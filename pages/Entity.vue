@@ -4,7 +4,7 @@
       <CFlex p="4" align="center">
         <CStack is-inline :spacing="4" align="center">
           <CIcon name="star" size="2rem" />
-          <CEditable :defaultValue="display" font-size="4xl" font-weight="700">
+          <CEditable :default-value="display" font-size="4xl" font-weight="700">
             <CEditablePreview />
             <CEditableInput />
           </CEditable>
@@ -35,7 +35,9 @@
         </CText>
       </CFlex>
       <CStack is-inline px="4" py="2" align="center">
-        <CText font-weight="500">Tag:</CText>
+        <CText font-weight="500">
+          Tag:
+        </CText>
         <CBox
           font-family="mono"
           font-size="sm"
@@ -48,17 +50,19 @@
           {{ name }}
         </CBox>
         <CBadge
-          variant-color="yellow"
-          rounded="4px"
           v-for="tag in tags"
           :key="tag"
+          variant-color="yellow"
+          rounded="4px"
         >
-        {{ tag }}
+          {{ tag }}
         </CBadge>
       </CStack>
 
       <CBox as="section" p="4">
-        <CHeading as="h3" size="lg" mb="2">Fields</CHeading>
+        <CHeading as="h3" size="lg" mb="2">
+          Fields
+        </CHeading>
         <CBox border-color="gray.300" border-width="1px" rounded="5px" p="4">
           <CStack spacing="0">
             <CBox
@@ -68,30 +72,52 @@
               py="2"
             >
               <CStack :spacing="2" is-inline align="center">
-                <CText font-weight="500">{{ field.name }}</CText>
+                <CText font-weight="500">
+                  {{ field.name }}
+                </CText>
                 <CBadge>{{ field.type }}</CBadge>
-                <CText ml="auto" color="gray.600">{{ field.description || 'No description' }}</CText>
+                <CText ml="auto" color="gray.600">
+                  {{ field.description || 'No description' }}
+                </CText>
               </CStack>
             </CBox>
           </CStack>
         </CBox>
         <CFlex mt="4" align="center">
-          <CLink font-weight="700">Add another field</CLink>
-          <CButton ml="auto" isDisabled>Apply changes</CButton>
+          <CLink font-weight="700">
+            Add another field
+          </CLink>
+          <CButton ml="auto" is-disabled>
+            Apply changes
+          </CButton>
         </CFlex>
       </CBox>
       <CBox as="section" p="4">
-        <CHeading as="h3" size="lg" mb="2">Rule sets</CHeading>
-        <CText>The <CBox as="span" font-weight="500">{{ display }}</CBox> entity is used in the following rule sets:</CText>
+        <CHeading as="h3" size="lg" mb="2">
+          Rule sets
+        </CHeading>
+        <CText>
+          The <CBox as="span" font-weight="500">
+            {{ display }}
+          </CBox> entity is used in the following rule sets:
+        </CText>
         <CStack :spacing="2" my="4">
           <CStack is-inline :spacing="2" align="center">
             <CIcon name="star" />
-            <CText font-weight="500">Is eligible for VAT</CText>
-            <CBadge font-size="md" variant-color="green" variant="solid" rounded="4px">Rev 1</CBadge>
+            <CText font-weight="500">
+              Is eligible for VAT
+            </CText>
+            <CBadge font-size="md" variant-color="green" variant="solid" rounded="4px">
+              Rev 1
+            </CBadge>
             <CIcon name="chevron-right" size="1.5rem" ml="8" />
             <CIcon name="star" ml="8" />
-            <CBox as="span" font-weight="500">{{ display }}</CBox>
-            <CBadge font-size="md" variant="outline" rounded="4px">Rev 1</CBadge>
+            <CBox as="span" font-weight="500">
+              {{ display }}
+            </CBox>
+            <CBadge font-size="md" variant="outline" rounded="4px">
+              Rev 1
+            </CBadge>
             <CText>12 days ago</CText>
           </CStack>
         </CStack>

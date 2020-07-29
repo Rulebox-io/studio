@@ -4,14 +4,14 @@
       <CFlex p="4" align="center">
         <CStack is-inline :spacing="4" align="center">
           <CIcon name="star" size="2rem" />
-          <CEditable :defaultValue="display" font-size="4xl" font-weight="700">
+          <CEditable :default-value="display" font-size="4xl" font-weight="700">
             <CEditablePreview />
             <CEditableInput />
           </CEditable>
         </CStack>
         <CStack is-inline :spacing="4" align="center" ml="auto">
           <CBadge font-size="md" variant="outline" rounded="4px">
-              Rev {{ version }}
+            Rev {{ version }}
           </CBadge>
           <CText>12 days ago</CText>
           <CFlex
@@ -35,9 +35,15 @@
         </CText>
       </CFlex>
       <CStack is-inline px="4" py="2" align="center">
-        <CText font-weight="500">Type:</CText>
-        <CBox px="2" py="1" font-weight="500" background-color="gray.100" rounded="2px">{{ type }}</CBox>
-        <CText font-weight="500">Tag:</CText>
+        <CText font-weight="500">
+          Type:
+        </CText>
+        <CBox px="2" py="1" font-weight="500" background-color="gray.100" rounded="2px">
+          {{ type }}
+        </CBox>
+        <CText font-weight="500">
+          Tag:
+        </CText>
         <CBox
           font-family="mono"
           font-size="sm"
@@ -50,44 +56,64 @@
           {{ name }}
         </CBox>
         <CBadge
-          variant-color="yellow"
-          rounded="4px"
           v-for="tag in tags"
           :key="tag"
+          variant-color="yellow"
+          rounded="4px"
         >
-        {{ tag }}
+          {{ tag }}
         </CBadge>
       </CStack>
       <CAlert status="warning" m="4" rounded="4px">
         <CAlertIcon />
         <div>
           The
-          <CBox as=span font-weight="500">{{ display }}</CBox>
+          <CBox as="span" font-weight="500">
+            {{ display }}
+          </CBox>
           ruleset uses an older version of the
-          <CBox as=span font-weight="500">{{ entity.display }}</CBox>
+          <CBox as="span" font-weight="500">
+            {{ entity.display }}
+          </CBox>
           entity.
           Update to create a new draft version of the ruleset based
           on the latest
-          <CBox as=span font-weight="500">{{ entity.display }}</CBox>
+          <CBox as="span" font-weight="500">
+            {{ entity.display }}
+          </CBox>
           entity.
         </div>
       </CAlert>
       <CStack is-inline px="4" py="2" align="center">
-        <CText font-weight="500">Entity:</CText>
+        <CText font-weight="500">
+          Entity:
+        </CText>
         <CIcon name="star" />
-        <CBox as="span" font-weight="500">{{ entity.display }}</CBox>
-        <CBadge font-size="md" variant="outline" rounded="4px">rev {{ entity.version }}</CBadge>
+        <CBox as="span" font-weight="500">
+          {{ entity.display }}
+        </CBox>
+        <CBadge font-size="md" variant="outline" rounded="4px">
+          rev {{ entity.version }}
+        </CBadge>
         <CText>{{ entity.date }}</CText>
         <CIcon name="chevron-right" size="1.5rem" />
         <CIcon name="star" />
-        <CBox as="span" font-weight="500">{{ display }}</CBox>
-        <CBadge font-size="md" variant-color="green" variant="solid" rounded="4px">rev {{ latestEntity.version }}</CBadge>
+        <CBox as="span" font-weight="500">
+          {{ display }}
+        </CBox>
+        <CBadge font-size="md" variant-color="green" variant="solid" rounded="4px">
+          rev {{ latestEntity.version }}
+        </CBadge>
         <CText>{{ latestEntity.date }}</CText>
-        <CButton ml="auto">Update version</CButton>
+        <CButton ml="auto">
+          Update version
+        </CButton>
       </CStack>
 
       <CBox as="section" p="4">
-        <CHeading as="h3" size="lg" mb="2">Rules</CHeading>
+        <CHeading as="h3" size="lg" mb="2">
+          Rules
+        </CHeading>
 
         <CStack
           py="2"
@@ -100,16 +126,20 @@
             rounded="full"
             border-width="1px"
             w="6"
-            h="6">
+            h="6"
+          >
             1
           </CFlex>
-          <CText as="span">When</CText>
+          <CText as="span">
+            When
+          </CText>
           <CBox
             px="2"
             py="1"
             font-weight="500"
             background-color="gray.100"
-            rounded="2px">
+            rounded="2px"
+          >
             Amount
           </CBox>
           <CText>is larger than</CText>
@@ -130,10 +160,13 @@
             py="1"
             font-weight="500"
             background-color="gray.100"
-            rounded="2px">
+            rounded="2px"
+          >
             Pass
           </CBox>
-          <CButton ml="auto">Edit</CButton>
+          <CButton ml="auto">
+            Edit
+          </CButton>
         </CStack>
       </CBox>
 
@@ -143,9 +176,13 @@
             Test cases
           </CHeading>
           <CIcon name="check-circle" color="green.600" />
-          <CText font-weight="500">3</CText>
+          <CText font-weight="500">
+            3
+          </CText>
           <CIcon name="exclamation" color="gray.400" />
-          <CText font-weight="500" color="gray.400">0</CText>
+          <CText font-weight="500" color="gray.400">
+            0
+          </CText>
         </CStack>
         <CAccordion border="none">
           <CAccordionItem border="none" mb="4">
@@ -164,21 +201,32 @@
             <CAccordionPanel>
               <CSimpleGrid :columns="2" :spacing="4">
                 <CBox>
-                  <CHeading as="h3" size="md" mb="1">Test data</CHeading>
-                  <CBox as="pre" background-color="gray.100" rounded="4px" p="2">{ "amount": 1200 }</CBox>
+                  <CHeading as="h3" size="md" mb="1">
+                    Test data
+                  </CHeading>
+                  <CBox as="pre" background-color="gray.100" rounded="4px" p="2">
+                    { "amount": 1200 }
+                  </CBox>
                 </CBox>
                 <CBox>
-                  <CHeading as="h3" size="md" mb="1">Assertions</CHeading>
+                  <CHeading as="h3" size="md" mb="1">
+                    Assertions
+                  </CHeading>
                   <CStack is-inline p="2" align="center">
-                    <CBox background-color="green.600" rounded="full" w="2" h="2"></CBox>
-                    <CText font-weight="500">Assert that: </CText>
-                    <CText ml="auto" >Outcome is</CText>
+                    <CBox background-color="green.600" rounded="full" w="2" h="2" />
+                    <CText font-weight="500">
+                      Assert that:
+                    </CText>
+                    <CText ml="auto">
+                      Outcome is
+                    </CText>
                     <CBox
                       px="2"
                       py="1"
                       font-weight="500"
                       background-color="gray.100"
-                      rounded="2px">
+                      rounded="2px"
+                    >
                       Pass
                     </CBox>
                   </CStack>
@@ -195,28 +243,39 @@
             >
               <CStack flex="1" is-inline align="center">
                 <CIcon name="check-circle" color="green.600" />
-               <CText>Should not trigger when value less than threshold</CText>
+                <CText>Should not trigger when value less than threshold</CText>
               </CStack>
               <CAccordionIcon />
             </CAccordionHeader>
             <CAccordionPanel>
               <CSimpleGrid :columns="2" :spacing="4">
                 <CBox>
-                  <CHeading as="h3" size="md" mb="1">Test data</CHeading>
-                  <CBox as="pre" background-color="gray.100" rounded="4px" p="2">{ "amount": 1200 }</CBox>
+                  <CHeading as="h3" size="md" mb="1">
+                    Test data
+                  </CHeading>
+                  <CBox as="pre" background-color="gray.100" rounded="4px" p="2">
+                    { "amount": 1200 }
+                  </CBox>
                 </CBox>
                 <CBox>
-                  <CHeading as="h3" size="md" mb="1">Assertions</CHeading>
+                  <CHeading as="h3" size="md" mb="1">
+                    Assertions
+                  </CHeading>
                   <CStack is-inline p="2" align="center">
-                    <CBox background-color="green.600" rounded="full" w="2" h="2"></CBox>
-                    <CText font-weight="500">Assert that: </CText>
-                    <CText ml="auto" >Outcome is</CText>
+                    <CBox background-color="green.600" rounded="full" w="2" h="2" />
+                    <CText font-weight="500">
+                      Assert that:
+                    </CText>
+                    <CText ml="auto">
+                      Outcome is
+                    </CText>
                     <CBox
                       px="2"
                       py="1"
                       font-weight="500"
                       background-color="gray.100"
-                      rounded="2px">
+                      rounded="2px"
+                    >
                       Fail
                     </CBox>
                   </CStack>
@@ -233,28 +292,39 @@
             >
               <CStack flex="1" is-inline align="center">
                 <CIcon name="check-circle" color="green.600" />
-               <CText>Should not trigger when value equal to threshold</CText>
+                <CText>Should not trigger when value equal to threshold</CText>
               </CStack>
               <CAccordionIcon />
             </CAccordionHeader>
             <CAccordionPanel>
               <CSimpleGrid :columns="2" :spacing="4">
                 <CBox>
-                  <CHeading as="h3" size="md" mb="1">Test data</CHeading>
-                  <CBox as="pre" background-color="gray.100" rounded="4px" p="2">{ "amount": 1200 }</CBox>
+                  <CHeading as="h3" size="md" mb="1">
+                    Test data
+                  </CHeading>
+                  <CBox as="pre" background-color="gray.100" rounded="4px" p="2">
+                    { "amount": 1200 }
+                  </CBox>
                 </CBox>
                 <CBox>
-                  <CHeading as="h3" size="md" mb="1">Assertions</CHeading>
+                  <CHeading as="h3" size="md" mb="1">
+                    Assertions
+                  </CHeading>
                   <CStack is-inline p="2" align="center">
-                    <CBox background-color="green.600" rounded="full" w="2" h="2"></CBox>
-                    <CText font-weight="500">Assert that: </CText>
-                    <CText ml="auto" >Outcome is</CText>
+                    <CBox background-color="green.600" rounded="full" w="2" h="2" />
+                    <CText font-weight="500">
+                      Assert that:
+                    </CText>
+                    <CText ml="auto">
+                      Outcome is
+                    </CText>
                     <CBox
                       px="2"
                       py="1"
                       font-weight="500"
                       background-color="gray.100"
-                      rounded="2px">
+                      rounded="2px"
+                    >
                       Fail
                     </CBox>
                   </CStack>
