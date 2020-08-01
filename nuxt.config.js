@@ -103,7 +103,7 @@ export default {
   },
   auth: {
     plugins: [
-      '~/plugins/appmetadata.js'
+      '~/plugins/userInfo.js'
     ],
     redirect: {
       home: '/ruleset',
