@@ -39,13 +39,20 @@
               </CBox>
             </CFlex>
           </CStack>
+          <CBox v-if="$fetchState.pending" py="2">
+            Retrieving users
+          </CBox>
           <CPseudoBox
             v-for="user in users"
+            v-else
             :key="user.email"
             display="flex"
           >
             <CStack w="33.33%" is-inline align="center">
-              <CAvatar :name="user.name" />
+              <CAvatar
+                :name="user.name"
+                :src="user.picture"
+              />
               <CText font-weight="500">
                 {{ user.email }}
               </CText>
@@ -95,13 +102,20 @@ export default {
     CStack,
     CText
   },
+  async fetch () {
+    try {
+      const { $axios } = this.$nuxt.context
+      const { data } = await $axios.get('http://localhost:7071/api/users/Teppa')
+      this.users = data
+      console.log(this.users)
+    } catch (err) {
+      console.log('ERR')
+      console.log(err)
+    }
+  },
   data () {
     return {
-      users: [
-        { email: 'edwin.groenendaal@cloudca.re', name: 'Edwin Groenendaal', roles: ['Administrator'] },
-        { email: 'james.wilson@gmail.com', name: 'James Wilson', roles: ['Approver', 'Publisher'] },
-        { email: 'john.doe@gmail.com', name: 'James Wilson', roles: ['Editor'] }
-      ]
+      users: []
     }
   }
 }
