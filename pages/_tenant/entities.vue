@@ -14,7 +14,15 @@
           <CBox v-if="$fetchState.pending" py="2">
             Retrieving entities
           </CBox>
-          <CPseudoBox v-for="entity in entities" v-else :key="entity.id">
+          <CBox v-else-if="0 == entities.length" py="2">
+            No entities available
+          </CBox>
+          <CPseudoBox
+            v-for="entity in entities"
+            v-else
+            :key="entity.id"
+            :_hover="{ bg: 'gray.100' }"
+          >
             <CStack is-inline spacing="4" align="center">
               <CText font-weight="500">
                 {{ entity.display_name }}
@@ -29,7 +37,9 @@
                 <CText>
                   {{ entity.revision.updated_by }}
                 </CText>
-                <CText>5 days ago</CText>
+                <CText>
+                  {{ entity.date_created }}
+                </CText>
                 <CFlex
                   font-weight="700"
                   color="white"
@@ -68,10 +78,9 @@ export default {
     try {
       const { $axios } = this.$nuxt.context
       const { data } = await $axios.get(
-        'http://localhost:7071/api/entity/Teppa'
+        `http://localhost:7071/api/${this.$route.params.tenant}/entity`
       )
       this.entities = data
-      console.log(this.entities)
     } catch (err) {
       console.log('ERR')
       console.log(err)
