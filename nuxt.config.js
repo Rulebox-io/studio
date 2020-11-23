@@ -83,6 +83,16 @@ export default {
   build: {
   },
 
+  /*
+  ** Make sure there is a fallback to Nuxt when a page is not
+  ** found, so we don't get Netlify's 404 page. This is because
+  ** we use dynamic routes like /{tenant}/entities.
+  ** https://nuxtjs.org/faq/netlify-deployment/
+  */
+  generate: {
+    fallback: true
+  },
+
   chakra: {
     extendTheme: {
       colors: {
