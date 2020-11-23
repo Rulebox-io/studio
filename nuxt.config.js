@@ -26,6 +26,10 @@ export default {
     ]
   },
 
+  env: {
+    studioApiUrl: process.env.RB_STUDIO_API_URL || 'http://localhost:7071'
+  },
+
   /**
    * Router middleware
    */

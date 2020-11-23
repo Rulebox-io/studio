@@ -78,7 +78,7 @@ export default {
     try {
       const { $axios } = this.$nuxt.context
       const { data } = await $axios.get(
-        `http://localhost:7071/api/${this.$route.params.tenant}/entity`
+        `${process.env.studioApiUrl}/api/${this.$route.params.tenant}/entity`
       )
       this.entities = data
     } catch (err) {

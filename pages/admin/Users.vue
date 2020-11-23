@@ -105,7 +105,7 @@ export default {
   async fetch () {
     try {
       const { $axios } = this.$nuxt.context
-      const { data } = await $axios.get('http://localhost:7071/api/Teppa/users')
+      const { data } = await $axios.get(`${process.env.studioApiUrl}/api/Teppa/users`)
       this.users = data
       console.log(this.users)
     } catch (err) {

@@ -178,7 +178,7 @@ export default {
     try {
       const { $axios } = this.$nuxt.context
       const { data } = await $axios.get(
-        `http://localhost:7071/api/${this.$route.params.tenant}/entity/${this.$route.params.id}`
+        `${process.env.studioApiUrl}/${this.$route.params.tenant}/entity/${this.$route.params.id}`
       )
 
       this.name = data.id
