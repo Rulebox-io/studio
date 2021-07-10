@@ -3,8 +3,8 @@
 </template>
 <script>
 export default {
-  mounted () {
+  mounted() {
     this.$auth.loginWith('auth0')
-  }
+  },
 }
 </script>

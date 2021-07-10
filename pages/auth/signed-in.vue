@@ -1,8 +1,8 @@
 <template>
-  <p>Signing in...</p>
+  <p>You have signed in</p>
 </template>
 <script>
 export default {
-  layout: 'empty'
+  layout: 'empty',
 }
 </script>

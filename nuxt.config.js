@@ -1,25 +1,21 @@
-
 export default {
-  /*
-  ** Nuxt rendering mode
-  ** See https://nuxtjs.org/api/configuration-mode
-  */
-  mode: 'spa',
-  /*
-  ** Nuxt target
-  ** See https://nuxtjs.org/api/configuration-target
-  */
+  // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
+  ssr: false,
+
+  // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
-  /*
-  ** Headers of the page
-  ** See https://nuxtjs.org/api/configuration-head
-  */
+
+  // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'Rulebox Studio',
+    htmlAttrs: {
+      lang: 'en'
+    },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
+      { hid: 'description', name: 'description', content: '' },
+      { name: 'format-detection', content: 'telephone=no' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
@@ -37,51 +33,39 @@ export default {
     middleware: ['auth']
   },
 
-  /*
-  ** Global CSS
-  */
+  // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
-    '@/assets/scss/main.scss'
   ],
-  /*
-  ** Plugins to load before mounting the App
-  ** https://nuxtjs.org/guide/plugins
-  */
+
+  // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
   ],
-  /*
-  ** Auto import components
-  ** See https://nuxtjs.org/api/configuration-components
-  */
+
+  // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
-  /*
-  ** Nuxt.js dev-modules
-  */
+
+  // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
-    // Doc: https://github.com/nuxt-community/eslint-module
-    '@nuxtjs/eslint-module'
+    // https://go.nuxtjs.dev/eslint
+    '@nuxtjs/eslint-module',
+    // Doc: https://github.com/nuxt-community/color-mode-module
+    "@nuxtjs/color-mode",
+    // https://go.nuxtjs.dev/tailwindcss
+    '@nuxtjs/tailwindcss',
   ],
-  /*
-  ** Nuxt.js modules
-  */
+
+  // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    // Doc: https://axios.nuxtjs.org/usage
+    // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
-    '@nuxtjs/emotion',
     '@nuxtjs/auth',
-    '@chakra-ui/nuxt'
   ],
-  /*
-  ** Axios module configuration
-  ** See https://axios.nuxtjs.org/options
-  */
+
+  // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},
-  /*
-  ** Build configuration
-  ** See https://nuxtjs.org/api/configuration-build/
-  */
-  build: {
-  },
+
+  // Build Configuration: https://go.nuxtjs.dev/config-build
+  build: {},
 
   /*
   ** Make sure there is a fallback to Nuxt when a page is not
@@ -93,34 +77,19 @@ export default {
     fallback: true
   },
 
-  chakra: {
-    extendTheme: {
-      colors: {
-        brand: {
-          50: '#e8e0f4',
-          100: '#c6b0e4',
-          200: '#a481d4',
-          300: '#8152c4',
-          400: '#6237a0',
-          500: '#542f89',
-          600: '#462772',
-          700: '#381f5b',
-          800: '#2a1744',
-          900: '#1c102e'
-        }
-      },
-      container: ['100%', '480px', '768px', '992px'],
-      fonts: {
-        myheading: '"Avenir Next", sans-serif'
-      }
-    }
+  tailwindcss: {
   },
+
+  colorMode: {
+    classSuffix: ""
+  },
+
   auth: {
     plugins: [
       '~/plugins/userInfo.js'
     ],
     redirect: {
-      home: '/ruleset',
+      home: '/',
       login: '/auth/sign-in', // redirect user when not connected
       callback: '/auth/signed-in'
     },
@@ -133,4 +102,5 @@ export default {
       }
     }
   }
+
 }
