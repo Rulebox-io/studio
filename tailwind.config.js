@@ -32,6 +32,18 @@ module.exports = {
     darkSelector: '.dark-mode',
     extend: {
       colors: {
+        rulebox: {
+          '50': '#f9fafb',
+          '100': '#edf1fb',
+          '200': '#d8daf6',
+          '300': '#b4b6e8',
+          '400': '#928cd6',
+          '500': '#7767c5',
+          '600': '#604bac',
+          '700': '#473886',
+          '800': '#301a5b',
+          '900': '#1b1736',
+        },
         gray: colors.trueGray
       },
       backgroundImage: theme => ({

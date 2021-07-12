@@ -1,8 +1,18 @@
 <template>
   <div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-      <h1 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+      <h1
+        class="
+          flex
+          items-center
+          text-2xl
+          font-semibold
+          text-gray-900
+          dark:text-gray-100
+        "
+      >
         Users
+        <Button class="ml-auto">Invite user</Button>
       </h1>
     </div>
     <div
@@ -15,9 +25,9 @@
 </template>
 <script>
 import UserList from '@/components/users/UserList'
-
+import Button from '@/components/common/Button'
 export default {
-  components: { UserList },
+  components: { UserList, Button },
   data() {
     return {
       users: [],
@@ -30,7 +40,6 @@ export default {
         `${process.env.studioApiUrl}/api/${this.$route.params.tenant}/users`
       )
       this.users = data
-      console.log(this.users)
     } catch (err) {
       console.log('ERR')
       console.log(err)
