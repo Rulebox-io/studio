@@ -52,7 +52,7 @@
           dark:bg-black
         "
       >
-        <nuxt class="py-6" />
+        <nuxt />
       </main>
     </div>
   </div>

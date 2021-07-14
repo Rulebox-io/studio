@@ -176,12 +176,17 @@ import NavItem from '@/components/common/NavItem'
 import Profile from './sidebar/Profile.vue'
 
 const navigation = [
-  { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
-  { name: 'Team', href: '#', icon: UsersIcon, current: false },
-  { name: 'Projects', href: '#', icon: FolderIcon, current: false },
-  { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
-  { name: 'Documents', href: '#', icon: InboxIcon, current: false },
-  { name: 'Reports', href: '#', icon: ChartBarIcon, current: false },
+  { name: 'Dashboard', href: '/', icon: HomeIcon, current: true },
+  { name: 'Entities', href: '~/entities', icon: UsersIcon, current: false },
+  { name: 'Rules', href: '~/entities', icon: FolderIcon, current: false },
+  { name: 'Tests', href: '~/tests', icon: CalendarIcon, current: false },
+  {
+    name: 'Integration',
+    href: '~/integration/keys',
+    icon: InboxIcon,
+    current: false,
+  },
+  { name: 'Reports', href: '~/reports', icon: ChartBarIcon, current: false },
 ]
 
 export default {
@@ -189,7 +194,10 @@ export default {
   props: { open: Boolean },
   data() {
     return {
-      navigation,
+      navigation: navigation.map((nav) => ({
+        ...nav,
+        href: nav.href.replace('~', `/${this.$route.params.tenant}`),
+      })),
     }
   },
   computed: {

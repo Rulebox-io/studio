@@ -1,6 +1,6 @@
 <template>
-  <a
-    :href="href"
+  <NuxtLink
+    :to="href"
     :class="[
       current
         ? 'bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100'
@@ -17,7 +17,7 @@
       aria-hidden="true"
     />
     {{ name }}
-  </a>
+  </NuxtLink>
 </template>
 <script>
 export default {

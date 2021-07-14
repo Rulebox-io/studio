@@ -1,5 +1,5 @@
 <template>
-  <a href="#" class="flex-shrink-0 md:w-full group block">
+  <NuxtLink :to="profileLink" class="flex-shrink-0 md:w-full group block">
     <div class="flex items-center">
       <Avatar :url="url" :name="name"> </Avatar>
       <div class="ml-3">
@@ -30,7 +30,7 @@
         </p>
       </div>
     </div>
-  </a>
+  </NuxtLink>
 </template>
 <script>
 import Avatar from '@/components/common/Avatar'
@@ -40,6 +40,11 @@ export default {
   props: {
     name: { type: String, required: true },
     url: { type: String, required: true },
+  },
+  computed: {
+    profileLink() {
+      return `/${this.$route.params.tenant}/Account/Profile`
+    },
   },
 }
 </script>
