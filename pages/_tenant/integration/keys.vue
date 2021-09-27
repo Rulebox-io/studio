@@ -16,7 +16,8 @@ import Table from '@/components/common/Table'
 
 const headers = [
   { id: 'name', display: 'Name' },
-  { id: 'key', display: 'Key' },
+  { id: 'primary', display: 'Primary' },
+  { id: 'secondary', display: 'Secondary' },
   { id: 'issued-on', display: 'Issued on' },
 ]
 
@@ -39,7 +40,7 @@ export default {
       if (undefined != data && Array.isArray(data)) {
         this.rows = data.map((elt, n) => ({
           id: n,
-          values: [elt.name, elt.key, elt.issued_on],
+          values: [elt.name, elt.primary, elt.secondary, elt.issued_on],
         }))
       }
     } catch (err) {
