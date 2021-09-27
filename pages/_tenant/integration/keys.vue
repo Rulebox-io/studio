@@ -19,38 +19,32 @@ const headers = [
   { id: 'key', display: 'Key' },
   { id: 'issued-on', display: 'Issued on' },
 ]
-const rows = [
-  {
-    id: '0',
-    values: [
-      'Default key',
-      '553c33c43c43c3443c43c34c343c43c23c23c',
-      '12 Jun 2021',
-    ],
-  },
-  {
-    id: '1',
-    values: [
-      'Default key',
-      'ab43b4ab535ba23ab32ba32ba3b2a32b4ab4b',
-      '12 Jun 2021',
-    ],
-  },
-  {
-    id: '2',
-    values: [
-      'Default key',
-      '8d78d78d86d56d56d45d45d45d45d56d67d11',
-      '12 Jun 2021',
-    ],
-  },
-]
+
 export default {
   components: { Table },
   data() {
     return {
       headers,
-      rows,
+      rows: [],
+    }
+  },
+  async fetch() {
+    try {
+      const { $axios } = this.$nuxt.context
+      const { data } = await $axios.get(
+        `${process.env.studioApiUrl}/api/${this.$route.params.tenant}/key`
+      )
+
+      // eslint-disable-next-line eqeqeq
+      if (undefined != data && Array.isArray(data)) {
+        this.rows = data.map((elt, n) => ({
+          id: n,
+          values: [elt.name, elt.key, elt.issued_on],
+        }))
+      }
+    } catch (err) {
+      console.log('ERR')
+      console.log(err)
     }
   },
 }
