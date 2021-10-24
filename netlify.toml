@@ -1,0 +1,2 @@
+[build]
+  environment = { FAUNADB_SECRET="fnAEQr6HZvAAyBz6eXqstg5nXSOYs-aHWZO2sNBu", RULEBOX_API_URL="https://apim-rulebox.azure-api.net", RULEBOX_SUBSCRIPTION_KEY="0a027e9428d941bd9a4984c10d7539ad" }

@@ -33,7 +33,7 @@ export default {
     try {
       const { $axios } = this.$nuxt.context
       const { data } = await $axios.get(
-        `${process.env.studioApiUrl}/api/${this.$route.params.tenant}/key`
+        `${process.env.studioApiUrl}/keys?tenant=${this.$route.params.tenant}`
       )
 
       // eslint-disable-next-line eqeqeq
