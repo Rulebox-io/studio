@@ -46,7 +46,7 @@ const handler = async (event) => {
 
         switch (created.status) {
           case "success":
-            return { statusCode: 200, headers, body: created }
+            return { statusCode: 200, headers, body: JSON.stringify(created) }
 
           default:
             return { statusCode: 400, headers, body: `Could not create key '${name}'` }
@@ -68,6 +68,8 @@ const handler = async (event) => {
         }
       }
 
+      case "OPTIONS": { return { statusCode: 200, headers } }
+
       default: {
         return {
           statusCode: 405,
@@ -78,6 +80,7 @@ const handler = async (event) => {
     }
 
   } catch (error) {
+    console.error(error)
     return { statusCode: 500, body: error.toString() }
   }
 }
