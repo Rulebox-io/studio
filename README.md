@@ -1,4 +1,4 @@
-# Studio
+# Rulebox Studio
 
 ## Build Setup
 
