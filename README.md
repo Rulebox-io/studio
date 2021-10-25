@@ -1,4 +1,4 @@
-# studio
+# Studio
 
 ## Build Setup
 
