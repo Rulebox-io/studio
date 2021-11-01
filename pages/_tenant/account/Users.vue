@@ -28,6 +28,7 @@ import UserList from '@/components/users/UserList'
 import Button from '@/components/common/Button'
 export default {
   components: { UserList, Button },
+  middleware: 'magicauth',
   data() {
     return {
       users: [],

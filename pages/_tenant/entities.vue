@@ -18,6 +18,7 @@ import EntityList from '@/components/entities/EntityList'
 
 export default {
   components: { EntityList },
+  middleware: 'magicauth',
   data() {
     return {
       entities: [],

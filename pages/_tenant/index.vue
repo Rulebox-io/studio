@@ -9,7 +9,9 @@
 </template>
 
 <script>
-export default {}
+export default {
+  middleware: 'magicauth',
+}
 </script>
 
 <style lang="postcss" scoped>

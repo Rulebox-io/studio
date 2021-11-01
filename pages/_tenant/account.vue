@@ -34,6 +34,7 @@ const tabs = [
 ]
 export default {
   components: { TabBar },
+  middleware: 'magicauth',
   data() {
     return {
       tabs,

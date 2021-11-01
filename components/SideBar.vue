@@ -61,7 +61,9 @@
                   w-10
                   rounded-full
                   focus:outline-none
-                  focus:ring-2 focus:ring-inset focus:ring-white
+                  focus:ring-2
+                  focus:ring-inset
+                  focus:ring-white
                 "
                 @click="emitClose"
               >
@@ -123,8 +125,7 @@
             flex-1
             border-r border-gray-200
             bg-white
-            dark:border-gray-800
-            dark:bg-gray-900
+            dark:border-gray-800 dark:bg-gray-900
           "
         >
           <div class="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
@@ -202,13 +203,13 @@ export default {
   },
   computed: {
     isLoggedIn() {
-      return this.$auth.loggedIn
+      return this.$store.state.authenticated
     },
     name() {
-      return this.isLoggedIn && this.$auth.user.name
+      return this.isLoggedIn && this.$store.state.user.email // Name
     },
     picture() {
-      return this.isLoggedIn && this.$auth.user.picture
+      return this.isLoggedIn && '' // this.$store.state.user.avatar // How?
     },
   },
   methods: {

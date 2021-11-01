@@ -34,11 +34,13 @@
     "eslint-plugin-vue": "^7.12.1",
     "faunadb": "^4.4.1",
     "jest": "^27.0.5",
+    "magic-sdk": "^6.2.0",
     "moment": "^2.29.1",
     "nanoid": "^2.1.11",
     "postcss": "^8.3.5",
     "prettier": "^2.3.2",
     "tailwindcss-dark-mode": "^1.1.7",
-    "vue-jest": "^3.0.4"
+    "vue-jest": "^3.0.4",
+    "vuex-persistedstate": "^4.1.0"
   }
 }

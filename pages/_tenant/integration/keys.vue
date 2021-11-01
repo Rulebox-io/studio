@@ -111,6 +111,7 @@ const headers = [
 
 export default {
   components: { Button, Dialog, Table },
+  middleware: 'magicauth',
   data() {
     return {
       headers,

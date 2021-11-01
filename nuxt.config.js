@@ -23,14 +23,7 @@ export default {
   },
 
   env: {
-    studioApiUrl: process.env.RB_STUDIO_API_URL || 'http://localhost:7071'
-  },
-
-  /**
-   * Router middleware
-   */
-  router: {
-    middleware: ['auth']
+    studioApiUrl: process.env.RB_STUDIO_API_URL || 'http://localhost:9999/.netlify/functions'
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -38,8 +31,7 @@ export default {
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [
-  ],
+  plugins: [{ src: '~/plugins/persistedState.client.js' }],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -58,7 +50,6 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
-    '@nuxtjs/auth',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -83,24 +74,4 @@ export default {
   colorMode: {
     classSuffix: ""
   },
-
-  auth: {
-    plugins: [
-      '~/plugins/userInfo.js'
-    ],
-    redirect: {
-      home: '/',
-      login: '/auth/sign-in', // redirect user when not connected
-      callback: '/auth/signed-in'
-    },
-    strategies: {
-      local: false,
-      auth0: {
-        domain: process.env.AUTH0_DOMAIN,
-        client_id: process.env.AUTH0_CLIENT_ID,
-        audience: process.env.AUTH0_API_ID
-      }
-    }
-  }
-
 }

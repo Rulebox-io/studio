@@ -24,9 +24,11 @@
                 class="
                   py-4
                   sm:py-5
-                  sm:grid sm:grid-cols-3
+                  sm:grid
+                  sm:grid-cols-3
                   sm:gap-4
-                  sm:border-b sm:border-gray-200
+                  sm:border-b
+                  sm:border-gray-200
                   sm:dark:border-gray-800
                 "
               >
@@ -42,8 +44,7 @@
                     flex
                     text-sm text-gray-900
                     dark:text-gray-100
-                    sm:mt-0
-                    sm:col-span-2
+                    sm:mt-0 sm:col-span-2
                   "
                 >
                   <Toggle
@@ -73,7 +74,9 @@
             text-white
             hover:bg-gray-900
             focus:outline-none
-            focus:ring-2 focus:ring-offset-2 focus:ring-gray-900
+            focus:ring-2
+            focus:ring-offset-2
+            focus:ring-gray-900
           "
         >
           Save
@@ -86,6 +89,7 @@
 import Toggle from '@/components/common/Toggle'
 export default {
   components: { Toggle },
+  middleware: 'magicauth',
   data() {
     return {
       enableDarkMode: this.$colorMode.value === 'dark',
