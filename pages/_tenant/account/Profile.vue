@@ -1,5 +1,19 @@
 <template>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+    <h1
+      class="
+        flex
+        items-center
+        text-2xl
+        font-semibold
+        text-gray-900
+        dark:text-gray-100
+      "
+    >
+      Profile
+      <Button class="ml-auto" @click="signOut">Sign out</Button>
+    </h1>
+
     <div class="shadow sm:rounded-md sm:overflow-hidden">
       <div class="bg-white py-6 px-4 sm:p-6 dark:bg-gray-900">
         <div>
@@ -58,7 +72,7 @@
         </div>
       </div>
       <div class="px-4 py-3 bg-gray-50 dark:bg-gray-900 text-right sm:px-6">
-        <button
+        <Button
           type="submit"
           class="
             bg-gray-800
@@ -80,15 +94,17 @@
           "
         >
           Save
-        </button>
+        </Button>
       </div>
     </div>
   </div>
 </template>
 <script>
 import Toggle from '@/components/common/Toggle'
+import Button from '@/components/common/Button'
+
 export default {
-  components: { Toggle },
+  components: { Button, Toggle },
   middleware: 'magicauth',
   data() {
     return {
@@ -96,6 +112,10 @@ export default {
     }
   },
   methods: {
+    signOut() {
+      this.$store.dispatch('logout')
+    },
+
     toggleDarkMode(darkMode) {
       this.enableDarkMode = darkMode
       this.$colorMode.preference = darkMode ? 'dark' : 'light'

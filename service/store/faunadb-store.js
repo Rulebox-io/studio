@@ -30,10 +30,7 @@ module.exports = class Store {
      */
     async createApiKey(tenant, name, tag, primary, secondary) {
 
-        const client = new faunadb.Client({
-            secret: this.secret,
-            domain: "db.eu.fauna.com"
-        })
+        const client = this._getClient()
 
         try {
 
@@ -79,10 +76,7 @@ module.exports = class Store {
      */
     async deleteApiKey(tenant, tag) {
 
-        const client = new faunadb.Client({
-            secret: this.secret,
-            domain: "db.eu.fauna.com"
-        })
+        const client = this._getClient()
 
         try {
 
@@ -108,10 +102,7 @@ module.exports = class Store {
      * @param {string} tenant The tenant.
      */
     async getApiKeys(tenant) {
-        const client = new faunadb.Client({
-            secret: this.secret,
-            domain: "db.eu.fauna.com"
-        })
+        const client = this._getClient()
 
         const helper = client.paginate(q.Match(q.Index("api-keys-summary"), q.Casefold(tenant)))
 
@@ -133,5 +124,41 @@ module.exports = class Store {
             })
 
         return results;
+    }
+
+    /**
+     * Retrieves a user. This function retrieves a user with a matching identifier.
+     * @param {string} id The user's identifier.
+     * @returns The user.
+     */
+    async getUser(id) {
+        const client = this._getClient()
+        return await client.query(q.Get(q.Match(q.Index("user-by-id"), id)))
+    }
+
+    /**
+     * Updates a user's login timestamp. This function updates the user record with the
+     * specified timestamp.
+     * @param {string} ref The user's document reference.
+     * @param {int} timestamp The new timestamp.
+     */
+    async updateUserLogin(ref, timestamp) {
+        const client = this._getClient()
+        await client.query(q.Update(ref, { data: { lastLoginAt: timestamp } }))
+    }
+
+
+
+    // Private implementation
+    // ======================
+    /**
+     * Instantiates and returns a FaunaDB client.
+     * @returns The FaunaDB client.
+     */
+    _getClient() {
+        return new faunadb.Client({
+            secret: this.secret,
+            domain: "db.eu.fauna.com"
+        })
     }
 }
