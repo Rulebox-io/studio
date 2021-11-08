@@ -5,19 +5,19 @@
       {{ $store.state.user.email }}
     </div>
 
-    <div class="label">Issuer</div>
+    <div class="label">ID</div>
     <div class="profile-info text-gray-700 dark:text-gray-300">
-      {{ $store.state.user.issuer }}
+      {{ $store.state.user.id }}
     </div>
 
-    <div class="label">Public Address</div>
+    <div class="label">First name</div>
     <div class="profile-info text-gray-700 dark:text-gray-300">
-      {{ $store.state.user.publicAddress }}
+      {{ $store.state.user.firstName }}
     </div>
 
-    <div class="label">Token</div>
+    <div class="label">Lasr name</div>
     <div class="profile-info text-gray-700 dark:text-gray-300">
-      {{ $store.state.token }}
+      {{ $store.state.user.lastName }}
     </div>
   </div>
 </template>
@@ -25,6 +25,16 @@
 <script>
 export default {
   middleware: 'magicauth',
+  async fetch() {
+    try {
+      const { $axios } = this.$nuxt.context
+      const { data } = await $axios.get(`${process.env.studioApiUrl}/user`)
+      console.log(data)
+    } catch (err) {
+      console.log('ERR')
+      console.log(err)
+    }
+  },
 }
 </script>
 

@@ -203,7 +203,7 @@ export default {
   },
   computed: {
     isLoggedIn() {
-      return this.$store.state.authenticated
+      return this.$store.state.user.authenticated
     },
     name() {
       return this.isLoggedIn && this.$store.state.user.email // Name

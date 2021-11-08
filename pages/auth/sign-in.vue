@@ -37,7 +37,7 @@ export default {
     // eslint-disable-next-line require-await
     async userLogin() {
       this.$store
-        .dispatch('login', {
+        .dispatch('user/login', {
           email: this.email,
         })
         .then(() => {

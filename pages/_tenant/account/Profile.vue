@@ -113,7 +113,7 @@ export default {
   },
   methods: {
     signOut() {
-      this.$store.dispatch('logout')
+      this.$store.dispatch('user/logout')
     },
 
     toggleDarkMode(darkMode) {
