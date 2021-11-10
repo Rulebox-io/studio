@@ -28,7 +28,9 @@ export default {
   async fetch() {
     try {
       const { $axios } = this.$nuxt.context
-      const { data } = await $axios.get(`${process.env.studioApiUrl}/user`)
+      const { data } = await $axios.get(`${process.env.studioApiUrl}/user`, {
+        withCredentials: true,
+      })
       console.log(data)
     } catch (err) {
       console.log('ERR')

@@ -9,7 +9,8 @@ const RB_SESSION_EXPIRY = 7 * 24 * 3600 // 7 days, in seconds.
 const magic = new Magic('sk_live_818DB17C25C2D872')
 
 const headers = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': 'true',
+  'Access-Control-Allow-Origin': 'http://localhost:3000',
   'Access-Control-Allow-Headers': 'Content-Type, authorization',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
 };
@@ -40,7 +41,7 @@ const handler = async (event) => {
         const payload = { ...(user.data), exp: Math.floor((Date.now() / 1000) + RB_SESSION_EXPIRY) }
         const token = jwt.sign(payload, process.env.JWT_SECRET)
         const sessionCookie = cookie.serialize("rb-session", token, {
-          secure: true,
+          secure: false, // Use DEV flag
           httpOnly: true,
           path: '/',
           maxAge: RB_SESSION_EXPIRY * 1000
@@ -55,7 +56,7 @@ const handler = async (event) => {
       }
     }
   } catch (error) {
-    return { statusCode: 500, body: error.toString() }
+    return { statusCode: 500, headers, body: error.toString() }
   }
 }
 

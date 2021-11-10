@@ -34,22 +34,30 @@ export const actions = {
 
   async login({ commit }, email) {
     const didToken = await magic.auth.loginWithMagicLink(email)
-    const { data } = await axios.get(
+    const { data } = await axios.post(
       `${process.env.studioApiUrl}/login`,
+      "",
       {
-        method: 'POST',
+        withCredentials: true,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer: ${didToken}`
         }
       }
     )
-
-    console.log(data);
     commit('SET_USER_DATA', data)
   },
   async logout({ commit }) {
-    await magic.user.logout()
+    await axios.post(
+      `${process.env.studioApiUrl}/logout`,
+      "",
+      {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      }
+    )
     commit('CLEAR_USER_DATA')
   },
 }
