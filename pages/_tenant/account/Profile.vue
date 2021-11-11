@@ -107,9 +107,14 @@ export default {
   components: { Button, Toggle },
   middleware: 'magicauth',
   data() {
-    return {
-      enableDarkMode: this.$colorMode.value === 'dark',
-    }
+    return {}
+  },
+  computed: {
+    enableDarkMode() {
+      return this.$store.getters['preferences/darkmodeOrDefault'](
+        this.$colorMode.value === 'dark'
+      )
+    },
   },
   methods: {
     signOut() {
@@ -117,7 +122,7 @@ export default {
     },
 
     toggleDarkMode(darkMode) {
-      this.enableDarkMode = darkMode
+      this.$store.commit('preferences/setDarkMode', darkMode)
       this.$colorMode.preference = darkMode ? 'dark' : 'light'
     },
   },

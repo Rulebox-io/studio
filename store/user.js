@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 import axios from 'axios'
 import { magic } from '../plugins/magic'
 
@@ -10,6 +11,12 @@ export const state = () => ({
   authenticated: false,
 })
 
+export const getters = {
+  displayName: state => {
+    if (undefined == state.lastName || undefined == state.firstName) return state.email
+    return `${state.firstName} ${state.lastName}`
+  }
+}
 export const mutations = {
   SET_USER_DATA(state, user) {
     state.id = user.id
@@ -33,6 +40,7 @@ export const mutations = {
 export const actions = {
 
   async login({ commit }, email) {
+    // Log in through magic link, and create a session.
     const didToken = await magic.auth.loginWithMagicLink(email)
     const { data } = await axios.post(
       `${process.env.studioApiUrl}/login`,
@@ -45,7 +53,15 @@ export const actions = {
         }
       }
     )
+
+    // Store the user data locally.
     commit('SET_USER_DATA', data)
+
+    // Navigate to the dashboard page.
+    if (undefined != data.tenants && data.tenants.length > 0) {
+      const tenant = data.tenants[0]
+      this.$router.push(`/${tenant}/integration/keys`)
+    }
   },
   async logout({ commit }) {
     await axios.post(

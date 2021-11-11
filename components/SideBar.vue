@@ -206,7 +206,7 @@ export default {
       return this.$store.state.user.authenticated
     },
     name() {
-      return this.isLoggedIn && this.$store.state.user.email // Name
+      return this.isLoggedIn && this.$store.getters['user/displayName'] // Name
     },
     picture() {
       return this.isLoggedIn && '' // this.$store.state.user.avatar // How?

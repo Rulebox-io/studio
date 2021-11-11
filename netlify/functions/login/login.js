@@ -15,6 +15,8 @@ const headers = {
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
 };
 
+const isDevelopment = console.log(process.env.NODE_ENV) || 'development'
+
 const handler = async (event) => {
   try {
     switch (event.httpMethod) {
@@ -41,7 +43,7 @@ const handler = async (event) => {
         const payload = { ...(user.data), exp: Math.floor((Date.now() / 1000) + RB_SESSION_EXPIRY) }
         const token = jwt.sign(payload, process.env.JWT_SECRET)
         const sessionCookie = cookie.serialize("rb-session", token, {
-          secure: false, // Use DEV flag
+          secure: !isDevelopment,
           httpOnly: true,
           path: '/',
           maxAge: RB_SESSION_EXPIRY * 1000

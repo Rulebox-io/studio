@@ -40,9 +40,6 @@ export default {
         .dispatch('user/login', {
           email: this.email,
         })
-        .then(() => {
-          this.$router.push('/auth/signed-in')
-        })
         .catch((err) => {
           console.log(err)
         })

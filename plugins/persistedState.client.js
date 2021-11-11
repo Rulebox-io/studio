@@ -5,5 +5,12 @@
 import createPersistedState from 'vuex-persistedstate'
 
 export default ({ store }) => {
-  createPersistedState({ paths: ["user"] })(store)
+  createPersistedState({
+    paths: ["user", "preferences"], rehydrated: _ => {
+      const darkMode = store.getters["preferences/darkmodeOrDefault"]()
+      if (undefined !== darkMode) {
+        store.$colorMode.preference = darkMode ? 'dark' : 'light'
+      }
+    }
+  })(store)
 }

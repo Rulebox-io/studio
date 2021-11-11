@@ -13,6 +13,8 @@ const headers = {
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
 };
 
+const isDevelopment = console.log(process.env.NODE_ENV) || 'development'
+
 const handler = async (event) => {
   try {
     switch (event.httpMethod) {
@@ -20,24 +22,22 @@ const handler = async (event) => {
       case "POST":
       case "GET": {
 
-        console.log(event)
-
         const cookies = event.headers.cookie && cookie.parse(event.headers.cookie)
-        if (!cookies["rb-session"]) {
+        if (cookies == undefined || !cookies["rb-session"]) {
           return {
             headers,
             statusCode: 401,
-            body: JSON.stringify("No Rulebox session"),
+            body: JSON.stringify("User not currently logged in"),
           }
         }
 
+        // Verify that the token is valid.
         const user = jwt.verify(cookies["rb-session"], process.env.JWT_SECRET)
-        console.log(user)
 
         const payload = { ...user, exp: Math.floor((Date.now() / 1000) + RB_SESSION_EXPIRY) }
         const token = jwt.sign(payload, process.env.JWT_SECRET)
         const sessionCookie = cookie.serialize("rb-session", token, {
-          secure: false, // Use DEV flag
+          secure: !isDevelopment,
           httpOnly: true,
           path: '/',
           maxAge: RB_SESSION_EXPIRY * 1000

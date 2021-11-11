@@ -12,6 +12,8 @@ const headers = {
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
 };
 
+const isDevelopment = console.log(process.env.NODE_ENV) || 'development'
+
 const handler = async (event) => {
   try {
     switch (event.httpMethod) {
@@ -41,7 +43,7 @@ const handler = async (event) => {
 
         // Create a "deleted" cookie.
         const sessionCookie = cookie.serialize("rb-session", "", {
-          secure: false, // Use DEV flag
+          secure: isDevelopment,
           httpOnly: true,
           path: '/',
           expires: new Date(0)
