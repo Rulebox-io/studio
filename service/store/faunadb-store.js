@@ -70,6 +70,102 @@ module.exports = class Store {
     }
 
     /**
+     * Signs up a user. This function creates a user record, or updates an existing user record
+     * to add a tenant or set the user's identifier upon first logon.
+     * @param {String} email The email address of the user.
+     * @param {String} tenant Optionally, the tenant to assign the user to.
+     * @returns The user.
+     */
+    async signupUser(email, tenant) {
+        const client = this._getClient()
+
+        try {
+
+            // Does the user already exist?
+            const exists = await client.query(q.Exists(q.Match(q.Index("user-by-email"), q.Casefold(email))))
+            if (exists === false) {
+
+                // The user did not exist, so we create a user record with a 'tenants' list.
+                const tenants = {}
+                if (tenant) tenants[this._normaliseTenantName(tenant)] = "contributor"
+
+                const result = await client.query(
+                    q.Create(
+                        q.Collection('users'),
+                        {
+                            data: {
+                                email,
+                                tenants,
+                            }
+                        }))
+
+                return {
+                    status: "success",
+                    email: result.data.email,
+                    id: result.data.id,
+                    tenants: result.data.tenants,
+                }
+            } else {
+                // This is an existing user. We update its tenant membership
+                const existing = await this.getUserByEmail(email)
+
+                const tenants = existing.data.tenants || {}
+                if (tenant) tenants[this._normaliseTenantName(tenant)] = "contributor"
+                await client.query(q.Update(existing.ref, { data: { tenants } }))
+
+                return {
+                    status: "success",
+                    email: existing.data.email,
+                    id: existing.data.id,
+                    tenants,
+                }
+            }
+        }
+        catch (err) {
+            return { status: "error", err }
+        }
+    }
+
+    /**
+     * Creates a new tenant.
+     * @param {String} name The name of the tenant.
+     * @returns The tenant.
+     */
+    async createTenant(name) {
+        const client = this._getClient()
+
+        try {
+
+            const tag = this._normaliseTenantName(name)
+
+            // Don't create a key if one already exists.
+            const exists = await client.query(q.Exists(q.Match(q.Index("tenant-by-tag"), tag)))
+            if (exists === true) return null;
+
+            const result = await client.query(
+                q.Create(
+                    q.Collection('tenants'),
+                    {
+                        data: {
+                            tag,
+                            name,
+                        }
+                    }))
+
+            console.log(result)
+
+            return {
+                status: "success",
+                name: result.data.name,
+                tag: result.data.tag,
+            }
+        }
+        catch (err) {
+            return { status: "error", err }
+        }
+    }
+
+    /**
      * Deletes a key given a tag.
      * @param {string} tenant The tenant.
      * @param {*} name The key's tag.
@@ -137,14 +233,25 @@ module.exports = class Store {
     }
 
     /**
+     * Retrieves a user given an email address. This function retrieves a user with a matching email address.
+     * @param {string} email The user's Email address.
+     * @returns The user.
+     */
+    async getUserByEmail(email) {
+        const client = this._getClient()
+        return await client.query(q.Get(q.Match(q.Index("user-by-email"), q.Casefold(email))))
+    }
+
+    /**
      * Updates a user's login timestamp. This function updates the user record with the
      * specified timestamp.
      * @param {string} ref The user's document reference.
+     * @param {string} issuer The issuer of the token - we will use that to update the user's identifier.
      * @param {int} timestamp The new timestamp.
      */
-    async updateUserLogin(ref, timestamp) {
+    async updateUserLogin(ref, issuer, timestamp) {
         const client = this._getClient()
-        await client.query(q.Update(ref, { data: { lastLoginAt: timestamp } }))
+        await client.query(q.Update(ref, { data: { id: issuer, lastLoginAt: timestamp } }))
     }
 
 
@@ -161,4 +268,16 @@ module.exports = class Store {
             domain: "db.eu.fauna.com"
         })
     }
+
+    /**
+     * Normalises a tenant name. This function converts a string to a normalised name string,
+     * removing non-alphanumeric characters, and converting spaces to dashes.
+     * @param {string} name The name string. 
+     * @returns The normalised name string.
+     */
+    _normaliseTenantName(name) {
+        if (undefined == name) return;
+        return name.replace(/[ _]/g, '-').replace(/[^0-9a-zA-Z]/g, '').toLowerCase()
+    }
+
 }

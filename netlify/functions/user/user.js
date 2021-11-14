@@ -13,7 +13,7 @@ const headers = {
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
 };
 
-const isDevelopment = console.log(process.env.NODE_ENV) || 'development'
+const isDevelopment = process.env.NODE_ENV || 'development'
 
 const handler = async (event) => {
   try {

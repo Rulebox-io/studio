@@ -7,7 +7,7 @@ export const state = () => ({
   email: null,
   firstName: null,
   lastName: null,
-  tenants: [],
+  tenants: {},
   authenticated: false,
 })
 
@@ -23,7 +23,7 @@ export const mutations = {
     state.firstName = user.firstName
     state.lastName = user.lastName
     state.email = user.email
-    state.tenants = user.tenants
+    state.tenants = { ...user.tenants }
     state.authenticated = true
   },
   CLEAR_USER_DATA(state) {
@@ -44,7 +44,7 @@ export const actions = {
     const didToken = await magic.auth.loginWithMagicLink(email)
     const { data } = await axios.post(
       `${process.env.studioApiUrl}/login`,
-      "",
+      { email: email.email },
       {
         withCredentials: true,
         headers: {
@@ -58,10 +58,11 @@ export const actions = {
     commit('SET_USER_DATA', data)
 
     // Navigate to the dashboard page.
-    if (undefined != data.tenants && data.tenants.length > 0) {
-      const tenant = data.tenants[0]
-      this.$router.push(`/${tenant}/integration/keys`)
-    }
+    if (undefined == data.tenants) return
+    const tenants = Object.keys(data.tenants)
+    if (undefined == tenants || tenants.length === 0) return
+
+    this.$router.push(`/${tenants[0]}/integration/keys`)
   },
   async logout({ commit }) {
     await axios.post(

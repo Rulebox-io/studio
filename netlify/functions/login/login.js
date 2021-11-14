@@ -15,29 +15,33 @@ const headers = {
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
 };
 
-const isDevelopment = console.log(process.env.NODE_ENV) || 'development'
+const isDevelopment = process.env.NODE_ENV || 'development'
 
 const handler = async (event) => {
   try {
     switch (event.httpMethod) {
       case "OPTIONS": { return { statusCode: 200, headers } }
-      case "POST":
-      case "GET": {
+      case "POST": {
         // Confirm that the log-in token is still valid.
         const didToken = event.headers.authorization.substring(7)
         magic.token.validate(didToken);
         const [, claim] = magic.token.decode(didToken)
 
-        // Fetch the user given the 'issuer' identifier. If this token was issued before the last log-in,
+        // Confirm that email was provided in the body.
+        const body = JSON.parse(event.body);
+        if (undefined == body.email) { return { statusCode: 400, headers, body: "Missing 'email' field" } }
+
+        // Fetch the user given the email address. If this token was issued before the last log-in,
         // it's replayed from an earlier request and invalid.
         const store = new Store(process.env.FAUNADB_SECRET);
-        const user = await store.getUser(claim.iss);
-        if (undefined != user.lastLoginAt && claim.iat <= user.lastLoginAt) {
+        const user = await store.getUserByEmail(body.email);
+        if (undefined != user.data.lastLoginAt && claim.iat <= user.data.lastLoginAt) {
           return { statusCode: 401, body: "Token is not valid - replay detected" }
         }
 
-        // Update the user's login to the timestamp of the token
-        await store.updateUserLogin(user.ref, claim.iat);
+        // Update the user's login to the timestamp of the token, and update its identifier as well
+        // (in case we didn't have the user's identifier yet)
+        await store.updateUserLogin(user.ref, claim.iss, claim.iat);
 
         // Create a JTW cookie that's a serialised user object.
         const payload = { ...(user.data), exp: Math.floor((Date.now() / 1000) + RB_SESSION_EXPIRY) }
@@ -56,6 +60,8 @@ const handler = async (event) => {
           body: JSON.stringify(user.data),
         }
       }
+
+      default: return { statusCode: 405, headers }
     }
   } catch (error) {
     return { statusCode: 500, headers, body: error.toString() }
