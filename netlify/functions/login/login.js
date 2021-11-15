@@ -2,6 +2,7 @@
 const { Magic } = require('@magic-sdk/admin')
 const jwt = require('jsonwebtoken')
 const cookie = require('cookie')
+const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-names-generator');
 const Store = require('../../../service/store/faunadb-store')
 
 const RB_SESSION_EXPIRY = 7 * 24 * 3600 // 7 days, in seconds.
@@ -31,12 +32,24 @@ const handler = async (event) => {
         const body = JSON.parse(event.body);
         if (undefined == body.email) { return { statusCode: 400, headers, body: "Missing 'email' field" } }
 
-        // Fetch the user given the email address. If this token was issued before the last log-in,
-        // it's replayed from an earlier request and invalid.
+        // Fetch the user given the email address. 
         const store = new Store(process.env.FAUNADB_SECRET);
-        const user = await store.getUserByEmail(body.email);
-        if (undefined != user.data.lastLoginAt && claim.iat <= user.data.lastLoginAt) {
-          return { statusCode: 401, body: "Token is not valid - replay detected" }
+        let user = await store.getUserByEmail(body.email);
+
+        if (user) {
+          // If the provided token was issued before the last log-in,
+          // it's replayed from an earlier request and invalid.
+          if (undefined != user.data.lastLoginAt && claim.iat <= user.data.lastLoginAt) {
+            return { statusCode: 401, body: "Token is not valid - replay detected" }
+          }
+        } else {
+          // The user doesn't exist in our database.
+          // OPTION 1: Create a user record, with a random tenant, if the user doesn't exist.
+          // TODO check if exists... repeat
+          const randomName = uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals], separator: ' ', style: 'capital' });
+          const tenant = await store.createTenant(randomName)
+          if (!tenant || tenant.status != "success") { return { statusCode: 500, headers, body: `Could not create tenant ${randomName}` } }
+          user = await store.signupUser(body.email, tenant.tag)
         }
 
         // Update the user's login to the timestamp of the token, and update its identifier as well
@@ -64,6 +77,7 @@ const handler = async (event) => {
       default: return { statusCode: 405, headers }
     }
   } catch (error) {
+    console.error(error)
     return { statusCode: 500, headers, body: error.toString() }
   }
 }

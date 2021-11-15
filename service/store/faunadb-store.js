@@ -101,9 +101,12 @@ module.exports = class Store {
 
                 return {
                     status: "success",
-                    email: result.data.email,
-                    id: result.data.id,
-                    tenants: result.data.tenants,
+                    ref: result.ref,
+                    data: {
+                        email: result.data.email,
+                        id: result.data.id,
+                        tenants: result.data.tenants
+                    }
                 }
             } else {
                 // This is an existing user. We update its tenant membership
@@ -115,9 +118,12 @@ module.exports = class Store {
 
                 return {
                     status: "success",
-                    email: existing.data.email,
-                    id: existing.data.id,
-                    tenants,
+                    ref: existing.ref,
+                    data: {
+                        email: existing.data.email,
+                        id: existing.data.id,
+                        tenants
+                    }
                 }
             }
         }
@@ -134,34 +140,26 @@ module.exports = class Store {
     async createTenant(name) {
         const client = this._getClient()
 
-        try {
+        const tag = this._normaliseTenantName(name)
 
-            const tag = this._normaliseTenantName(name)
+        // Don't create a key if one already exists.
+        const exists = await client.query(q.Exists(q.Match(q.Index("tenant-by-tag"), tag)))
+        if (exists === true) return null;
 
-            // Don't create a key if one already exists.
-            const exists = await client.query(q.Exists(q.Match(q.Index("tenant-by-tag"), tag)))
-            if (exists === true) return null;
+        const result = await client.query(
+            q.Create(
+                q.Collection('tenants'),
+                {
+                    data: {
+                        tag,
+                        name,
+                    }
+                }))
 
-            const result = await client.query(
-                q.Create(
-                    q.Collection('tenants'),
-                    {
-                        data: {
-                            tag,
-                            name,
-                        }
-                    }))
-
-            console.log(result)
-
-            return {
-                status: "success",
-                name: result.data.name,
-                tag: result.data.tag,
-            }
-        }
-        catch (err) {
-            return { status: "error", err }
+        return {
+            status: "success",
+            name: result.data.name,
+            tag: result.data.tag,
         }
     }
 
@@ -229,7 +227,27 @@ module.exports = class Store {
      */
     async getUser(id) {
         const client = this._getClient()
-        return await client.query(q.Get(q.Match(q.Index("user-by-id"), id)))
+
+        const result = await client.query(
+            q.Let(
+                {
+                    ref: q.Match(q.Index("user-by-id"), id),
+                },
+                q.If(
+                    q.Exists(q.Var('ref')),
+                    {
+                        status: 'success',
+                        data: q.Get(q.Var('ref'))
+                    },
+                    {
+                        status: 'not-found',
+                        code: 404
+                    }
+                )
+            ))
+
+        if (result.status == 'success') return result.data;
+        return null;
     }
 
     /**
@@ -239,7 +257,27 @@ module.exports = class Store {
      */
     async getUserByEmail(email) {
         const client = this._getClient()
-        return await client.query(q.Get(q.Match(q.Index("user-by-email"), q.Casefold(email))))
+
+        const result = await client.query(
+            q.Let(
+                {
+                    ref: q.Match(q.Index("user-by-email"), q.Casefold(email)),
+                },
+                q.If(
+                    q.Exists(q.Var('ref')),
+                    {
+                        status: 'success',
+                        data: q.Get(q.Var('ref'))
+                    },
+                    {
+                        status: 'not-found',
+                        code: 404
+                    }
+                )
+            ))
+
+        if (result.status == 'success') return result.data;
+        return null;
     }
 
     /**

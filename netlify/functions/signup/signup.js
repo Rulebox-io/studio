@@ -26,7 +26,7 @@ const handler = async (event) => {
         // Return the user.
         return {
           statusCode: 200,
-          body: JSON.stringify(user),
+          body: JSON.stringify(user.data),
         }
       }
 
