@@ -8,8 +8,7 @@
             font-medium
             text-gray-700
             group-hover:text-gray-900
-            dark:text-gray-300
-            dark:group-hover:text-gray-100
+            dark:text-gray-300 dark:group-hover:text-gray-100
             truncate
           "
         >
@@ -39,13 +38,13 @@
               dark:group-hover:text-gray-300
             "
           >
-            <span class="font-mono">{{ id }}</span>
+            <span class="font-mono">{{ tag }}</span>
           </p>
         </div>
         <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
           <p>
             Last modified on
-            <time datetime="2020-01-07">January 7, 2020</time
+            <time :datetime="lastModified">{{ lastModified }}</time
             ><!-- hard coded -->
           </p>
         </div>
@@ -61,10 +60,10 @@ export default {
   props: { entity: { type: Object, required: true } },
   computed: {
     display() {
-      return this.entity && this.entity.display_name
+      return this.entity && this.entity.name
     },
-    id() {
-      return this.entity && this.entity.id
+    tag() {
+      return this.entity && this.entity.tag
     },
     revision() {
       if (!this.entity || !this.entity.revision) return
@@ -73,6 +72,10 @@ export default {
     status() {
       if (!this.entity || !this.entity.revision) return
       return this.entity.revision.status
+    },
+    lastModified() {
+      if (!this.entity || !this.entity.revision) return
+      return this.entity.revision.last_modified_on
     },
   },
 }

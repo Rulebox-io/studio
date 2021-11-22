@@ -220,6 +220,56 @@ module.exports = class Store {
         return results;
     }
 
+    async getEntities(tenant) {
+        const client = this._getClient()
+
+        const result = await client.query(
+            q.Map(
+                q.Paginate(q.Match(q.Index("entities-by-tenant"), q.Casefold(tenant))),
+                q.Lambda(
+                    "entityRef",
+                    q.Let(
+                        {
+                            entityDoc: q.Get(q.Var("entityRef"))
+                        },
+                        q.Let(
+                            {
+                                headDoc: q.Get(q.Select(["data", "head"], q.Var("entityDoc")))
+                            },
+                            {
+                                ref: q.Select("ref", q.Var("entityDoc")),
+                                name: q.Select(["data", "name"], q.Var("entityDoc")),
+                                tag: q.Select(["data", "tag"], q.Var("entityDoc")),
+                                labels: q.Select(["data", "labels"], q.Var("entityDoc")),
+                                revision: q.Select(["data", "revision"], q.Var("headDoc")),
+                                status: q.Select(["data", "status"], q.Var("headDoc")),
+                                edited_by: q.Select(["data", "edited_by"], q.Var("headDoc")),
+                                published_by: q.Select(["data", "published_by"], q.Var("headDoc")),
+                                last_modified_on: q.Select("ts", q.Var("headDoc"))
+                            }
+                        )
+                    )
+                )
+            )
+        )
+
+        if (!result || !result.data || !Array.isArray(result.data)) return null
+
+        return result.data.map(e => ({
+            id: e.ref.id,
+            name: e.name,
+            tag: e.tag,
+            labels: e.labels,
+            revision: {
+                revision: e.revision,
+                status: e.status,
+                edited_by: e.edited_by,
+                published_by: e.published_by,
+                last_modified_on: moment(e.last_modified_on / 1000).format("YYYY-MM-DD")
+            },
+        }))
+    }
+
     /**
      * Retrieves a user. This function retrieves a user with a matching identifier.
      * @param {string} id The user's identifier.

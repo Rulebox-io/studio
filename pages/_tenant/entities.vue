@@ -1,8 +1,18 @@
 <template>
   <div>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-      <h1 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+    <div class="max-w-7xl my-4 mx-auto px-4 sm:px-6 md:px-8">
+      <h1
+        class="
+          flex
+          items-center
+          text-2xl
+          font-semibold
+          text-gray-900
+          dark:text-gray-100
+        "
+      >
         Entities
+        <Button class="ml-auto" @click="newEntity">Create entity</Button>
       </h1>
     </div>
     <div
@@ -14,10 +24,11 @@
   </div>
 </template>
 <script>
+import Button from '@/components/common/Button'
 import EntityList from '@/components/entities/EntityList'
 
 export default {
-  components: { EntityList },
+  components: { Button, EntityList },
   middleware: 'magicauth',
   data() {
     return {
@@ -28,7 +39,7 @@ export default {
     try {
       const { $axios } = this.$nuxt.context
       const { data } = await $axios.get(
-        `${process.env.studioApiUrl}/api/${this.$route.params.tenant}/entity`
+        `${process.env.studioApiUrl}/entity?tenant=${this.$route.params.tenant}`
       )
       this.entities = data
       console.log(data)
@@ -36,6 +47,11 @@ export default {
       console.log('ERR')
       console.log(err)
     }
+  },
+  methods: {
+    newEntity() {
+      // COmmit to a new entity.
+    },
   },
 }
 </script>
