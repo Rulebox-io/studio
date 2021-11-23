@@ -241,11 +241,14 @@ module.exports = class Store {
                                 name: q.Select(["data", "name"], q.Var("entityDoc")),
                                 tag: q.Select(["data", "tag"], q.Var("entityDoc")),
                                 labels: q.Select(["data", "labels"], q.Var("entityDoc")),
-                                revision: q.Select(["data", "revision"], q.Var("headDoc")),
-                                status: q.Select(["data", "status"], q.Var("headDoc")),
-                                edited_by: q.Select(["data", "edited_by"], q.Var("headDoc")),
-                                published_by: q.Select(["data", "published_by"], q.Var("headDoc")),
-                                last_modified_on: q.Select("ts", q.Var("headDoc"))
+                                revision: {
+                                    ref: q.Select("ref", q.Var("headDoc")),
+                                    revision: q.Select(["data", "revision"], q.Var("headDoc")),
+                                    status: q.Select(["data", "status"], q.Var("headDoc")),
+                                    edited_by: q.Select(["data", "edited_by"], q.Var("headDoc")),
+                                    published_by: q.Select(["data", "published_by"], q.Var("headDoc")),
+                                    last_modified_on: q.Select("ts", q.Var("headDoc"))
+                                }
                             }
                         )
                     )
@@ -261,13 +264,65 @@ module.exports = class Store {
             tag: e.tag,
             labels: e.labels,
             revision: {
-                revision: e.revision,
-                status: e.status,
-                edited_by: e.edited_by,
-                published_by: e.published_by,
-                last_modified_on: moment(e.last_modified_on / 1000).format("YYYY-MM-DD")
+                id: e.revision.ref.id,
+                revision: e.revision.revision,
+                status: e.revision.status,
+                edited_by: e.revision.edited_by,
+                published_by: e.revision.published_by,
+                last_modified_on: moment(e.revision.last_modified_on / 1000).format("YYYY-MM-DD")
             },
         }))
+    }
+
+    /**
+     * Retrieves an entity given an entity identifier.
+     * @param {string} id The entity identifier.
+     * @returns The entity.
+     */
+    async getEntity(id) {
+        const client = this._getClient()
+
+        const result = await client.query(
+            q.Let(
+                {
+                    revisionRef: q.Ref(q.Collection("entity-revisions"), id)
+                },
+                q.If(
+                    q.Exists(q.Var("revisionRef")),
+                    q.Let(
+                        { revisionDoc: q.Get(q.Var("revisionRef")) },
+                        q.Let(
+                            {
+                                entityDoc: q.Get(q.Select(["data", "entity"], q.Var("revisionDoc")))
+                            },
+                            {
+                                status: "success",
+                                data: {
+                                    id: q.Select(["ref", "id"], q.Var("entityDoc")),
+                                    name: q.Select(["data", "name"], q.Var("entityDoc")),
+                                    tag: q.Select(["data", "tag"], q.Var("entityDoc")),
+                                    labels: q.Select(["data", "labels"], q.Var("entityDoc")),
+                                    revision: {
+                                        id: q.Select(["ref", "id"], q.Var("revisionDoc")),
+                                        revision: q.Select(["data", "revision"], q.Var("revisionDoc")),
+                                        status: q.Select(["data", "status"], q.Var("revisionDoc")),
+                                        edited_by: q.Select(["data", "edited_by"], q.Var("revisionDoc")),
+                                        published_by: q.Select(["data", "published_by"], q.Var("revisionDoc")),
+                                        definition: q.Select(["data", "definition"], q.Var("revisionDoc"))
+                                    }
+                                }
+                            }
+                        )
+                    ),
+                    {
+                        status: "not-found"
+                    }
+                )
+            )
+        )
+
+        if (result.status == 'success') return result.data;
+        return null;
     }
 
     /**

@@ -13,6 +13,7 @@ const handler = async (event) => {
 
     // Get the tenant from the route /entity/:tenant
     const tenant = event.queryStringParameters.tenant;
+    const id = event.queryStringParameters.id;
 
     console.log(`Invoking ${event.httpMethod} entity/${tenant}`)
 
@@ -21,13 +22,26 @@ const handler = async (event) => {
 
     switch (event.httpMethod) {
       case "GET": {
-        let entities = await store.getEntities(tenant)
-        if (!entities) entities = []
+        if (!id) {
+          // No ID was specified so we fetch entity header records.
+          let entities = await store.getEntities(tenant)
+          if (!entities) entities = []
 
-        return {
-          statusCode: 200,
-          headers,
-          body: JSON.stringify(entities),
+          return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify(entities),
+          }
+        } else {
+          // We fetch a single entity revision.
+          const entity = await store.getEntity(id)
+          if (!entity) { return { statusCode: 404, headers } }
+
+          return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify(entity),
+          }
         }
       }
 
