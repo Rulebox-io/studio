@@ -1,0 +1,121 @@
+Delete(Index("entity-by-revision"))
+
+CreateIndex({
+  name: "entity-by-revision",
+  source: {
+    collection: Collection("entity-revisions"),
+  },
+  terms: [
+    { field: ["data", "entity"] },
+    { field: ["data", "revision"] }
+  ],
+  values: [
+    { field: "ref" }
+  ],
+  unique: true
+}
+)
+
+Delete(Index("entity-by-tag"))
+
+CreateIndex({
+  name: "entity-by-tag",
+  source: {
+    collection: Collection("entities"),
+  },
+  terms: [
+    { field: ["data", "tag"] }
+  ],
+  values: [
+    { field: "ref" }
+  ],
+  unique: true
+}
+)
+
+Paginate(Match(Index("entity-by-tag"), "invoice"))
+
+Paginate(Match(Index("entity-by-revision"), [Ref(Collection("entities"), "315401292783550663"), 2]))
+
+// Get an entity by tag and revision
+Let(
+  {
+    entityRef: Match(Index("entity-by-tag"), "invoice")
+  },  
+  If(
+    Exists(Var("entityRef")),
+    Let(
+      {
+        entityDoc: Get(Var("entityRef")),
+        revisionRef: Match(Index("entity-by-revision"), [Select("ref", Var("entityDoc")), 1])
+      },
+      If(
+        Exists(Var("revisionRef")),
+        Let(
+          {
+            revisionDoc: Get(Var("revisionRef"))
+          },
+          {
+            status: "success",
+            data: {
+                id: Select(["ref", "id"], Var("entityDoc")),
+                name: Select(["data", "name"], Var("entityDoc")),
+                tag: Select(["data", "tag"], Var("entityDoc")),
+                labels: Select(["data", "labels"], Var("entityDoc")),
+                revision: {
+                    id: Select(["ref", "id"], Var("revisionDoc")),
+                    revision: Select(["data", "revision"], Var("revisionDoc")),
+                    status: Select(["data", "status"], Var("revisionDoc")),
+                    edited_by: Select(["data", "edited_by"], Var("revisionDoc")),
+                    published_by: Select(["data", "published_by"], Var("revisionDoc")),
+                    definition: Select(["data", "definition"], Var("revisionDoc"))
+                }
+            }
+          }
+        ),
+        {
+          status: "not-found"
+        }
+      )
+    ),
+    {
+      status: "not-found"
+    }
+  )
+)
+
+// Get an entity's head revision given a tag.
+Let(
+  {
+    entityRef: Match(Index("entity-by-tag"), "invoice")
+  },  
+  If(
+    Exists(Var("entityRef")),
+    Let(
+      {
+        entityDoc: Get(Var("entityRef")),
+        revisionDoc: Get(Select(["data", "head"], Var("entityDoc")))
+      },
+      {
+        status: "success",
+        data: {
+            id: Select(["ref", "id"], Var("entityDoc")),
+            name: Select(["data", "name"], Var("entityDoc")),
+            tag: Select(["data", "tag"], Var("entityDoc")),
+            labels: Select(["data", "labels"], Var("entityDoc")),
+            revision: {
+                id: Select(["ref", "id"], Var("revisionDoc")),
+                revision: Select(["data", "revision"], Var("revisionDoc")),
+                status: Select(["data", "status"], Var("revisionDoc")),
+                edited_by: Select(["data", "edited_by"], Var("revisionDoc")),
+                published_by: Select(["data", "published_by"], Var("revisionDoc")),
+                definition: Select(["data", "definition"], Var("revisionDoc"))
+            }
+        }
+      }
+    ),
+    {
+      status: "not-found"
+    }
+  )
+)

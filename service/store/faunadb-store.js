@@ -326,6 +326,116 @@ module.exports = class Store {
     }
 
     /**
+     * Retrieves an entity given its tag and a revision number.
+     * @param {string} tag The entity's tag.
+     * @param {number} tevision The entity revision number.
+     * @returns The entity.
+     */
+    async getEntityByTagAndRevision(tag, revision) {
+        const client = this._getClient()
+
+        const result = await client.query(
+            q.Let(
+                {
+                    entityRef: q.Match(q.Index("entity-by-tag"), tag)
+                },
+                q.If(
+                    q.Exists(q.Var("entityRef")),
+                    q.Let(
+                        {
+                            entityDoc: q.Get(q.Var("entityRef")),
+                            revisionRef: q.Match(q.Index("entity-by-revision"), [q.Select("ref", q.Var("entityDoc")), revision])
+                        },
+                        q.If(
+                            q.Exists(q.Var("revisionRef")),
+                            q.Let(
+                                {
+                                    revisionDoc: q.Get(q.Var("revisionRef"))
+                                },
+                                {
+                                    status: "success",
+                                    data: {
+                                        id: q.Select(["ref", "id"], q.Var("entityDoc")),
+                                        name: q.Select(["data", "name"], q.Var("entityDoc")),
+                                        tag: q.Select(["data", "tag"], q.Var("entityDoc")),
+                                        labels: q.Select(["data", "labels"], q.Var("entityDoc")),
+                                        revision: {
+                                            id: q.Select(["ref", "id"], q.Var("revisionDoc")),
+                                            revision: q.Select(["data", "revision"], q.Var("revisionDoc")),
+                                            status: q.Select(["data", "status"], q.Var("revisionDoc")),
+                                            edited_by: q.Select(["data", "edited_by"], q.Var("revisionDoc")),
+                                            published_by: q.Select(["data", "published_by"], q.Var("revisionDoc")),
+                                            definition: q.Select(["data", "definition"], q.Var("revisionDoc"))
+                                        }
+                                    }
+                                }
+                            ),
+                            {
+                                status: "not-found"
+                            }
+                        )
+                    ),
+                    {
+                        status: "not-found"
+                    }
+                )
+            )
+        )
+
+        if (result.status == 'success') return result.data;
+        return null;
+    }
+
+    /**
+     * Retrieves an entity's HEAD revision, given its tag.
+     * @param {string} tag The entity's tag.
+     * @returns The entity.
+     */
+    async getEntityByTag(tag) {
+        const client = this._getClient()
+
+        const result = await client.query(
+            q.Let(
+                {
+                    entityRef: q.Match(q.Index("entity-by-tag"), tag)
+                },
+                q.If(
+                    q.Exists(q.Var("entityRef")),
+                    q.Let(
+                        {
+                            entityDoc: q.Get(q.Var("entityRef")),
+                            revisionDoc: q.Get(q.Select(["data", "head"], q.Var("entityDoc")))
+                        },
+                        {
+                            status: "success",
+                            data: {
+                                id: q.Select(["ref", "id"], q.Var("entityDoc")),
+                                name: q.Select(["data", "name"], q.Var("entityDoc")),
+                                tag: q.Select(["data", "tag"], q.Var("entityDoc")),
+                                labels: q.Select(["data", "labels"], q.Var("entityDoc")),
+                                revision: {
+                                    id: q.Select(["ref", "id"], q.Var("revisionDoc")),
+                                    revision: q.Select(["data", "revision"], q.Var("revisionDoc")),
+                                    status: q.Select(["data", "status"], q.Var("revisionDoc")),
+                                    edited_by: q.Select(["data", "edited_by"], q.Var("revisionDoc")),
+                                    published_by: q.Select(["data", "published_by"], q.Var("revisionDoc")),
+                                    definition: q.Select(["data", "definition"], q.Var("revisionDoc"))
+                                }
+                            }
+                        }
+                    ),
+                    {
+                        status: "not-found"
+                    }
+                )
+            )
+        )
+
+        if (result.status == 'success') return result.data;
+        return null;
+    }
+
+    /**
      * Retrieves a user. This function retrieves a user with a matching identifier.
      * @param {string} id The user's identifier.
      * @returns The user.
