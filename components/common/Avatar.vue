@@ -1,29 +1,28 @@
 <template>
-  <div>
+  <span>
     <img
       v-if="url"
       class="inline-block h-10 md:h-9 w-10 md:w-9 rounded-full"
       :src="url"
       alt="Profile image"
     />
-    <div
+    <span
       v-else
       class="
-        inline-block
+        inline-flex
         h-10
         md:h-9
         w-10
         md:w-9
         rounded-full
-        flex
         items-center
         justify-center
       "
       :style="avatarStyle"
     >
       <span class="font-medium leading-none text-white">{{ initials }}</span>
-    </div>
-  </div>
+    </span>
+  </span>
 </template>
 <script>
 export default {

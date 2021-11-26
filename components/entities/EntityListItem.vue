@@ -1,34 +1,18 @@
 <template>
-  <a href="#" class="group block hover:bg-gray-50 dark:hover:bg-gray-800">
+  <NuxtLink
+    :to="link"
+    class="group block hover:bg-gray-50 dark:hover:bg-gray-800"
+  >
     <div class="px-4 py-4 sm:px-6">
-      <div class="flex items-center justify-between">
-        <p
-          class="
-            text-sm
-            font-medium
-            text-gray-700
-            group-hover:text-gray-900
-            dark:text-gray-300 dark:group-hover:text-gray-100
-            truncate
-          "
-        >
-          {{ display }}
-          <Badge
-            class="
-              ml-2
-              bg-transparent
-              text-blue-500
-              border-solid border-2 border-blue-500
-            "
-            >{{ revision }}</Badge
-          >
-        </p>
-        <div class="ml-2 flex-shrink-0 flex">
-          <Badge class="bg-green-100 text-green-800">{{ status }}</Badge>
-        </div>
-      </div>
+      <EntityRevision :entity="entity" :revision="latest"></EntityRevision>
+      <EntityRevision
+        v-if="hasRecentDraft"
+        :entity="entity"
+        :revision="head"
+      ></EntityRevision>
+
       <div class="mt-2 sm:flex sm:justify-between">
-        <div class="sm:flex">
+        <div class="flex items-center">
           <p
             class="
               flex
@@ -40,42 +24,49 @@
           >
             <span class="font-mono">{{ tag }}</span>
           </p>
-        </div>
-        <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-          <p>
-            Last modified on
-            <time :datetime="lastModified">{{ lastModified }}</time
-            ><!-- hard coded -->
-          </p>
+          <Badge
+            v-for="label in entity.labels"
+            :key="label"
+            class="
+              ml-2
+              border border-gray-300
+              bg-white
+              text-gray-700
+              dark:border-transparent dark:bg-gray-600 dark:text-white
+            "
+          >
+            {{ label }}
+          </Badge>
         </div>
       </div>
     </div>
-  </a>
+  </NuxtLink>
 </template>
 <script>
 import Badge from '@/components/common/Badge'
+import EntityRevision from './EntityRevision.vue'
 
 export default {
-  components: { Badge },
+  components: { Badge, EntityRevision },
   props: { entity: { type: Object, required: true } },
   computed: {
-    display() {
-      return this.entity && this.entity.name
+    hasRecentDraft() {
+      if (!this.entity.latest || !this.entity.head) return
+
+      return this.entity.latest.revision !== this.entity.head.revision
+    },
+    link() {
+      if (!this.entity.head) return
+      return `/${this.$route.params.tenant}/entity/${this.entity.tag}/${this.entity.head.revision}`
     },
     tag() {
-      return this.entity && this.entity.tag
+      return this.entity.tag
     },
-    revision() {
-      if (!this.entity || !this.entity.revision) return
-      return `Rev ${this.entity.revision.revision}`
+    latest() {
+      return this.entity.latest
     },
-    status() {
-      if (!this.entity || !this.entity.revision) return
-      return this.entity.revision.status
-    },
-    lastModified() {
-      if (!this.entity || !this.entity.revision) return
-      return this.entity.revision.last_modified_on
+    head() {
+      return this.entity.head
     },
   },
 }

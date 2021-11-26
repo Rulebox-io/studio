@@ -5,9 +5,9 @@
       items-center
       px-2.5
       py-0.5
-      rounded-full
-      text-xs
+      rounded-lg
       font-medium
+      border-solid border-2
     "
   >
     <slot />

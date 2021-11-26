@@ -31,7 +31,7 @@ export default {
   computed: {
     buttonStyle() {
       return this.secondary === true
-        ? 'border-gray-300 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200'
+        ? 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 dark:border-transparent dark:bg-gray-600 dark:text-white dark:hover:bg-gray-700'
         : 'border-transparent bg-rulebox-600 hover:bg-rulebox-700 text-white'
     },
   },

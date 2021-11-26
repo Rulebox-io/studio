@@ -234,15 +234,24 @@ module.exports = class Store {
                         },
                         q.Let(
                             {
-                                headDoc: q.Get(q.Select(["data", "head"], q.Var("entityDoc")))
+                                headDoc: q.Get(q.Select(["data", "head"], q.Var("entityDoc"))),
+                                latestDoc: q.Get(q.Select(["data", "latest"], q.Var("entityDoc")))
                             },
                             {
-                                ref: q.Select("ref", q.Var("entityDoc")),
+                                id: q.Select(["ref", "id"], q.Var("entityDoc")),
                                 name: q.Select(["data", "name"], q.Var("entityDoc")),
                                 tag: q.Select(["data", "tag"], q.Var("entityDoc")),
                                 labels: q.Select(["data", "labels"], q.Var("entityDoc")),
-                                revision: {
-                                    ref: q.Select("ref", q.Var("headDoc")),
+                                latest: {
+                                    id: q.Select(["ref", "id"], q.Var("latestDoc")),
+                                    revision: q.Select(["data", "revision"], q.Var("latestDoc")),
+                                    status: q.Select(["data", "status"], q.Var("latestDoc")),
+                                    edited_by: q.Select(["data", "edited_by"], q.Var("latestDoc")),
+                                    published_by: q.Select(["data", "published_by"], q.Var("latestDoc")),
+                                    last_modified_on: q.Select("ts", q.Var("latestDoc"))
+                                },
+                                head: {
+                                    id: q.Select(["ref", "id"], q.Var("headDoc")),
                                     revision: q.Select(["data", "revision"], q.Var("headDoc")),
                                     status: q.Select(["data", "status"], q.Var("headDoc")),
                                     edited_by: q.Select(["data", "edited_by"], q.Var("headDoc")),
@@ -259,18 +268,9 @@ module.exports = class Store {
         if (!result || !result.data || !Array.isArray(result.data)) return null
 
         return result.data.map(e => ({
-            id: e.ref.id,
-            name: e.name,
-            tag: e.tag,
-            labels: e.labels,
-            revision: {
-                id: e.revision.ref.id,
-                revision: e.revision.revision,
-                status: e.revision.status,
-                edited_by: e.revision.edited_by,
-                published_by: e.revision.published_by,
-                last_modified_on: moment(e.revision.last_modified_on / 1000).format("YYYY-MM-DD")
-            },
+            ...e,
+            latest: { ...e.latest, last_modified_on: moment(e.latest.last_modified_on / 1000).format("YYYY-MM-DD") },
+            head: { ...e.head, last_modified_on: moment(e.head.last_modified_on / 1000).format("YYYY-MM-DD") }
         }))
     }
 
@@ -308,7 +308,8 @@ module.exports = class Store {
                                         status: q.Select(["data", "status"], q.Var("revisionDoc")),
                                         edited_by: q.Select(["data", "edited_by"], q.Var("revisionDoc")),
                                         published_by: q.Select(["data", "published_by"], q.Var("revisionDoc")),
-                                        definition: q.Select(["data", "definition"], q.Var("revisionDoc"))
+                                        definition: q.Select(["data", "definition"], q.Var("revisionDoc")),
+                                        last_modified_on: q.Select("ts", q.Var("revisionDoc"))
                                     }
                                 }
                             }
@@ -321,8 +322,14 @@ module.exports = class Store {
             )
         )
 
-        if (result.status == 'success') return result.data;
-        return null;
+        if (result.status != 'success') return
+        return {
+            ...result.data,
+            revision: {
+                ...result.data.revision,
+                last_modified_on: moment(result.data.revision.last_modified_on / 1000).format("YYYY-MM-DD")
+            }
+        }
     }
 
     /**
@@ -365,7 +372,8 @@ module.exports = class Store {
                                             status: q.Select(["data", "status"], q.Var("revisionDoc")),
                                             edited_by: q.Select(["data", "edited_by"], q.Var("revisionDoc")),
                                             published_by: q.Select(["data", "published_by"], q.Var("revisionDoc")),
-                                            definition: q.Select(["data", "definition"], q.Var("revisionDoc"))
+                                            definition: q.Select(["data", "definition"], q.Var("revisionDoc")),
+                                            last_modified_on: q.Select("ts", q.Var("revisionDoc"))
                                         }
                                     }
                                 }
@@ -382,8 +390,14 @@ module.exports = class Store {
             )
         )
 
-        if (result.status == 'success') return result.data;
-        return null;
+        if (result.status != 'success') return
+        return {
+            ...result.data,
+            revision: {
+                ...result.data.revision,
+                last_modified_on: moment(result.data.revision.last_modified_on / 1000).format("YYYY-MM-DD")
+            }
+        }
     }
 
     /**
@@ -419,7 +433,8 @@ module.exports = class Store {
                                     status: q.Select(["data", "status"], q.Var("revisionDoc")),
                                     edited_by: q.Select(["data", "edited_by"], q.Var("revisionDoc")),
                                     published_by: q.Select(["data", "published_by"], q.Var("revisionDoc")),
-                                    definition: q.Select(["data", "definition"], q.Var("revisionDoc"))
+                                    definition: q.Select(["data", "definition"], q.Var("revisionDoc")),
+                                    last_modified_on: q.Select("ts", q.Var("revisionDoc"))
                                 }
                             }
                         }
@@ -431,8 +446,14 @@ module.exports = class Store {
             )
         )
 
-        if (result.status == 'success') return result.data;
-        return null;
+        if (result.status != 'success') return
+        return {
+            ...result.data,
+            revision: {
+                ...result.data.revision,
+                last_modified_on: moment(result.data.revision.last_modified_on / 1000).format("YYYY-MM-DD")
+            }
+        }
     }
 
     /**
