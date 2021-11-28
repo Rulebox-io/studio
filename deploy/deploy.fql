@@ -119,3 +119,78 @@ Let(
     }
   )
 )
+
+// Update a revision
+Let(
+  {
+    revisionRef: Ref(Collection("entity-revisions"), "316309357286392000")
+  },
+  If(
+    Exists(Var("revisionRef")),
+    Let(
+      { revisionDoc: Get(Var("revisionRef")) },
+      If(
+        GTE(1638126431930000, Select(["ts"], Var("revisionDoc"))),
+        Let(
+          { entityDoc: Get(Select(["data", "entity"], Var("revisionDoc"))) },
+          If(
+            Equals(Var("revisionRef"), Select(["data","latest"], Var("entityDoc"))),
+            If(
+              Equals("published", Select(["data", "status"], Var("revisionDoc"))),
+              Let(
+                {
+                  createdResult: Create(
+                    Collection("entity-revisions"),
+                    {
+                      data: {
+                        "entity": Select(["ref"], Var("entityDoc")),
+                        "revision": Add(1, Select(["data", "revision"], Var("revisionDoc"))),
+                        "status": "draft",
+                        "edited_by": "",
+                        "published_by": "",
+                        "definition": "CREATED"                        
+                      }
+                    }
+                  ),
+                  updateResult: Update(Select(["ref"], Var("entityDoc")), { data: { latest: Select("ref", Var("createdResult")) } }), 
+                },
+                {
+                  "status": "success",
+                  "data": {
+                    "id": Select(["ref", "id"], Var("createdResult")),
+                    "last_modified_on": Select("ts", q.Var("createdResult"))
+                    // Return ref and revision
+                    // Needs to say CREATE
+                  }
+                }
+              ),
+              Let(
+                { updateResult: Update(Var("revisionRef"), { data: { definition: "UPDATED" } } ) },
+                {
+                  "status": "success",
+                  "data": {
+                    "id": Select(["ref", "id"], Var("updateResult")),
+                    "last_modified_on": Select("ts", q.Var("updateResult"))
+                    // Return ref and revision
+                    // Needs to say UPDATE
+                  }
+                }
+              )
+            ),
+            {
+              "status": "precondition-failed",
+              "message": "newer revision available"
+            }
+          )
+        ),
+        {
+          "status": "precondition-failed",
+          "message": "The entity was already modified by someone else."
+        }
+      )
+    ),
+    {
+      status: "not-found"
+    }
+  )
+)

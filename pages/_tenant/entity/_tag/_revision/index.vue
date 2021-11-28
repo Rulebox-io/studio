@@ -128,11 +128,37 @@
             >
               <h2
                 id="definition-title"
-                class="text-lg font-medium text-gray-900 dark:text-gray-100"
+                class="
+                  text-lg
+                  font-medium
+                  text-gray-900
+                  dark:text-gray-100
+                  flex
+                  items-center
+                "
               >
                 Definition
+                <Button v-if="!isEditing" class="ml-auto" @click="startEditing">
+                  <PencilIcon class="h-5 w-5 mr-3"></PencilIcon>
+                  Edit
+                </Button>
+                <Button
+                  v-if="isEditing"
+                  :secondary="true"
+                  class="ml-auto"
+                  @click="abandonChanges"
+                >
+                  <XCircleIcon class="w-5 h-5 mr-3"></XCircleIcon>
+                  Cancel
+                </Button>
+                <Button v-if="isEditing" class="ml-1.5" @click="saveDraft">
+                  <SaveIcon class="h-5 w-5 mr-3"></SaveIcon>
+                  Save draft
+                </Button>
               </h2>
               <pre
+                ref="definitionEditor"
+                :contenteditable="isEditing"
                 class="
                   border border-gray-200
                   dark:border-gray-700
@@ -188,7 +214,7 @@
                     rounded-md
                   "
                 >
-                  <CubeIcon class="inline-block h-5 w-5"></CubeIcon>
+                  <CubeIcon class="inline-block h-5 w-5 mr-1.5"></CubeIcon>
                   Invoice
                   <Badge
                     class="
@@ -247,7 +273,7 @@
                     rounded-md
                   "
                 >
-                  <CubeIcon class="inline-block h-5 w-5"></CubeIcon>
+                  <CubeIcon class="inline-block h-5 w-5 mr-1.5"></CubeIcon>
                   Invoice
                   <Badge
                     class="
@@ -297,8 +323,10 @@
                 hover:bg-red-700
                 mt-5
               "
-              >Delete revision</Button
             >
+              <TrashIcon class="w-5 h-5 mr-3"></TrashIcon>
+              Delete revision
+            </Button>
           </section>
         </div>
       </div>
@@ -307,14 +335,29 @@
 </template>        
 <script>
 import Avatar from '@/components/common/Avatar.vue'
-import ChevronRightIcon from '@/components/heroIcons/solid/ChevronRight'
-import CubeIcon from '@/components/heroIcons/outline/CubeIcon'
 import Button from '@/components/common/Button.vue'
 import Badge from '@/components/common/Badge.vue'
 import Label from '@/components/common/Label.vue'
+import ChevronRightIcon from '@/components/heroIcons/solid/ChevronRight'
+import CubeIcon from '@/components/heroIcons/outline/CubeIcon'
+import PencilIcon from '@/components/heroIcons/solid/PencilIcon.vue'
+import SaveIcon from '@/components/heroIcons/solid/SaveIcon.vue'
+import TrashIcon from '@/components/heroIcons/solid/TrashIcon.vue'
+import XCircleIcon from '@/components/heroIcons/solid/XCircleIcon.vue'
 
 export default {
-  components: { Avatar, Badge, Button, ChevronRightIcon, CubeIcon, Label },
+  components: {
+    Avatar,
+    Badge,
+    Button,
+    ChevronRightIcon,
+    CubeIcon,
+    Label,
+    PencilIcon,
+    SaveIcon,
+    TrashIcon,
+    XCircleIcon,
+  },
   middleware: 'magicauth',
   data() {
     return {
@@ -326,6 +369,7 @@ export default {
       revision: null,
       status: null,
       definition: null,
+      isEditing: false,
     }
   },
 
@@ -354,6 +398,16 @@ export default {
     name() {
       return 'Edwin Groenendaal'
     },
+  },
+  methods: {
+    startEditing() {
+      this.isEditing = true
+      this.$nextTick(() => this.$refs.definitionEditor.focus())
+    },
+    abandonChanges() {
+      this.isEditing = false
+    },
+    saveDraft() {},
   },
 }
 </script>
