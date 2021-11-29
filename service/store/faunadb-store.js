@@ -517,6 +517,113 @@ module.exports = class Store {
     }
 
     /**
+     * Updates an entity revision. This function overwrites the definition of an entity
+     * given the identifier of a revision. The provided timestamp acts as a check - an
+     * entity revision cannot be updated if the latest timestamp is greater than the provided one.
+     * If the revision is published, and no newer drafts exist, this function creates a new draft revision.
+     * If the revision is a draft, this function updates the draft.
+     * If a newer revision exists, this method returns an error.
+     * @param {string} id The identifier of the revision. 
+     * @param {string} timestamp The timestamp of the revision being edited, as far as the caller is aware.
+     * @param {string} userId The identifier of the user making the change.
+     * @param {any} definition The updated definition.
+     */
+    async updateEntityRevision(id, timestamp, userId, definition) {
+        const client = this._getClient()
+
+        const result = await client.query(
+            q.Let(
+                {
+                    revisionRef: q.Ref(q.Collection("entity-revisions"), id)
+                },
+                q.If(
+                    q.Exists(q.Var("revisionRef")),
+                    q.Let(
+                        { revisionDoc: q.Get(q.Var("revisionRef")) },
+                        q.If(
+                            q.GTE(timestamp, q.Select(["ts"], q.Var("revisionDoc"))),
+                            q.Let(
+                                { entityDoc: q.Get(q.Select(["data", "entity"], q.Var("revisionDoc"))) },
+                                q.If(
+                                    q.Equals(q.Var("revisionRef"), q.Select(["data", "latest"], q.Var("entityDoc"))),
+                                    q.If(
+                                        q.Equals("published", q.Select(["data", "status"], q.Var("revisionDoc"))),
+                                        q.Let(
+                                            {
+                                                newRevision: q.Add(1, q.Select(["data", "revision"], q.Var("revisionDoc"))),
+                                                createdResult: q.Create(
+                                                    q.Collection("entity-revisions"),
+                                                    {
+                                                        data: {
+                                                            "entity": q.Select(["ref"], q.Var("entityDoc")),
+                                                            "revision": q.Var("newRevision"),
+                                                            "status": "draft",
+                                                            "edited_by": userId,
+                                                            "published_by": "",
+                                                            definition
+                                                        }
+                                                    }
+                                                ),
+                                                updateResult: q.Update(q.Select(["ref"], q.Var("entityDoc")), { data: { latest: q.Select("ref", q.Var("createdResult")) } }),
+                                            },
+                                            {
+                                                "status": "success",
+                                                "data": {
+                                                    "id": q.Select(["ref", "id"], q.Var("createdResult")),
+                                                    "tag": q.Select(["data", "tag"], q.Var("entityDoc")),
+                                                    "revision": q.Var("newRevision"),
+                                                    "last_modified_on": q.Select("ts", q.Var("createdResult"))
+                                                }
+                                            }
+                                        ),
+                                        q.Let(
+                                            {
+                                                updateResult: q.Update(
+                                                    q.Var("revisionRef"),
+                                                    {
+                                                        data: {
+                                                            "edited_by": userId,
+                                                            definition
+                                                        }
+                                                    }
+                                                )
+                                            },
+                                            {
+                                                "status": "success",
+                                                "data": {
+                                                    "id": q.Select(["ref", "id"], q.Var("updateResult")),
+                                                    "tag": q.Select(["data", "tag"], q.Var("entityDoc")),
+                                                    "revision": q.Select(["data", "revision"], q.Var("revisionDoc")),
+                                                    "last_modified_on": q.Select("ts", q.Var("updateResult"))
+                                                }
+                                            }
+                                        )
+                                    ),
+                                    {
+                                        "status": "precondition-failed",
+                                        "sub_status": "newer-available",
+                                        "message": "newer revision available"
+                                    }
+                                )
+                            ),
+                            {
+                                "status": "precondition-failed",
+                                "sub_status": "stale",
+                                "message": "The entity was already modified by someone else."
+                            }
+                        )
+                    ),
+                    {
+                        status: "not-found"
+                    }
+                )
+            )
+        )
+
+        return result
+    }
+
+    /**
      * Updates a user's login timestamp. This function updates the user record with the
      * specified timestamp.
      * @param {string} ref The user's document reference.

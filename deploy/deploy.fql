@@ -139,12 +139,13 @@ Let(
               Equals("published", Select(["data", "status"], Var("revisionDoc"))),
               Let(
                 {
+                  newRevision: Add(1, Select(["data", "revision"], Var("revisionDoc"))),
                   createdResult: Create(
                     Collection("entity-revisions"),
                     {
                       data: {
                         "entity": Select(["ref"], Var("entityDoc")),
-                        "revision": Add(1, Select(["data", "revision"], Var("revisionDoc"))),
+                        "revision": Var("newRevision"),
                         "status": "draft",
                         "edited_by": "",
                         "published_by": "",
@@ -158,9 +159,9 @@ Let(
                   "status": "success",
                   "data": {
                     "id": Select(["ref", "id"], Var("createdResult")),
+                    "tag": Select(["data", "tag"], Var("entityDoc")),
+                    "revision": Var("newRevision"),
                     "last_modified_on": Select("ts", q.Var("createdResult"))
-                    // Return ref and revision
-                    // Needs to say CREATE
                   }
                 }
               ),
@@ -170,21 +171,23 @@ Let(
                   "status": "success",
                   "data": {
                     "id": Select(["ref", "id"], Var("updateResult")),
+                    "tag": Select(["data", "tag"], Var("entityDoc")),
+                    "revision": Select(["data", "revision"], Var("revisionDoc")),
                     "last_modified_on": Select("ts", q.Var("updateResult"))
-                    // Return ref and revision
-                    // Needs to say UPDATE
                   }
                 }
               )
             ),
             {
               "status": "precondition-failed",
+              "sub_status": "newer-available",
               "message": "newer revision available"
             }
           )
         ),
         {
           "status": "precondition-failed",
+          "sub_status": "stale",
           "message": "The entity was already modified by someone else."
         }
       )

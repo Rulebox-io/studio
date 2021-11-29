@@ -11,7 +11,7 @@ const headers = {
 const handler = async (event) => {
   try {
 
-    // Get the tenant from the route /entity/:tenant
+    // Get common query string parameters
     const tenant = event.queryStringParameters.tenant;
     const id = event.queryStringParameters.id;
     const tag = event.queryStringParameters.tag;
@@ -69,6 +69,19 @@ const handler = async (event) => {
             headers,
             body: JSON.stringify(entity),
           }
+        }
+      }
+
+      case "PUT": {
+        if (tag) {
+          // Given a tag, this PUT operation updates the display and/or labels.
+          return {
+            statusCode: 200,
+            headers,
+          }
+        }
+        else {
+          return { statusCode: 400, headers }
         }
       }
 
