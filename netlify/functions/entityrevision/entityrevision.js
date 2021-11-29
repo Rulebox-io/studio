@@ -1,7 +1,6 @@
 /* eslint-disable eqeqeq */
-const jwt = require('jsonwebtoken')
-const cookie = require('cookie')
-const Store = require('../../../service/store/faunadb-store')
+const Store = require('../../../service/store/faunadb-store');
+const User = require('~/service/auth/User');
 
 const headers = {
   'Access-Control-Allow-Origin': '*',
@@ -13,25 +12,15 @@ const headers = {
 const handler = async (event) => {
   try {
 
-    const cookies = event.headers.cookie && cookie.parse(event.headers.cookie)
-    if (cookies == undefined || !cookies["rb-session"]) {
-      return {
-        headers,
-        statusCode: 401,
-        body: JSON.stringify("User not currently logged in"),
-      }
-    }
-
-    // Verify that the token is valid.
-    const user = jwt.verify(cookies["rb-session"], process.env.JWT_SECRET)
-    console.log(user)
-
-    // ==========
-
     // Get common query string parameters
     const tenant = event.queryStringParameters.tenant;
     const id = event.queryStringParameters.id;
     console.log(`Invoking ${event.httpMethod} entityrevision/${tenant}/${id}`)
+
+    // Does the user have contributor access to this tenant?
+    const user = new User(event)
+    if (!user.hasSession) { return { statusCode: 401, headers, body: "Not authenticated" } }
+    if (!user.authorise(tenant, User.contributor)) { return { statusCode: 403, headers, body: "Not authorised" } }
 
     // 'id' is required.
     if (!id) { return { statusCode: 400, headers, body: "Missing 'id' parameter" } }
@@ -58,6 +47,26 @@ const handler = async (event) => {
 
           case "not-found": { return { statusCode: 404, headers } }
 
+          case "precondition-failed": {
+            return {
+              statusCode: 400,
+              headers, body: {
+                status: result.status,
+                sub_status: result.sub_status
+              }
+            }
+          }
+
+          default: { return { statusCode: 400, headers, body: result.message } }
+        }
+      }
+
+      case "DELETE": {
+        const result = await store.deleteEntityRevision(id)
+
+        switch (result.status) {
+          case "success": { return { statusCode: 204, headers } }
+          case "not-found": { return { statusCode: 404, headers } }
           case "precondition-failed": {
             return {
               statusCode: 400,

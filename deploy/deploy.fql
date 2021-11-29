@@ -197,3 +197,69 @@ Let(
     }
   )
 )
+
+
+// Delete an entity revision
+Let(
+  {
+    revisionRef: Ref(Collection("entity-revisions"), "316309357286392000")
+  },
+  If(
+    Exists(Var("revisionRef")),
+    Let(
+      {
+        revisionDoc: Get(Var("revisionRef")),
+        entityDoc: Get(Select(["data", "entity"], Var("revisionDoc"))),
+        headRef: Select(["data", "head"], Var("entityDoc")),
+      },
+      If(
+        Equals(Var("revisionRef"), Select(["data","latest"], Var("entityDoc"))),
+        If(
+          Equals("draft", Select(["data", "status"], Var("revisionDoc"))),
+          If(
+            Exists(Var("headRef")),
+            Let(
+              {
+                headDoc: Get(Var("headRef")),
+                deleted: Delete(Var("revisionRef")),
+                updated: Update(Select(["ref"], Var("entityDoc")), { data: { latest: Var("headRef") } })
+              },
+              {
+                "status": "success",
+                "data": {
+                  "id": Select(["ref", "id"], Var("headDoc")),
+                  "tag": Select(["data", "tag"], Var("entityDoc")),
+                  "revision": Select(["data", "revision"], Var("headDoc")),
+                  "last_modified_on": Select("ts", Var("headDoc"))
+                }
+              }
+            ),
+            Let(
+              {
+                deletedEntity: Delete(Select("ref", Var("entityDoc"))),
+                deletedRevision: Delete(Var("revisionRef"))
+              },
+              {
+                "status": "success",
+              }
+            )
+          ),
+          {
+            "status": "precondition-failed",
+            "sub_status": "in-use",
+            "message": "entity revision is in use"
+          }
+        ),
+        {
+          "status": "precondition-failed",
+          "sub_status": "newer-available",
+          "message": "newer revision available"
+        }
+      )
+    ),
+    {
+      status: "not-found"
+    }
+  )
+)
+

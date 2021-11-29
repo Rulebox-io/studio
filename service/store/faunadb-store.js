@@ -191,6 +191,85 @@ module.exports = class Store {
     }
 
     /**
+     * This function deletes an entity revision. If the revision does not exist,
+     * or a newer revision exists, or the revision is not a draft, this function returns
+     * an error. The entity's head revision will be the latest revision, post deletion.
+     * If the entity does not have a head revision, the entire entity will be deleted. 
+     * @param {string} id The ID of the revision to delete. 
+     * @returns The result of the operation.
+     */
+    async deleteEntityRevision(id) {
+        const client = this._getClient()
+
+        const result = await client.query(
+            q.Let(
+                {
+                    revisionRef: q.Ref(q.Collection("entity-revisions"), id)
+                },
+                q.If(
+                    q.Exists(q.Var("revisionRef")),
+                    q.Let(
+                        {
+                            revisionDoc: q.Get(q.Var("revisionRef")),
+                            entityDoc: q.Get(q.Select(["data", "entity"], q.Var("revisionDoc"))),
+                            headRef: q.Select(["data", "head"], q.Var("entityDoc")),
+                        },
+                        q.If(
+                            q.Equals(q.Var("revisionRef"), q.Select(["data", "latest"], q.Var("entityDoc"))),
+                            q.If(
+                                q.Equals("draft", q.Select(["data", "status"], q.Var("revisionDoc"))),
+                                q.If(
+                                    q.Exists(q.Var("headRef")),
+                                    q.Let(
+                                        {
+                                            headDoc: q.Get(q.Var("headRef")),
+                                            deleted: q.Delete(q.Var("revisionRef")),
+                                            updated: q.Update(q.Select(["ref"], q.Var("entityDoc")), { data: { latest: q.Var("headRef") } })
+                                        },
+                                        {
+                                            "status": "success",
+                                            "data": {
+                                                "id": q.Select(["ref", "id"], q.Var("headDoc")),
+                                                "tag": q.Select(["data", "tag"], q.Var("entityDoc")),
+                                                "revision": q.Select(["data", "revision"], q.Var("headDoc")),
+                                                "last_modified_on": q.Select("ts", q.Var("headDoc"))
+                                            }
+                                        }
+                                    ),
+                                    q.Let(
+                                        {
+                                            deletedEntity: q.Delete(q.Select("ref", q.Var("entityDoc"))),
+                                            deletedRevision: q.Delete(q.Var("revisionRef"))
+                                        },
+                                        {
+                                            "status": "success",
+                                        }
+                                    )
+                                ),
+                                {
+                                    "status": "precondition-failed",
+                                    "sub_status": "in-use",
+                                    "message": "entity revision is in use"
+                                }
+                            ),
+                            {
+                                "status": "precondition-failed",
+                                "sub_status": "newer-available",
+                                "message": "newer revision available"
+                            }
+                        )
+                    ),
+                    {
+                        status: "not-found"
+                    }
+                )
+            )
+        )
+
+        return result
+    }
+
+    /**
      * Retrieves API keys for a given tenant. This function returns an array
      * of API keys.
      * @param {string} tenant The tenant.
