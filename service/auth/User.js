@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken')
 const cookie = require('cookie')
 
-const roles = ["contributor", "publisher", "administrator"]
-const RULEBOX_SESSION_COOKIE = "rb_session"
+const roles = ["contributor", "publisher", "administrator", "owner"]
+const RULEBOX_SESSION_COOKIE = "rb-session"
 
 /**
  * The User class handles authentication and authorisation based
@@ -31,7 +31,6 @@ module.exports = class User {
 
     // Verify that the token is valid.
     const user = jwt.verify(rulebox, process.env.JWT_SECRET)
-    console.log(user)
 
     this.hasSession = true
     this.user = user
@@ -56,14 +55,16 @@ module.exports = class User {
    * @returns True if the user has the role, or access above the role.
    */
   authorise(tenant, role) {
+
     if (!this.hasSession) return false
-    if (!this.user.tenants || !Array.isArray(this.user.tenants)) return false
+    if (!this.user.tenants) return false
 
     const membership = this.user.tenants[tenant]
     if (!membership) return false
 
     const claimed = roles.indexOf(role)
     const actual = roles.indexOf(membership)
+
     if (actual === -1 || claimed === -1) return false
 
     return actual >= claimed

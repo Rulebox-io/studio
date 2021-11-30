@@ -31,14 +31,12 @@ const handler = async (event) => {
           }
         }
 
-        // Verify that the token is valid.
-        const user = jwt.verify(cookies["rb-session"], process.env.JWT_SECRET)
-
-        // Log the user out of Magic.
+        // Verify that the token is valid, and log the user out of Magic.
         try {
+          const user = jwt.verify(cookies["rb-session"], process.env.JWT_SECRET)
           await magic.users.logoutByIssuer(user.id);
         } catch (error) {
-          console.log('User\'s session with Magic already expired');
+          console.log('User\'s session with Magic already expired, or JWT token expired.');
         }
 
         // Create a "deleted" cookie.
@@ -57,6 +55,7 @@ const handler = async (event) => {
       }
     }
   } catch (error) {
+    console.error(error)
     return { statusCode: 500, headers, body: error.toString() }
   }
 }

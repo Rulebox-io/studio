@@ -1,6 +1,6 @@
 /* eslint-disable eqeqeq */
 const Store = require('../../../service/store/faunadb-store');
-const User = require('~/service/auth/User');
+const User = require('../../../service/auth/User');
 
 const headers = {
   'Access-Control-Allow-Origin': '*',
@@ -30,7 +30,7 @@ const handler = async (event) => {
 
     switch (event.httpMethod) {
       case "PUT": {
-        const timestamp = Number(event.queryStringParameters.timestamp);
+        const timestamp = Number(event.queryStringParameters.ts);
         if (!event.body) { return { statusCode: 400, headers, body: "Missing body" } }
         const definition = JSON.parse(event.body)
 
@@ -50,10 +50,10 @@ const handler = async (event) => {
           case "precondition-failed": {
             return {
               statusCode: 400,
-              headers, body: {
+              headers, body: JSON.stringify({
                 status: result.status,
                 sub_status: result.sub_status
-              }
+              })
             }
           }
 
@@ -70,10 +70,10 @@ const handler = async (event) => {
           case "precondition-failed": {
             return {
               statusCode: 400,
-              headers, body: {
+              headers, body: JSON.stringify({
                 status: result.status,
                 sub_status: result.sub_status
-              }
+              })
             }
           }
 

@@ -388,7 +388,7 @@ module.exports = class Store {
                                         edited_by: q.Select(["data", "edited_by"], q.Var("revisionDoc")),
                                         published_by: q.Select(["data", "published_by"], q.Var("revisionDoc")),
                                         definition: q.Select(["data", "definition"], q.Var("revisionDoc")),
-                                        last_modified_on: q.Select("ts", q.Var("revisionDoc"))
+                                        ts: q.Select("ts", q.Var("revisionDoc"))
                                     }
                                 }
                             }
@@ -406,7 +406,7 @@ module.exports = class Store {
             ...result.data,
             revision: {
                 ...result.data.revision,
-                last_modified_on: moment(result.data.revision.last_modified_on / 1000).format("YYYY-MM-DD")
+                last_modified_on: moment(result.data.revision.ts / 1000).format("YYYY-MM-DD")
             }
         }
     }
@@ -452,7 +452,7 @@ module.exports = class Store {
                                             edited_by: q.Select(["data", "edited_by"], q.Var("revisionDoc")),
                                             published_by: q.Select(["data", "published_by"], q.Var("revisionDoc")),
                                             definition: q.Select(["data", "definition"], q.Var("revisionDoc")),
-                                            last_modified_on: q.Select("ts", q.Var("revisionDoc"))
+                                            ts: q.Select("ts", q.Var("revisionDoc"))
                                         }
                                     }
                                 }
@@ -474,7 +474,7 @@ module.exports = class Store {
             ...result.data,
             revision: {
                 ...result.data.revision,
-                last_modified_on: moment(result.data.revision.last_modified_on / 1000).format("YYYY-MM-DD")
+                last_modified_on: moment(result.data.revision.ts / 1000).format("YYYY-MM-DD")
             }
         }
     }
@@ -513,7 +513,7 @@ module.exports = class Store {
                                     edited_by: q.Select(["data", "edited_by"], q.Var("revisionDoc")),
                                     published_by: q.Select(["data", "published_by"], q.Var("revisionDoc")),
                                     definition: q.Select(["data", "definition"], q.Var("revisionDoc")),
-                                    last_modified_on: q.Select("ts", q.Var("revisionDoc"))
+                                    ts: q.Select("ts", q.Var("revisionDoc"))
                                 }
                             }
                         }
@@ -530,7 +530,7 @@ module.exports = class Store {
             ...result.data,
             revision: {
                 ...result.data.revision,
-                last_modified_on: moment(result.data.revision.last_modified_on / 1000).format("YYYY-MM-DD")
+                last_modified_on: moment(result.data.revision.ts / 1000).format("YYYY-MM-DD")
             }
         }
     }
