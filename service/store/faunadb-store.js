@@ -265,7 +265,6 @@ module.exports = class Store {
                 )
             )
         )
-
         return result
     }
 

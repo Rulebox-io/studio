@@ -1,6 +1,9 @@
  <template>
   <div>
-    <div class="max-w-7xl my-4 mx-auto px-4 sm:px-6 md:px-8">
+    <div
+      v-if="!$fetchState.pending"
+      class="max-w-7xl my-4 mx-auto px-4 sm:px-6 md:px-8"
+    >
       <div class="lg:flex lg:items-center lg:justify-between">
         <div class="flex-1 min-w-0">
           <h2
@@ -69,38 +72,16 @@
             </div>
           </div>
         </div>
-        <div class="mt-5 flex lg:mt-0 lg:ml-4">
+        <div class="mt-5 flex items-center lg:mt-0 lg:ml-4">
           <span class="flex items-center">
             <div class="mr-3 text-sm text-gray-500 dark:text-gray-300">
               12 November 2021
             </div>
-            <Avatar :url="url" :name="name"> </Avatar>
+            <Avatar :name="name"> </Avatar>
           </span>
 
           <span class="ml-3">
-            <Label
-              class="
-                text-green-700
-                border-green-700
-                dark:text-green-500 dark:border-green-500
-              "
-            >
-              <!-- Heroicon name: solid/check -->
-              <svg
-                class="-ml-1 mr-2 h-5 w-5"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              Published
-            </Label>
+            <StatusLabel :status="status"></StatusLabel>
           </span>
         </div>
       </div>
@@ -323,6 +304,7 @@
                 hover:bg-red-700
                 mt-5
               "
+              @click="deleteRevision"
             >
               <TrashIcon class="w-5 h-5 mr-3"></TrashIcon>
               Delete revision
@@ -337,10 +319,10 @@
 import Avatar from '@/components/common/Avatar.vue'
 import Button from '@/components/common/Button.vue'
 import Badge from '@/components/common/Badge.vue'
-import Label from '@/components/common/Label.vue'
 import ChevronRightIcon from '@/components/heroIcons/solid/ChevronRight'
 import CubeIcon from '@/components/heroIcons/outline/CubeIcon'
 import PencilIcon from '@/components/heroIcons/solid/PencilIcon.vue'
+import StatusLabel from '@/components/entities/StatusLabel.vue'
 import SaveIcon from '@/components/heroIcons/solid/SaveIcon.vue'
 import TrashIcon from '@/components/heroIcons/solid/TrashIcon.vue'
 import XCircleIcon from '@/components/heroIcons/solid/XCircleIcon.vue'
@@ -352,9 +334,9 @@ export default {
     Button,
     ChevronRightIcon,
     CubeIcon,
-    Label,
     PencilIcon,
     SaveIcon,
+    StatusLabel,
     TrashIcon,
     XCircleIcon,
   },
@@ -389,6 +371,8 @@ export default {
       this.revision_id = data.revision.id
       this.revision = data.revision.revision
       this.definition = data.revision.definition
+      this.status = data.revision.status
+      this.ts = data.revision.ts
     } catch (err) {
       console.log('ERR')
       console.log(err)
@@ -407,7 +391,20 @@ export default {
     abandonChanges() {
       this.isEditing = false
     },
-    saveDraft() {},
+    deleteRevision() {
+      this.$store.dispatch('entity/deleteEntityRevision', {
+        tenant: this.$route.params.tenant,
+        id: this.revision_id,
+      })
+    },
+    saveDraft() {
+      this.$store.dispatch('entity/updateEntityRevision', {
+        tenant: this.$route.params.tenant,
+        id: this.revision_id,
+        ts: this.ts,
+        content: this.$refs.definitionEditor.textContent,
+      })
+    },
   },
 }
 </script>

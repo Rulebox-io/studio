@@ -3,7 +3,8 @@ const Store = require('../../../service/store/faunadb-store');
 const User = require('../../../service/auth/User');
 
 const headers = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': 'true',
+  'Access-Control-Allow-Origin': 'http://localhost:3000',
   'Access-Control-Allow-Headers': 'Content-Type, authorization',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
 };
@@ -11,6 +12,9 @@ const headers = {
 // eslint-disable-next-line require-await
 const handler = async (event) => {
   try {
+
+    // Handle OPTIONS
+    if (event.httpMethod === "OPTIONS") { return { statusCode: 200, headers } }
 
     // Get common query string parameters
     const tenant = event.queryStringParameters.tenant;
@@ -34,7 +38,7 @@ const handler = async (event) => {
         if (!event.body) { return { statusCode: 400, headers, body: "Missing body" } }
         const definition = JSON.parse(event.body)
 
-        const result = await store.updateEntityRevision(id, timestamp, user.id, definition)
+        const result = await store.updateEntityRevision(id, timestamp, user.user.id, definition)
 
         switch (result.status) {
           case "success": {
@@ -63,9 +67,11 @@ const handler = async (event) => {
 
       case "DELETE": {
         const result = await store.deleteEntityRevision(id)
-
         switch (result.status) {
-          case "success": { return { statusCode: 204, headers } }
+          case "success": {
+            if (result.data) return { statusCode: 200, body: JSON.stringify(result.data), headers }
+            else return { statusCode: 204, headers }
+          }
           case "not-found": { return { statusCode: 404, headers } }
           case "precondition-failed": {
             return {
@@ -80,8 +86,6 @@ const handler = async (event) => {
           default: { return { statusCode: 400, headers, body: result.message } }
         }
       }
-
-      case "OPTIONS": { return { statusCode: 200, headers } }
 
       default: {
         return {
