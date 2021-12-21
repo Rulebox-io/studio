@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="bg-white shadow dark:bg-gray-900 py-6">
+    <div class="bg-white shadow dark:bg-gray-900 py-4">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
         <TabBar :tabs="tabs"></TabBar>
       </div>

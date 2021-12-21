@@ -77,14 +77,15 @@
           <div class="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
             <div class="flex-shrink-0 flex items-center px-4">
               <div class="h-8 bg-image=url('~/assets/logo.svg')"></div>
-              <div
+              <nuxt-link
+              to="/"
                 class="
                   h-8
                   w-full
                   bg-rulebox-logo bg-contain bg-no-repeat
                   dark:bg-rulebox-logo-dark
                 "
-              ></div>
+              ></nuxt-link>
             </div>
             <nav class="mt-5 px-2 space-y-1 dark:bg-black">
               <NavItem
@@ -130,14 +131,15 @@
         >
           <div class="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
             <div class="flex items-center flex-shrink-0 px-4">
-              <div
+              <nuxt-link
+              to="/"
                 class="
                   h-8
                   w-full
                   bg-rulebox-logo bg-contain bg-no-repeat
                   dark:bg-rulebox-logo-dark
                 "
-              ></div>
+              ></nuxt-link>
             </div>
             <nav class="mt-5 flex-1 px-2 bg-white dark:bg-gray-900 space-y-1">
               <NavItem

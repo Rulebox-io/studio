@@ -43,12 +43,12 @@
                   dark:text-gray-200
                 "
               >
-                Email address
+                Key Name
               </label>
               <div class="mt-1">
                 <input
                   v-model="keyName"
-                  placeholder="Your key's name"
+                  placeholder="Enter a key name"
                   required
                   class="
                     appearance-none

@@ -8,6 +8,7 @@
         font-semibold
         text-gray-900
         dark:text-gray-100
+        mb-2
       "
     >
       Profile
@@ -15,7 +16,7 @@
     </h1>
 
     <div class="shadow sm:rounded-md sm:overflow-hidden">
-      <div class="bg-white py-6 px-4 sm:p-6 dark:bg-gray-900">
+      <div class="bg-white pt-6 px-4 sm:pt-6 sm:px-6 dark:bg-gray-900">
         <div>
           <h2
             id="payment-details-heading"
@@ -36,8 +37,8 @@
             <dl class="divide-y divide-gray-200 dark:divide-gray-800">
               <div
                 class="
-                  py-4
-                  sm:py-5
+                  pb-4
+                  sm:pb-5
                   sm:grid
                   sm:grid-cols-3
                   sm:gap-4
@@ -71,7 +72,7 @@
           </div>
         </div>
       </div>
-      <div class="px-4 py-3 bg-gray-50 dark:bg-gray-900 text-right sm:px-6">
+      <div class="px-4 py-3 bg-white dark:bg-gray-900 text-right sm:px-6">
         <Button
           type="submit"
           class="
