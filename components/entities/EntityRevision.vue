@@ -23,7 +23,7 @@
         >{{ rev }}</Badge
       >
     </p>
-    <div class="ml-2 flex-shrink-0 flex items-center">
+    <div class="ml-2 flex-shrink-0 flex items-center dark:text-white">
       <time class="text-sm mr-1.5" :datetime="lastModified">{{
         lastModified
       }}</time>

@@ -76,7 +76,7 @@
         <Button
           type="submit"
           class="
-            bg-gray-800
+            bg-rulebox-600
             border border-transparent
             rounded-md
             shadow-sm
@@ -87,11 +87,11 @@
             text-sm
             font-medium
             text-white
-            hover:bg-gray-900
+            hover:bg-rulebox-700
             focus:outline-none
             focus:ring-2
             focus:ring-offset-2
-            focus:ring-gray-900
+            focus:ring-rulebox-500
           "
         >
           Save

@@ -60,7 +60,7 @@
                   border border-gray-300
                   bg-white
                   text-gray-700
-                  hover:bg-gray-50
+                  hover:bg-gray-100
                   dark:border-transparent
                   dark:bg-gray-600
                   dark:text-white
@@ -188,7 +188,7 @@
                   class="
                     flex
                     items-center
-                    bg-gray-50
+                    bg-gray-100
                     dark:bg-gray-800
                     px-2
                     py-1
@@ -214,7 +214,7 @@
                   class="
                     flex
                     items-center
-                    bg-gray-50
+                    bg-gray-100
                     dark:bg-gray-800
                     px-2
                     py-1
@@ -247,7 +247,7 @@
                   class="
                     flex
                     items-center
-                    bg-gray-50
+                    bg-gray-100
                     dark:bg-gray-800
                     px-2
                     py-1
@@ -273,7 +273,7 @@
                   class="
                     flex
                     items-center
-                    bg-gray-50
+                    bg-gray-100
                     dark:bg-gray-800
                     px-2
                     py-1

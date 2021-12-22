@@ -29,6 +29,7 @@
                     text-gray-500
                     uppercase
                     tracking-wider
+                    dark:text-white
                   "
                 >
                   {{ header.display }}
@@ -52,7 +53,7 @@
                   :key="n"
                   :class="[
                     0 == n
-                      ? 'font-medium text-gray-900 dark:text-gray-100'
+                      ? 'font-medium text-gray-900 dark:text-gray-200'
                       : 'text-gray-500',
                     'px-6 py-4 whitespace-nowrap text-sm',
                   ]"
