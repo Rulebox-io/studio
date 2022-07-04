@@ -1,15 +1,6 @@
 <template>
   <span
-    class="
-      inline-flex
-      items-center
-      px-2.5
-      py-0.5
-      rounded-lg
-      font-medium
-      border-solid border-2
-    "
-  >
+    class="inline-flex items-center rounded-lg border-2 border-solid px-2.5 py-0.5 font-medium">
     <slot />
   </span>
 </template>
