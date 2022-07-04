@@ -1,5 +1,7 @@
 <script lang="ts" setup>
-  import "./assets/css/tailwind.css"
+  // Comment to force a build 20220704.01
+
+import "./assets/css/tailwind.css"
 
   import {MenuIcon} from "@heroicons/vue/outline"
 
