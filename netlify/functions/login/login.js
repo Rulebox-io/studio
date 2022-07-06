@@ -24,7 +24,7 @@ const handler = async (event) => {
       case "OPTIONS": { return { statusCode: 200, headers } }
       case "POST": {
         // Confirm that the log-in token is still valid.
-        const didToken = event.headers.authorization.substring(7)
+        const didToken = event.headers.authorization.substring(7).trim()
         magic.token.validate(didToken);
         const [, claim] = magic.token.decode(didToken)
 

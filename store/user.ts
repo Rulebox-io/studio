@@ -44,6 +44,8 @@ export const useStore = defineStore("user", {
         tenants: null,
         authenticated: false,
       })
+
+      navigateTo(`/login`)
     },
 
     async login(email) {

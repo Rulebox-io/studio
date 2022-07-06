@@ -30,10 +30,12 @@
     "@magic-sdk/admin": "^1.4.1",
     "@pinia/nuxt": "^0.1.9",
     "axios": "^0.27.2",
+    "cookie": "^0.5.0",
     "faunadb": "^4.6.0",
     "jsonwebtoken": "^8.5.1",
     "magic-sdk": "^8.1.1",
     "moment": "^2.29.3",
-    "pinia": "^2.0.14"
+    "pinia": "^2.0.14",
+    "unique-names-generator": "^4.7.1"
   }
 }
