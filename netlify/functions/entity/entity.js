@@ -4,7 +4,8 @@ const Store = require('../../../service/store/faunadb-store')
 const headers = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'Content-Type, authorization',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
+  'Content-Type': 'application/json',
 };
 
 // eslint-disable-next-line require-await
