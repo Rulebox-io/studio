@@ -1,5 +1,7 @@
 # Rulebox Studio
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/3b8ba287-e72e-4836-869b-782987ef7495/deploy-status)](https://app.netlify.com/sites/stupefied-knuth-7b6748/deploys)
+
 The **Rulebox Studio** project combines the web front-end and its supporting functions.
 It is hosted in **Netlify** and is available at [https://app.netlify.com/sites/stupefied-knuth-7b6748/overview](https://app.netlify.com/sites/stupefied-knuth-7b6748/overview).
 
