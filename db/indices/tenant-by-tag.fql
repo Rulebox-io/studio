@@ -1,0 +1,13 @@
+CreateIndex({
+    name: "tenant-by-tag",
+    unique: true,
+    serialized: true,
+    source: "tenants",
+    terms: [
+        { field: ["data", "tag"] }
+    ],
+    values: [
+        { field: ["data", "name"] },
+        { field: ["data", "tag"] }
+    ]
+})

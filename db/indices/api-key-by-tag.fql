@@ -1,0 +1,18 @@
+CreateIndex({
+    name: "api-key-by-tag",
+    unique: true,
+    serialized: true,
+    source: "api-keys",
+    terms: [
+        { field: ["data", "tenant"] },
+        { field: ["data", "tag"] }
+    ],
+    values: [
+        { field: ["data", "tenant"] },
+        { field: ["data", "name"] },
+        { field: ["data", "tag"] },
+        { field: ["data", "primary"] },
+        { field: ["data", "secondary"] },
+        { field: ["data", "issued_on"] }
+    ]
+})

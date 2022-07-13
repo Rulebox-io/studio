@@ -1,0 +1,44 @@
+CreateFunction({
+    name: "create-tenant",
+    body:
+        Query(
+            Lambda(
+                ["tag", "name"],
+                Let(
+                    {
+                        existing: Match(Index("tenant-by-tag"), Var("tag"))
+                    },
+                    If(
+                        Exists(Var("existing")),
+                        {
+                            "status": "precondition-failed",
+                            "substatus": "Tenant already exists"
+                        },
+                        Let(
+                            {
+                                createdResult: Create(
+                                    Collection("tenants"),
+                                    {
+                                        data: {
+                                            "name": Var("name"),
+                                            "tag": Var("tag")
+                                        }
+                                    }
+                                )                    
+                            },
+                            {
+                                "status": "ok",
+                                "data": {
+                                    "ref": Select(["ref", "id"], Var("createdResult")),
+                                }
+                            }
+                        )
+                    )
+                ),
+            )
+        )
+})
+
+/*
+Call(Function("create-tentant"), "mynewtenant", "My new tenant", true)
+*/
