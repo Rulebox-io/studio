@@ -1,6 +1,2 @@
 [build]
   environment = { FAUNADB_SECRET="fnAEQr6HZvAAyBz6eXqstg5nXSOYs-aHWZO2sNBu", RULEBOX_API_URL="https://apim-rulebox.azure-api.net", RULEBOX_SUBSCRIPTION_KEY="0a027e9428d941bd9a4984c10d7539ad", JWT_SECRET="d6ff7b91d50846b0b0739e121f48bd77"}
-
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
