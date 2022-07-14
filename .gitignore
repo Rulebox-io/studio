@@ -6,7 +6,6 @@ node_modules
 .output
 .env
 dist
-!dist/_redirects
 
 # Local Netlify folder
 .netlify
