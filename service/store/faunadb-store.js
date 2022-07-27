@@ -713,7 +713,39 @@ module.exports = class Store {
         await client.query(q.Update(ref, { data: { id: issuer, lastLoginAt: timestamp } }))
     }
 
+    /**
+     * Retrieves a RuleSet given a RuleSet identifier.
+     * @param {string} id The RuleSet identifier.
+     * @returns The RuleSet.
+     */
+     async getRuleSet(id) {
+        const client = this._getClient()
 
+        const result = await client.query(
+            q.Let(
+
+                {
+                    ruleSetRef: q.Ref(q.Collection("rulesets"), id)
+                },
+                q.If(
+                    q.Exists(q.Var('ruleSetRef')),
+                    {
+                        status: 'success',
+                        data: q.Get(q.Var('ruleSetRef'))
+                    },
+                    {
+                        status: 'not-found',
+                        code: 404
+                    }
+                )              
+            )
+        )
+
+        if (result.status != 'success') return
+        return {
+            ...result.data
+        }
+    }
 
     // Private implementation
     // ======================

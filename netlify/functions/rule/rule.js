@@ -22,14 +22,18 @@ const handler = async (event) => {
 
     console.log(`Invoking ${event.httpMethod} rule/${tenant}`)
 
+    const store = new Store(process.env.FAUNADB_SECRET);
 
     switch (event.httpMethod) {
       case "GET": {
-          return {
-            statusCode: 200,
-            headers,
-            body: "[{ \"id\" : \"123\" },{ \"id\" : \"246\" }]",
-          }
+        const entity = await store.getRuleSet("338369760090652874")
+        if (!entity) { return { statusCode: 404, headers } }
+
+        return {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify(entity),
+        }
         }  
       default: {
         return {
