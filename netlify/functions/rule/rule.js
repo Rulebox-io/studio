@@ -1,6 +1,6 @@
 /* eslint-disable eqeqeq */
 const { stringify } = require('postcss');
-const Store = require('../../../service/store/faunadb-store')
+const Store = require('../../../service/store/faunadb-rule-store')
 
 const headers = {
   'Access-Control-Allow-Origin': '*',
@@ -34,7 +34,26 @@ const handler = async (event) => {
           headers,
           body: JSON.stringify(entity),
         }
-        }  
+      }
+      case "POST": {
+
+        const body = JSON.parse(event.body);
+        //if (undefined == body.email) { return { statusCode: 400, headers, body: "Missing 'email' field" } }
+
+        const created = await store.createRuleSet(body)
+
+        if (undefined == created) {
+          return { statusCode: 400, headers, body: `Key with name ${name} already exists` }
+        }
+
+        switch (created.status) {
+          case "success":
+            return { statusCode: 200, headers, body: JSON.stringify(created) }
+
+          default:
+            return { statusCode: 400, headers, body: `Could not create key '${name}'` }
+        }
+      }  
       default: {
         return {
           statusCode: 405,
