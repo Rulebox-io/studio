@@ -15,18 +15,15 @@ const handler = async (event) => {
     
 
     // Get common query string parameters
-    const tenant = event.queryStringParameters.tenant;
     const id = event.queryStringParameters.id;
-    const tag = event.queryStringParameters.tag;
-    const revision = event.queryStringParameters.revision;
 
-    console.log(`Invoking ${event.httpMethod} rule/${tenant}`)
+    console.log(`Invoking ${event.httpMethod} rule/${id}`)
 
     const store = new Store(process.env.FAUNADB_SECRET);
 
     switch (event.httpMethod) {
       case "GET": {
-        const entity = await store.getRuleSet("338369760090652874")
+        const entity = await store.getRuleSet(id)
         if (!entity) { return { statusCode: 404, headers } }
 
         return {
