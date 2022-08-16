@@ -28,7 +28,6 @@ module.exports = class RuleStore {
 
         const result = await client.query(
             q.Let(
-
                 {
                     ruleSetRef: q.Ref(q.Collection("rulesets"), id)
                 },
@@ -67,18 +66,36 @@ module.exports = class RuleStore {
         console.debug(ruleSet)
 
         const result = await client.query(
-            q.Create(
-                q.Collection('rulesets'),
-                {
-                    data: {
-                        ruleSet,
-                    }
-                }))
+            // q.Create(
+            //     q.Collection('rulesets'),
+            //     {
+            //         data: {
+            //             ruleSet,
+            //         }
+            //     })
+            q.Call("create-ruleset", 
+                "user",
+                "teppa",
+                "test name",
+                "tag",
+                "test desc",
+                "339545286012567757")
+            )
+            .then((ret) => console.log(ret))
+            .catch((err) => console.error(
+            'Error: [%s] %s: %s',
+            err.name,
+            err.message,
+            err.errors()[0].description,
+            )
+        )
+        
+            
 
         return {
-            status: "success",
-            name: result.data.name,
-            tag: result.data.tag,
+            status: "success"//,
+            // name: result.data.name,
+            // tag: result.data.tag,
         }
     }
 
