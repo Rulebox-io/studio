@@ -59,43 +59,30 @@ module.exports = class RuleStore {
     async createRuleSet(ruleSet) {
         const client = this._getClient()
 
-        // Don't create a key if one already exists.
-        // const exists = await client.query(q.Exists(q.Match(q.Index("tenant-by-tag"), tag)))
-        // if (exists === true) return null;
-
-        console.debug(ruleSet)
-
         const result = await client.query(
-            // q.Create(
-            //     q.Collection('rulesets'),
-            //     {
-            //         data: {
-            //             ruleSet,
-            //         }
-            //     })
             q.Call("create-ruleset", 
-                "user",
-                "teppa",
-                "test name",
-                "tag",
-                "test desc",
-                "339545286012567757")
+                ruleSet.user,
+                ruleSet.tenant,
+                ruleSet.name,
+                ruleSet.tag,
+                ruleSet.description,
+                '' + ruleSet.entityRevisionId)
             )
-            .then((ret) => console.log(ret))
-            .catch((err) => console.error(
-            'Error: [%s] %s: %s',
-            err.name,
-            err.message,
-            err.errors()[0].description,
-            )
-        )
+            // .catch((err) => 
+            //     console.error(
+            //     'Error: [%s] %s: %s %s %s',
+            //     err.name,
+            //     err.message,
+            //     err.errors()[0].description,
+            //     err.errors()[0].cause[0].code,
+            //     err.errors()[0].cause[0].description,
+            //     ),             
+            // )
         
-            
-
+        
         return {
-            status: "success"//,
-            // name: result.data.name,
-            // tag: result.data.tag,
+            code: result.code,
+            body: result.body
         }
     }
 
