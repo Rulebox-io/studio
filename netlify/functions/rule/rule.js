@@ -42,7 +42,7 @@ const handler = async (event) => {
         if (undefined == body.description) { return { statusCode: 400, headers, body: "Missing 'description' field" } }
         if (undefined == body.tag) { return { statusCode: 400, headers, body: "Missing 'tag' field" } }
         if (undefined == body.entityRevisionId) { return { statusCode: 400, headers, body: "Missing 'entityRevisionId' field" } }
-        //if (false == Number.isInteger(body.entityRevisionId)) { return { statusCode: 400, headers, body: "Invalid 'entityRevisionId'" } }
+        if (true == isNaN(body.entityRevisionId)) { return { statusCode: 400, headers, body: "Invalid 'entityRevisionId'" } }
         if (undefined == body.test) { return { statusCode: 400, headers, body: "Missing 'test' field" } }
 
         const result = await store.createRuleSet(body)
