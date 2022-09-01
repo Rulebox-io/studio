@@ -66,7 +66,7 @@ module.exports = class RuleStore {
                 ruleSet.name,
                 ruleSet.tag,
                 ruleSet.description,
-                '' + ruleSet.entityRevisionId)
+                ruleSet.entityRevisionId)
             )
             // .catch((err) => 
             //     console.error(
@@ -85,6 +85,30 @@ module.exports = class RuleStore {
             body: result.body
         }
     }
+
+         /**
+     * Creates a new tenant.
+     * @param {String} name The name of the tenant.
+     * @returns The tenant.
+     */
+          async updateRuleSet(id, ruleSet) {
+            const client = this._getClient()
+    
+            const result = await client.query(
+                q.Call("update-ruleset-revision", 
+                    id,
+                    ruleSet.entityRevisionId,
+                    ruleSet.timeStamp,
+                    ruleSet.userId,
+                    ruleSet.definition
+                    )
+                )
+            
+            return {
+                code: result.code,
+                body: result.body
+            }
+        }
 
     // Private implementation
     // ======================

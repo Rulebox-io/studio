@@ -43,7 +43,6 @@ const handler = async (event) => {
         if (undefined == body.tag) { return { statusCode: 400, headers, body: "Missing 'tag' field" } }
         if (undefined == body.entityRevisionId) { return { statusCode: 400, headers, body: "Missing 'entityRevisionId' field" } }
         if (true == isNaN(body.entityRevisionId)) { return { statusCode: 400, headers, body: "Invalid 'entityRevisionId'" } }
-        if (undefined == body.test) { return { statusCode: 400, headers, body: "Missing 'test' field" } }
 
         const result = await store.createRuleSet(body)
 
@@ -54,6 +53,26 @@ const handler = async (event) => {
         }
 
         return { statusCode: result.code, headers, body: JSON.stringify(result.body) }
+      }
+      case "PUT": {
+
+        const body = JSON.parse(event.body);
+
+        if (undefined == body.user) { return { statusCode: 400, headers, body: "Missing 'user' field" } }
+        if (undefined == body.entityRevisionId) { return { statusCode: 400, headers, body: "Missing 'entityRevisionId' field" } }
+        if (true == isNaN(body.entityRevisionId)) { return { statusCode: 400, headers, body: "Invalid 'entityRevisionId'" } }
+        if (undefined == body.definition) { return { statusCode: 400, headers, body: "Missing 'definition' field" } }     
+        if (undefined == body.timeStamp) { return { statusCode: 400, headers, body: "Missing 'timeStamp' field" } }     
+
+        const result = await store.updateRuleSet(id, body)
+
+        console.debug(result)
+
+        return {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify("PUT"),
+        }
       }  
       default: {
         return {
