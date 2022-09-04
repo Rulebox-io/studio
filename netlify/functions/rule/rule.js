@@ -48,9 +48,9 @@ const handler = async (event) => {
 
         console.debug(result)
 
-        if (undefined == result) {
-          return { statusCode: 400, headers, body: `Key with name ${name} already exists` }
-        }
+        // if (undefined == result) {
+        //   return { statusCode: 400, headers, body: `Key with name ${name} already exists` }
+        // }
 
         return { statusCode: result.code, headers, body: JSON.stringify(result.body) }
       }
@@ -68,11 +68,8 @@ const handler = async (event) => {
 
         console.debug(result)
 
-        return {
-          statusCode: 200,
-          headers,
-          body: JSON.stringify("PUT"),
-        }
+        return { statusCode: result.code, headers, body: JSON.stringify(result.body) }
+
       }  
       default: {
         return {
