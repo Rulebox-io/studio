@@ -15,7 +15,11 @@ const handler = async (event) => {
     
 
     // Get common query string parameters
+    const tenant = event.queryStringParameters.tenant;
     const id = event.queryStringParameters.id;
+    const tag = event.queryStringParameters.tag;
+    const revision = event.queryStringParameters.revision;
+
 
     console.log(`Invoking ${event.httpMethod} rule/${id}`)
 
@@ -23,13 +27,35 @@ const handler = async (event) => {
 
     switch (event.httpMethod) {
       case "GET": {
-        const entity = await store.getRuleSet(id)
-        if (!entity) { return { statusCode: 404, headers } }
 
-        return {
-          statusCode: 200,
-          headers,
-          body: JSON.stringify(entity),
+        if (!!tag && !!revision) {
+          
+        }
+        else if (tag) {
+          
+        }
+        else if (!id) {
+
+          const result = await store.getRuleSets(tenant)
+
+          console.debug(result)
+
+          // return { statusCode: result.code, headers, body: JSON.stringify(result.body) }
+
+          // const entity = await store.getRuleSet(id)
+          // if (!entity) { return { statusCode: 404, headers } }
+
+          return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify(result),
+          }
+        } else {
+          return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify("single entity"),
+          }
         }
       }
       case "POST": {

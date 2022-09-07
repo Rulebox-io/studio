@@ -18,6 +18,27 @@ module.exports = class RuleStore {
 
     // Public functions
     // ================
+
+            /**
+     * Gets all rulesets for a tennt.
+     * @param {String} name The name of the tenant.
+     * @returns The tenant.
+     */
+    async getRuleSets(tenant) {
+    const client = this._getClient()
+
+    const result = await client.query(
+        q.Call("get-rulesets", 
+            tenant)
+        )
+    
+    
+    return {
+        body: result.data
+    }
+}
+
+
     /**
      * Retrieves a RuleSet given a RuleSet identifier.
      * @param {string} id The RuleSet identifier.
