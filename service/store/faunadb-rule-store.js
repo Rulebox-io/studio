@@ -48,29 +48,55 @@ module.exports = class RuleStore {
         const client = this._getClient()
 
         const result = await client.query(
-            q.Let(
-                {
-                    ruleSetRef: q.Ref(q.Collection("rulesets"), id)
-                },
-                q.If(
-                    q.Exists(q.Var('ruleSetRef')),
-                    {
-                        status: 'success',
-                        data: q.Get(q.Var('ruleSetRef'))
-                    },
-                    {
-                        status: 'not-found',
-                        code: 404
-                    }
-                )              
+            q.Call("get-ruleset-by-ref", 
+                id)
             )
-        )
-
-        if (result.status != 'success') return
+        
+        
         return {
-            ...result.data
+            body: result.data
         }
     }
+
+            /**
+     * Retrieves a RuleSet given a RuleSet identifier.
+     * @param {string} id The RuleSet identifier.
+     * @returns The RuleSet.
+     */
+             async getRuleSetByTag(tenant, tag) {
+                const client = this._getClient()
+        
+                const result = await client.query(
+                    q.Call("get-ruleset-by-tag", 
+                        tenant,
+                        tag)
+                    )
+                
+                
+                return {
+                    body: result.data
+                }
+            }
+    
+
+        /**
+     * Retrieves a RuleSet given a RuleSet identifier.
+     * @param {string} id The RuleSet identifier.
+     * @returns The RuleSet.
+     */
+         async getRuleSetByTagAndRevision(tenant, tag, revision) {
+            const client = this._getClient()
+    
+            const result = await client.query(
+                q.Call("get-ruleset-by-tag-and-revision", 
+                    tenant, tag, revision)
+                )
+            
+            
+            return {
+                body: result.data
+            }
+        }
 
         /**
      * Creates a new tenant.

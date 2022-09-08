@@ -29,10 +29,22 @@ const handler = async (event) => {
       case "GET": {
 
         if (!!tag && !!revision) {
-          
+          const result = await store.getRuleSetByTagAndRevision(tenant, tag, revision)
+
+          return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify(result),
+          }
         }
         else if (tag) {
-          
+          const result = await store.getRuleSetByTag(tenant, tag)
+
+          return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify(result),
+          }
         }
         else if (!id) {
 
@@ -40,21 +52,19 @@ const handler = async (event) => {
 
           console.debug(result)
 
-          // return { statusCode: result.code, headers, body: JSON.stringify(result.body) }
-
-          // const entity = await store.getRuleSet(id)
-          // if (!entity) { return { statusCode: 404, headers } }
-
           return {
             statusCode: 200,
             headers,
             body: JSON.stringify(result),
           }
         } else {
+
+          const result = await store.getRuleSet(id)
+
           return {
             statusCode: 200,
             headers,
-            body: JSON.stringify("single entity"),
+            body: JSON.stringify(result),
           }
         }
       }
