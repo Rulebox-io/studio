@@ -29,21 +29,22 @@ const handler = async (event) => {
       case "GET": {
 
         if (!!tag && !!revision) {
-          const result = await store.getRuleSetByTagAndRevision(tenant, tag, revision)
+          const revNumber = Number(revision)
+          const result = await store.getRuleSetByTagAndRevision(tenant, tag, revNumber)
 
           return {
-            statusCode: 200,
+            statusCode: result.code,
             headers,
-            body: JSON.stringify(result),
+            body: JSON.stringify(result.body),
           }
         }
         else if (tag) {
           const result = await store.getRuleSetByTag(tenant, tag)
 
           return {
-            statusCode: 200,
+            statusCode: result.code,
             headers,
-            body: JSON.stringify(result),
+            body: JSON.stringify(result.body),
           }
         }
         else if (!id) {
@@ -62,9 +63,9 @@ const handler = async (event) => {
           const result = await store.getRuleSet(id)
 
           return {
-            statusCode: 200,
+            statusCode: result.code,
             headers,
-            body: JSON.stringify(result),
+            body: JSON.stringify(result.body),
           }
         }
       }

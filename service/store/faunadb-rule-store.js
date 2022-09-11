@@ -54,7 +54,8 @@ module.exports = class RuleStore {
         
         
         return {
-            body: result.data
+            code: result.code,
+            body: result.body
         }
     }
 
@@ -74,7 +75,8 @@ module.exports = class RuleStore {
                 
                 
                 return {
-                    body: result.data
+                    code: result.code,
+                    body: result.body
                 }
             }
     
@@ -94,7 +96,8 @@ module.exports = class RuleStore {
             
             
             return {
-                body: result.data
+                code: result.code,
+                body: result.body
             }
         }
 
