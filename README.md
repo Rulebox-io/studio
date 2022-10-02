@@ -76,16 +76,19 @@ For the back-end functions, Netlify uses the `Netlify.toml` file. This file is i
 
 ```
 [build]
-  environment = { FAUNADB_SECRET="fnAEQr6HZvAAyBz6eXqstg5nXSOYs-aHWZO2sNBu", RULEBOX_API_URL="https://apim-rulebox.azure-api.net", RULEBOX_SUBSCRIPTION_KEY="0a027e9428d941bd9a4984c10d7539ad", JWT_SECRET="d6ff7b91d50846b0b0739e121f48bd77"}
+  environment = { ENVVAR="VALUE",  .... }
 ```
 
-This contains the env variables Netlify injects into the functions runtime, and they are used like regular env variables in code:
+This may contain the env variables Netlify injects into the functions runtime, and they are used like regular env variables in code, as below:
 
 ```typescript
     // Use the Store module to retrieve the keys, or make changes to a key.
     const store = new Store(process.env.FAUNADB_SECRET);
     const rbx = new Rulebox(process.env.RULEBOX_API_URL, process.env.RULEBOX_SUBSCRIPTION_KEY)
 ```
+
+**Note** If no variables are specified in the `Netlify.toml` file, the Netlify runtime will download the variables from Netlify, and so you can use the Netlify UI to set the variables.
+
 #### Configuration in Production
 The functions config is also in the Netlify environment variables config section, same place as the UI config.
 
