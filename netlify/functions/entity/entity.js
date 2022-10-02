@@ -19,7 +19,7 @@ const handler = async (event) => {
     const revision = event.queryStringParameters.revision;
 
     console.log(`Invoking ${event.httpMethod} entity/${tenant}`)
-
+    
     // Use the Store module to retrieve entities.
     const store = new Store(process.env.FAUNADB_SECRET);
 
