@@ -713,8 +713,6 @@ module.exports = class Store {
         await client.query(q.Update(ref, { data: { id: issuer, lastLoginAt: timestamp } }))
     }
 
-
-
     // Private implementation
     // ======================
     /**
