@@ -1,5 +1,5 @@
 /* eslint-disable eqeqeq */
-const Store = require('../../../service/store/faunadb-store');
+const Store = require('../../../service/store/faunadb-entity-store');
 const User = require('../../../service/auth/User');
 
 const headers = {

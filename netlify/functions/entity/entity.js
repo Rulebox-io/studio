@@ -1,5 +1,5 @@
 /* eslint-disable eqeqeq */
-const Store = require('../../../service/store/faunadb-store')
+const Store = require('../../../service/store/faunadb-entity-store')
 
 const headers = {
   'Access-Control-Allow-Origin': '*',
@@ -71,6 +71,27 @@ const handler = async (event) => {
             body: JSON.stringify(entity),
           }
         }
+      }
+
+      case "POST": {
+
+        const body = JSON.parse(event.body);
+
+        if (undefined == body.user) { return { statusCode: 400, headers, body: "Missing 'user' field" } }
+        if (undefined == body.tenant) { return { statusCode: 400, headers, body: "Missing 'tenant' field" } }
+        if (undefined == body.name) { return { statusCode: 400, headers, body: "Missing 'name' field" } }
+        if (undefined == body.description) { return { statusCode: 400, headers, body: "Missing 'description' field" } }
+        if (undefined == body.tag) { return { statusCode: 400, headers, body: "Missing 'tag' field" } }
+
+        const result = await store.createEntity(body)
+
+        console.debug(result)
+
+        // if (undefined == result) {
+        //   return { statusCode: 400, headers, body: `Key with name ${name} already exists` }
+        // }
+
+        return { statusCode: result.code, headers, body: JSON.stringify(result.body) }
       }
 
       case "PUT": {
