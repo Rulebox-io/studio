@@ -30,11 +30,26 @@ module.exports = class Store {
                 entity.tenant,
                 entity.name,
                 entity.tag,
-                entity.description)
+                entity.description,
+                entity.definition)
             )
         return {
             code: result.code,
             body: result.body
+        }
+    }
+
+    async getEntities(tenant) {
+        const client = this._getClient()
+
+        const result = await client.query(
+            q.Call("get-entities", 
+                tenant)
+            )
+        
+        
+        return {
+            body: result.data
         }
     }
 
@@ -118,25 +133,6 @@ module.exports = class Store {
         return result
     }
 
-   
-
-    async getEntities(tenant) {
-        const client = this._getClient()
-
-        const result = await client.query(
-            q.Call("get-entities", 
-                tenant)
-            )
-
-        if (!result || !result.data || !Array.isArray(result.data)) return null
-
-        return result.data.map(e => ({
-            ...e,
-            latest: { ...e.latest, last_modified_on: moment(e.latest.last_modified_on / 1000).format("YYYY-MM-DD") },
-            head: { ...e.head, last_modified_on: moment(e.head.last_modified_on / 1000).format("YYYY-MM-DD") }
-        }))
-    }
-
     /**
      * Retrieves an entity given an entity identifier.
      * @param {string} id The entity identifier.
@@ -146,52 +142,13 @@ module.exports = class Store {
         const client = this._getClient()
 
         const result = await client.query(
-            q.Let(
-                {
-                    revisionRef: q.Ref(q.Collection("entity-revisions"), id)
-                },
-                q.If(
-                    q.Exists(q.Var("revisionRef")),
-                    q.Let(
-                        { revisionDoc: q.Get(q.Var("revisionRef")) },
-                        q.Let(
-                            {
-                                entityDoc: q.Get(q.Select(["data", "entity"], q.Var("revisionDoc")))
-                            },
-                            {
-                                status: "success",
-                                data: {
-                                    id: q.Select(["ref", "id"], q.Var("entityDoc")),
-                                    name: q.Select(["data", "name"], q.Var("entityDoc")),
-                                    tag: q.Select(["data", "tag"], q.Var("entityDoc")),
-                                    labels: q.Select(["data", "labels"], q.Var("entityDoc")),
-                                    revision: {
-                                        id: q.Select(["ref", "id"], q.Var("revisionDoc")),
-                                        revision: q.Select(["data", "revision"], q.Var("revisionDoc")),
-                                        status: q.Select(["data", "status"], q.Var("revisionDoc")),
-                                        edited_by: q.Select(["data", "edited_by"], q.Var("revisionDoc")),
-                                        published_by: q.Select(["data", "published_by"], q.Var("revisionDoc")),
-                                        definition: q.Select(["data", "definition"], q.Var("revisionDoc")),
-                                        ts: q.Select("ts", q.Var("revisionDoc"))
-                                    }
-                                }
-                            }
-                        )
-                    ),
-                    {
-                        status: "not-found"
-                    }
-                )
+            q.Call("get-entity-by-ref", 
+                id)
             )
-        )
-
-        if (result.status != 'success') return
+          
         return {
-            ...result.data,
-            revision: {
-                ...result.data.revision,
-                last_modified_on: moment(result.data.revision.ts / 1000).format("YYYY-MM-DD")
-            }
+            code: result.code,
+            body: result.body
         }
     }
 

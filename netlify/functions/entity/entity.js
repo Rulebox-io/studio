@@ -62,13 +62,12 @@ const handler = async (event) => {
           }
         } else {
           // We fetch a single entity revision.
-          const entity = await store.getEntity(id)
-          if (!entity) { return { statusCode: 404, headers } }
-
+          const result = await store.getEntity(id)
+          
           return {
-            statusCode: 200,
+            statusCode: result.code,
             headers,
-            body: JSON.stringify(entity),
+            body: JSON.stringify(result.body),
           }
         }
       }
@@ -82,6 +81,7 @@ const handler = async (event) => {
         if (undefined == body.name) { return { statusCode: 400, headers, body: "Missing 'name' field" } }
         if (undefined == body.description) { return { statusCode: 400, headers, body: "Missing 'description' field" } }
         if (undefined == body.tag) { return { statusCode: 400, headers, body: "Missing 'tag' field" } }
+        if (undefined == body.definition) { return { statusCode: 400, headers, body: "Missing 'definition' field" } }
 
         const result = await store.createEntity(body)
 
