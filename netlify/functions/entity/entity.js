@@ -29,25 +29,23 @@ const handler = async (event) => {
           // A tag and identifier were provided, so we attempt to
           // fetch the entity and revision data.
           const revNumber = Number(revision)
-          const entity = await store.getEntityByTagAndRevision(tag, revNumber)
-          if (!entity) { return { statusCode: 404, headers } }
-
+          const result = await store.getEntityByTagAndRevision(tenant, tag, revNumber)
+          
           return {
-            statusCode: 200,
+            statusCode: result.code,
             headers,
-            body: JSON.stringify(entity),
+            body: JSON.stringify(result.body),
           }
         }
         else if (tag) {
           // A tag was provided, so we attempt to
           // fetch the entity's HEAD revision.
-          const entity = await store.getEntityByTag(tag)
-          if (!entity) { return { statusCode: 404, headers } }
-
+          const result = await store.getEntityByTag(tenant, tag)
+          
           return {
-            statusCode: 200,
+            statusCode: result.code,
             headers,
-            body: JSON.stringify(entity),
+            body: JSON.stringify(result.body),
           }
         }
         else if (!id) {
