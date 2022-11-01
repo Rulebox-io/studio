@@ -93,12 +93,19 @@ const handler = async (event) => {
       }
 
       case "PUT": {
-        if (tag) {
-          // Given a tag, this PUT operation updates the display and/or labels.
-          return {
-            statusCode: 200,
-            headers,
-          }
+        if (id) {
+          
+          const body = JSON.parse(event.body);
+
+          if (undefined == body.user) { return { statusCode: 400, headers, body: "Missing 'user' field" } }
+          if (undefined == body.definition) { return { statusCode: 400, headers, body: "Missing 'definition' field" } }     
+          if (undefined == body.timeStamp) { return { statusCode: 400, headers, body: "Missing 'timeStamp' field" } }   
+
+          const result = await store.updateEntity(id, body)
+
+          console.debug(result)
+
+          return { statusCode: result.code, headers, body: JSON.stringify(result.body) }
         }
         else {
           return { statusCode: 400, headers }
