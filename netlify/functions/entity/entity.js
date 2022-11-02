@@ -14,7 +14,7 @@ const handler = async (event) => {
 
     // Get common query string parameters
     const tenant = event.queryStringParameters.tenant;
-    const id = event.queryStringParameters.id;
+    const revisionid = event.queryStringParameters.revisionid;
     const tag = event.queryStringParameters.tag;
     const revision = event.queryStringParameters.revision;
 
@@ -48,7 +48,7 @@ const handler = async (event) => {
             body: JSON.stringify(result.body),
           }
         }
-        else if (!id) {
+        else if (!revisionid) {
           // No ID was specified so we fetch entity header records.
           let entities = await store.getEntities(tenant)
           if (!entities) entities = []
@@ -60,7 +60,7 @@ const handler = async (event) => {
           }
         } else {
           // We fetch a single entity revision.
-          const result = await store.getEntity(id)
+          const result = await store.getEntity(revisionid)
           
           return {
             statusCode: result.code,
@@ -93,7 +93,7 @@ const handler = async (event) => {
       }
 
       case "PUT": {
-        if (id) {
+        if (revisionid) {
           
           const body = JSON.parse(event.body);
 
@@ -101,7 +101,7 @@ const handler = async (event) => {
           if (undefined == body.definition) { return { statusCode: 400, headers, body: "Missing 'definition' field" } }     
           if (undefined == body.timeStamp) { return { statusCode: 400, headers, body: "Missing 'timeStamp' field" } }   
 
-          const result = await store.updateEntity(id, body)
+          const result = await store.updateEntity(revisionid, body)
 
           console.debug(result)
 

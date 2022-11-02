@@ -16,12 +16,12 @@ const handler = async (event) => {
 
     // Get common query string parameters
     const tenant = event.queryStringParameters.tenant;
-    const id = event.queryStringParameters.id;
+    const revisionid = event.queryStringParameters.revisionid;
     const tag = event.queryStringParameters.tag;
     const revision = event.queryStringParameters.revision;
 
 
-    console.log(`Invoking ${event.httpMethod} rule/${id}`)
+    console.log(`Invoking ${event.httpMethod} rule/${revisionid}`)
 
     const store = new Store(process.env.FAUNADB_SECRET);
 
@@ -47,7 +47,7 @@ const handler = async (event) => {
             body: JSON.stringify(result.body),
           }
         }
-        else if (!id) {
+        else if (!revisionid) {
 
           const result = await store.getRuleSets(tenant)
 
@@ -60,7 +60,7 @@ const handler = async (event) => {
           }
         } else {
 
-          const result = await store.getRuleSet(id)
+          const result = await store.getRuleSet(revisionid)
 
           return {
             statusCode: result.code,
@@ -101,7 +101,7 @@ const handler = async (event) => {
         if (undefined == body.definition) { return { statusCode: 400, headers, body: "Missing 'definition' field" } }     
         if (undefined == body.timeStamp) { return { statusCode: 400, headers, body: "Missing 'timeStamp' field" } }     
 
-        const result = await store.updateRuleSet(id, body)
+        const result = await store.updateRuleSet(revisionid, body)
 
         console.debug(result)
 
