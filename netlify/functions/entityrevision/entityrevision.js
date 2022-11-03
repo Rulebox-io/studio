@@ -20,49 +20,69 @@ const handler = async (event) => {
     // Get common query string parameters
     const tenant = event.queryStringParameters.tenant;
     const id = event.queryStringParameters.id;
+    const tag = event.queryStringParameters.tag;
+    const revision = event.queryStringParameters.revision;
+
     console.log(`Invoking ${event.httpMethod} entityrevision/${tenant}/${id}`)
 
     // Does the user have contributor access to this tenant?
-    const user = new User(event)
-    if (!user.hasSession) { return { statusCode: 401, headers, body: "Not authenticated" } }
-    if (!user.authorise(tenant, User.contributor)) { return { statusCode: 403, headers, body: "Not authorised" } }
+    //const user = new User(event)
+    //if (!user.hasSession) { return { statusCode: 401, headers, body: "Not authenticated" } }
+    //if (!user.authorise(tenant, User.contributor)) { return { statusCode: 403, headers, body: "Not authorised" } }
 
     // 'id' is required.
-    if (!id) { return { statusCode: 400, headers, body: "Missing 'id' parameter" } }
+    //if (!id) { return { statusCode: 400, headers, body: "Missing 'id' parameter" } }
 
     // Use the Store module to retrieve entities.
     const store = new Store(process.env.FAUNADB_SECRET);
 
     switch (event.httpMethod) {
+      case "GET": {
+        if (!!tag && !!revision) {
+          // A tag and identifier were provided, so we attempt to
+          // fetch the entity and revision data.
+          const revNumber = Number(revision)
+          const result = await store.getEntityByTagAndRevision(tenant, tag, revNumber)
+          
+          return {
+            statusCode: result.code,
+            headers,
+            body: JSON.stringify(result.body),
+          }
+        }
+        else if (!!id) {
+          // We fetch a single entity revision.
+          const result = await store.getEntityByRevisionId(id)
+          
+          return {
+            statusCode: result.code,
+            headers,
+            body: JSON.stringify(result.body),
+          }
+        }
+        return {
+            statusCode: 400,
+            headers,
+            body: "Expected tag and revision or id"
+        }
+      }
       case "PUT": {
-        const timestamp = Number(event.queryStringParameters.ts);
-        if (!event.body) { return { statusCode: 400, headers, body: "Missing body" } }
-        const definition = JSON.parse(event.body)
+        if (id) {
+          
+          const body = JSON.parse(event.body);
 
-        const result = await store.updateEntityRevision(id, timestamp, user.user.id, definition)
+          if (undefined == body.user) { return { statusCode: 400, headers, body: "Missing 'user' field" } }
+          if (undefined == body.definition) { return { statusCode: 400, headers, body: "Missing 'definition' field" } }     
+          if (undefined == body.timeStamp) { return { statusCode: 400, headers, body: "Missing 'timeStamp' field" } }   
 
-        switch (result.status) {
-          case "success": {
-            return {
-              statusCode: 200,
-              headers,
-              body: JSON.stringify(result.data)
-            }
-          }
+          const result = await store.updateEntityRevision(id, body)
 
-          case "not-found": { return { statusCode: 404, headers } }
+          console.debug(result)
 
-          case "precondition-failed": {
-            return {
-              statusCode: 400,
-              headers, body: JSON.stringify({
-                status: result.status,
-                sub_status: result.sub_status
-              })
-            }
-          }
-
-          default: { return { statusCode: 400, headers, body: result.message } }
+          return { statusCode: result.code, headers, body: JSON.stringify(result.body) }
+        }
+        else {
+          return { statusCode: 400, headers }
         }
       }
 

@@ -138,11 +138,11 @@ module.exports = class Store {
      * @param {string} id The entity identifier.
      * @returns The entity.
      */
-    async getEntity(id) {
+    async getEntityByRevisionId(id) {
         const client = this._getClient()
 
         const result = await client.query(
-            q.Call("get-entity-by-ref", 
+            q.Call("get-entity-by-revisionid", 
                 id)
             )
           
@@ -165,6 +165,20 @@ module.exports = class Store {
             )
         
         
+        return {
+            code: result.code,
+            body: result.body
+        }
+    }
+
+    async getEntityById(id) {
+        const client = this._getClient()
+
+        const result = await client.query(
+            q.Call("get-entity-by-id", 
+                id)
+            )
+                
         return {
             code: result.code,
             body: result.body
@@ -201,7 +215,7 @@ module.exports = class Store {
      * @param {string} userId The identifier of the user making the change.
      * @param {any} definition The updated definition.
      */
-     async updateEntity(id, entity) {
+     async updateEntityRevision(id, entity) {
         const client = this._getClient()
 
         const result = await client.query(
