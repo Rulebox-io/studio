@@ -69,7 +69,6 @@ const handler = async (event) => {
           }
         }
       }
-
       case "POST": {
 
         const body = JSON.parse(event.body);
@@ -91,7 +90,26 @@ const handler = async (event) => {
 
         return { statusCode: result.code, headers, body: JSON.stringify(result.body) }
       }
+      case "PATCH": {
+        if (id) {
+          
+          const body = JSON.parse(event.body);
 
+          if (undefined == body.name) { return { statusCode: 400, headers, body: "Missing 'name' field" } }
+          if (undefined == body.tag) { return { statusCode: 400, headers, body: "Missing 'tag' field" } }     
+          if (undefined == body.description) { return { statusCode: 400, headers, body: "Missing 'description' field" } }   
+          if (undefined == body.timeStamp) { return { statusCode: 400, headers, body: "Missing 'timeStamp' field" } }   
+
+          const result = await store.updateEntity(id, body)
+
+          console.debug(result)
+
+          return { statusCode: result.code, headers, body: JSON.stringify(result.body) }
+        }
+        else {
+          return { statusCode: 400, headers }
+        }
+      }
 
 
       case "OPTIONS": { return { statusCode: 200, headers } }

@@ -233,6 +233,25 @@ module.exports = class Store {
         }
     }
 
+    async updateEntity(id, entity) {
+        const client = this._getClient()
+
+        const result = await client.query(
+            q.Call("update-entity", 
+                id,
+                entity.timeStamp,
+                entity.name,
+                entity.tag,
+                entity.description
+                )
+            )
+        
+        return {
+            code: result.code,
+            body: result.body
+        }
+    }
+
 
     
 
