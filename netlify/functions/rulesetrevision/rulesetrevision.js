@@ -16,18 +16,17 @@ const handler = async (event) => {
 
     // Get common query string parameters
     const tenant = event.queryStringParameters.tenant;
-    const revisionid = event.queryStringParameters.revisionid;
+    const id = event.queryStringParameters.id;
     const tag = event.queryStringParameters.tag;
     const revision = event.queryStringParameters.revision;
 
 
-    console.log(`Invoking ${event.httpMethod} rule/${revisionid}`)
+    console.log(`Invoking ${event.httpMethod} rule/${id}`)
 
     const store = new Store(process.env.FAUNADB_SECRET);
 
     switch (event.httpMethod) {
       case "GET": {
-
         if (!!tag && !!revision) {
           const revNumber = Number(revision)
           const result = await store.getRuleSetByTagAndRevision(tenant, tag, revNumber)
@@ -38,8 +37,9 @@ const handler = async (event) => {
             body: JSON.stringify(result.body),
           }
         }
-        else if (tag) {
-          const result = await store.getRuleSetByTag(tenant, tag)
+        else if (!!id) {
+
+          const result = await store.getRuleSetByRevisionRef(id)
 
           return {
             statusCode: result.code,
@@ -47,49 +47,6 @@ const handler = async (event) => {
             body: JSON.stringify(result.body),
           }
         }
-        else if (!revisionid) {
-
-          const result = await store.getRuleSets(tenant)
-
-          console.debug(result)
-
-          return {
-            statusCode: 200,
-            headers,
-            body: JSON.stringify(result),
-          }
-        } else {
-
-          const result = await store.getRuleSet(revisionid)
-
-          return {
-            statusCode: result.code,
-            headers,
-            body: JSON.stringify(result.body),
-          }
-        }
-      }
-      case "POST": {
-
-        const body = JSON.parse(event.body);
-
-        if (undefined == body.user) { return { statusCode: 400, headers, body: "Missing 'user' field" } }
-        if (undefined == body.tenant) { return { statusCode: 400, headers, body: "Missing 'tenant' field" } }
-        if (undefined == body.name) { return { statusCode: 400, headers, body: "Missing 'name' field" } }
-        if (undefined == body.description) { return { statusCode: 400, headers, body: "Missing 'description' field" } }
-        if (undefined == body.tag) { return { statusCode: 400, headers, body: "Missing 'tag' field" } }
-        if (undefined == body.entityRevisionId) { return { statusCode: 400, headers, body: "Missing 'entityRevisionId' field" } }
-        if (true == isNaN(body.entityRevisionId)) { return { statusCode: 400, headers, body: "Invalid 'entityRevisionId'" } }
-
-        const result = await store.createRuleSet(body)
-
-        console.debug(result)
-
-        // if (undefined == result) {
-        //   return { statusCode: 400, headers, body: `Key with name ${name} already exists` }
-        // }
-
-        return { statusCode: result.code, headers, body: JSON.stringify(result.body) }
       }
       case "PUT": {
 

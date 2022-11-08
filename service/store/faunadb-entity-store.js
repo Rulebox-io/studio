@@ -142,7 +142,7 @@ module.exports = class Store {
         const client = this._getClient()
 
         const result = await client.query(
-            q.Call("get-entity-by-revisionid", 
+            q.Call("get-entity-by-revisionref", 
                 id)
             )
           
@@ -175,7 +175,7 @@ module.exports = class Store {
         const client = this._getClient()
 
         const result = await client.query(
-            q.Call("get-entity-by-id", 
+            q.Call("get-entity-by-ref", 
                 id)
             )
                 

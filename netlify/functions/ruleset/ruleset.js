@@ -1,5 +1,6 @@
 /* eslint-disable eqeqeq */
-const Store = require('../../../service/store/faunadb-entity-store')
+const { stringify } = require('postcss');
+const Store = require('../../../service/store/faunadb-rule-store')
 
 const headers = {
   'Access-Control-Allow-Origin': '*',
@@ -11,6 +12,7 @@ const headers = {
 // eslint-disable-next-line require-await
 const handler = async (event) => {
   try {
+    
 
     // Get common query string parameters
     const tenant = event.queryStringParameters.tenant;
@@ -18,18 +20,17 @@ const handler = async (event) => {
     const tag = event.queryStringParameters.tag;
     const revision = event.queryStringParameters.revision;
 
-    console.log(`Invoking ${event.httpMethod} entity/${tenant}`)
-    
-    // Use the Store module to retrieve entities.
+
+    console.log(`Invoking ${event.httpMethod} rule/${id}`)
+
     const store = new Store(process.env.FAUNADB_SECRET);
 
     switch (event.httpMethod) {
       case "GET": {
-         if (tag) {
-          // A tag was provided, so we attempt to
-          // fetch the entity's HEAD revision.
-          const result = await store.getEntityByTag(tenant, tag)
-          
+
+        if (tag) {
+          const result = await store.getRuleSetByTag(tenant, tag)
+
           return {
             statusCode: result.code,
             headers,
@@ -37,19 +38,20 @@ const handler = async (event) => {
           }
         }
         else if (!id) {
-          // No ID was specified so we fetch entity header records.
-          let entities = await store.getEntities(tenant)
-          if (!entities) entities = []
+
+          const result = await store.getRuleSets(tenant)
+
+          console.debug(result)
 
           return {
             statusCode: 200,
             headers,
-            body: JSON.stringify(entities),
+            body: JSON.stringify(result),
           }
         } else {
-          // We fetch a single entity revision.
-          const result = await store.getEntityById(id)
-          
+
+          const result = await store.getRulesetById(id)
+
           return {
             statusCode: result.code,
             headers,
@@ -66,9 +68,10 @@ const handler = async (event) => {
         if (undefined == body.name) { return { statusCode: 400, headers, body: "Missing 'name' field" } }
         if (undefined == body.description) { return { statusCode: 400, headers, body: "Missing 'description' field" } }
         if (undefined == body.tag) { return { statusCode: 400, headers, body: "Missing 'tag' field" } }
-        if (undefined == body.definition) { return { statusCode: 400, headers, body: "Missing 'definition' field" } }
+        if (undefined == body.entityRevisionId) { return { statusCode: 400, headers, body: "Missing 'entityRevisionId' field" } }
+        if (true == isNaN(body.entityRevisionId)) { return { statusCode: 400, headers, body: "Invalid 'entityRevisionId'" } }
 
-        const result = await store.createEntity(body)
+        const result = await store.createRuleSet(body)
 
         console.debug(result)
 
@@ -88,7 +91,7 @@ const handler = async (event) => {
           if (undefined == body.description) { return { statusCode: 400, headers, body: "Missing 'description' field" } }   
           if (undefined == body.timeStamp) { return { statusCode: 400, headers, body: "Missing 'timeStamp' field" } }   
 
-          const result = await store.updateEntity(id, body)
+          const result = await store.updateRuleset(id, body)
 
           console.debug(result)
 
@@ -98,9 +101,9 @@ const handler = async (event) => {
           return { statusCode: 400, headers }
         }
       }
+      
+      
 
-
-      case "OPTIONS": { return { statusCode: 200, headers } }
 
       default: {
         return {
@@ -113,7 +116,11 @@ const handler = async (event) => {
 
   } catch (error) {
     console.error(error)
-    return { statusCode: 500, body: error.toString() }
+    return 
+    { 
+      statusCode: 500//, 
+      //body: error.errors()[0].cause[0].description 
+    }
   }
 }
 

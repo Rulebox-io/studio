@@ -44,11 +44,11 @@ module.exports = class RuleStore {
      * @param {string} id The RuleSet identifier.
      * @returns The RuleSet.
      */
-     async getRuleSet(id) {
+     async getRuleSetByRevisionRef(id) {
         const client = this._getClient()
 
         const result = await client.query(
-            q.Call("get-ruleset-by-ref", 
+            q.Call("get-ruleset-by-revisionref", 
                 id)
             )
         
@@ -101,6 +101,20 @@ module.exports = class RuleStore {
             }
         }
 
+        async getRulesetById(id) {
+            const client = this._getClient()
+    
+            const result = await client.query(
+                q.Call("get-ruleset-by-ref", 
+                    id)
+                )
+                    
+            return {
+                code: result.code,
+                body: result.body
+            }
+        }
+
         /**
      * Creates a new tenant.
      * @param {String} name The name of the tenant.
@@ -141,7 +155,7 @@ module.exports = class RuleStore {
      * @param {String} name The name of the tenant.
      * @returns The tenant.
      */
-          async updateRuleSet(id, ruleSet) {
+          async updateRuleSetRevision(id, ruleSet) {
             const client = this._getClient()
     
             const result = await client.query(
@@ -159,6 +173,26 @@ module.exports = class RuleStore {
                 body: result.body
             }
         }
+
+        async updateRuleset(id, ruleset) {
+            const client = this._getClient()
+    
+            const result = await client.query(
+                q.Call("update-ruleset", 
+                    id,
+                    ruleset.timeStamp,
+                    ruleset.name,
+                    ruleset.tag,
+                    ruleset.description
+                    )
+                )
+            
+            return {
+                code: result.code,
+                body: result.body
+            }
+        }
+    
 
     // Private implementation
     // ======================
