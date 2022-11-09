@@ -68,6 +68,7 @@ const handler = async (event) => {
         if (undefined == body.name) { return { statusCode: 400, headers, body: "Missing 'name' field" } }
         if (undefined == body.description) { return { statusCode: 400, headers, body: "Missing 'description' field" } }
         if (undefined == body.tag) { return { statusCode: 400, headers, body: "Missing 'tag' field" } }
+        if (undefined == body.definition) { return { statusCode: 400, headers, body: "Missing 'definition' field" } }
         if (undefined == body.entityRevisionId) { return { statusCode: 400, headers, body: "Missing 'entityRevisionId' field" } }
         if (true == isNaN(body.entityRevisionId)) { return { statusCode: 400, headers, body: "Invalid 'entityRevisionId'" } }
 
@@ -101,10 +102,7 @@ const handler = async (event) => {
           return { statusCode: 400, headers }
         }
       }
-      
-      
-
-
+  
       default: {
         return {
           statusCode: 405,

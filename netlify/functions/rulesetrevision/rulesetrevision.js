@@ -58,7 +58,7 @@ const handler = async (event) => {
         if (undefined == body.definition) { return { statusCode: 400, headers, body: "Missing 'definition' field" } }     
         if (undefined == body.timeStamp) { return { statusCode: 400, headers, body: "Missing 'timeStamp' field" } }     
 
-        const result = await store.updateRuleSet(revisionid, body)
+        const result = await store.updateRuleSetRevision(id, body)
 
         console.debug(result)
 

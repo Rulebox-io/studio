@@ -16,11 +16,112 @@ module.exports = class Store {
         this.secret = secret;
     }
 
-        /**
-     * Creates a new tenant.
-     * @param {String} name The name of the tenant.
-     * @returns The tenant.
-     */
+    // Public functions
+    // ================
+
+    /**
+    * Retrieves an Entity given a Tenant and Tag, including the latest revision
+    * @param {string} tenant The tenant name.
+    * @param {string} tag The tag name.
+    * @returns The RuleSet.
+    */
+    async getEntityByTag(tenant, tag) {
+        const client = this._getClient()
+
+        const result = await client.query(
+            q.Call("get-entity-by-tag", 
+                tenant,
+                tag)
+            )
+               
+        return {
+            code: result.code,
+            body: result.body
+        }
+    }
+
+    /**
+    * Gets all entities for a tenant.
+    * @param {String} name The name of the tenant.
+    * @returns The tenant.
+    */
+    async getEntities(tenant) {
+        const client = this._getClient()
+
+        const result = await client.query(
+            q.Call("get-entities", 
+                tenant)
+            )   
+        
+        return {
+            body: result.data
+        }
+    }
+
+    /**
+    * Retrieves an entity given an ID, including latest revision
+    * @param {string} id The entity id.
+    * @returns The entity.
+    */
+    async getEntityById(id) {
+        const client = this._getClient()
+
+        const result = await client.query(
+            q.Call("get-entity-by-ref", 
+                id)
+            )
+                
+        return {
+            code: result.code,
+            body: result.body
+        }
+    }
+  
+    /**
+    * Retrieves an entity given a tenant, tag and revision number and returnes the entity and specified revision.
+    * @param {string} tenant The tenant name.
+    * @param {string} tag The tag name.
+    * @param {string} revision The revision number.
+    * @returns The entity.
+    */
+    async getEntityByTagAndRevision(tenant, tag, revision) {
+        const client = this._getClient()
+
+        const result = await client.query(
+            q.Call("get-entity-by-tag-and-revision", 
+                tenant, tag, revision)
+            )
+                
+        return {
+            code: result.code,
+            body: result.body
+        }
+    }
+
+    /**
+    * Retrieves an entity and Revision given a entity revision identifier.
+    * @param {string} id The entity revision identifier.
+    * @returns The entity.
+    */
+    async getEntityByRevisionRef(id) {
+        const client = this._getClient()
+
+        const result = await client.query(
+            q.Call("get-entity-by-revisionref", 
+                id)
+            )
+            
+        return {
+            code: result.code,
+            body: result.body
+        }
+    }
+
+    /**
+    * Creates a new entity and entity revision.
+    * @param {entity} name The entity object.
+    * @returns The entity ids.
+    */
     async createEntity(entity) {
         const client = this._getClient()
 
@@ -39,17 +140,58 @@ module.exports = class Store {
         }
     }
 
-    async getEntities(tenant) {
+    /**
+    * Updates an entity.
+    * @param {string} id The entity id.
+    * @param {entity} name The entity object.
+    * @returns The entity ids.
+    */
+    async updateEntity(id, entity) {
         const client = this._getClient()
 
         const result = await client.query(
-            q.Call("get-entities", 
-                tenant)
+            q.Call("update-entity", 
+                id,
+                entity.timeStamp,
+                entity.name,
+                entity.tag,
+                entity.description
+                )
             )
         
+        return {
+            code: result.code,
+            body: result.body
+        }
+    }
+
+    /**
+    * Updates an entity revision. This function overwrites the definition of an entity
+    * given the identifier of a revision. The provided timestamp acts as a check - an
+    * entity revision cannot be updated if the latest timestamp is greater than the provided one.
+    * If the revision is published, and no newer drafts exist, this function creates a new draft revision.
+    * If the revision is a draft, this function updates the draft.
+    * If a newer revision exists, this method returns an error.
+    * @param {string} id The identifier of the revision. 
+    * @param {string} timestamp The timestamp of the revision being edited, as far as the caller is aware.
+    * @param {string} userId The identifier of the user making the change.
+    * @param {any} definition The updated definition.
+    */
+    async updateEntityRevision(id, entity) {
+        const client = this._getClient()
+
+        const result = await client.query(
+            q.Call("update-entity-revision", 
+                id,
+                entity.timeStamp,
+                entity.userId,
+                entity.definition
+                )
+            )
         
         return {
-            body: result.data
+            code: result.code,
+            body: result.body
         }
     }
 
@@ -132,128 +274,6 @@ module.exports = class Store {
         )
         return result
     }
-
-    /**
-     * Retrieves an entity given an entity identifier.
-     * @param {string} id The entity identifier.
-     * @returns The entity.
-     */
-    async getEntityByRevisionId(id) {
-        const client = this._getClient()
-
-        const result = await client.query(
-            q.Call("get-entity-by-revisionref", 
-                id)
-            )
-          
-        return {
-            code: result.code,
-            body: result.body
-        }
-    }
-
-
-    async getEntityByTag(tenant, tag) {
-        const client = this._getClient()
-
-        
-
-        const result = await client.query(
-            q.Call("get-entity-by-tag", 
-                tenant,
-                tag)
-            )
-        
-        
-        return {
-            code: result.code,
-            body: result.body
-        }
-    }
-
-    async getEntityById(id) {
-        const client = this._getClient()
-
-        const result = await client.query(
-            q.Call("get-entity-by-ref", 
-                id)
-            )
-                
-        return {
-            code: result.code,
-            body: result.body
-        }
-    }
-
-    async getEntityByTagAndRevision(tenant, tag, revision) {
-        const client = this._getClient()
-
-        const result = await client.query(
-            q.Call("get-entity-by-tag-and-revision", 
-                tenant, tag, revision)
-            )
-        
-        
-        return {
-            code: result.code,
-            body: result.body
-        }
-    }
-
-
-    
-
-    /**
-     * Updates an entity revision. This function overwrites the definition of an entity
-     * given the identifier of a revision. The provided timestamp acts as a check - an
-     * entity revision cannot be updated if the latest timestamp is greater than the provided one.
-     * If the revision is published, and no newer drafts exist, this function creates a new draft revision.
-     * If the revision is a draft, this function updates the draft.
-     * If a newer revision exists, this method returns an error.
-     * @param {string} id The identifier of the revision. 
-     * @param {string} timestamp The timestamp of the revision being edited, as far as the caller is aware.
-     * @param {string} userId The identifier of the user making the change.
-     * @param {any} definition The updated definition.
-     */
-     async updateEntityRevision(id, entity) {
-        const client = this._getClient()
-
-        const result = await client.query(
-            q.Call("update-entity-revision", 
-                id,
-                entity.timeStamp,
-                entity.userId,
-                entity.definition
-                )
-            )
-        
-        return {
-            code: result.code,
-            body: result.body
-        }
-    }
-
-    async updateEntity(id, entity) {
-        const client = this._getClient()
-
-        const result = await client.query(
-            q.Call("update-entity", 
-                id,
-                entity.timeStamp,
-                entity.name,
-                entity.tag,
-                entity.description
-                )
-            )
-        
-        return {
-            code: result.code,
-            body: result.body
-        }
-    }
-
-
-    
 
     // Private implementation
     // ======================
