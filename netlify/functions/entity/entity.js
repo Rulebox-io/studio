@@ -1,5 +1,5 @@
 /* eslint-disable eqeqeq */
-const Store = require('../../../service/store/faunadb-store')
+const Store = require('../../../service/store/faunadb-entity-store')
 
 const headers = {
   'Access-Control-Allow-Origin': '*',
@@ -25,29 +25,15 @@ const handler = async (event) => {
 
     switch (event.httpMethod) {
       case "GET": {
-        if (!!tag && !!revision) {
-          // A tag and identifier were provided, so we attempt to
-          // fetch the entity and revision data.
-          const revNumber = Number(revision)
-          const entity = await store.getEntityByTagAndRevision(tag, revNumber)
-          if (!entity) { return { statusCode: 404, headers } }
-
-          return {
-            statusCode: 200,
-            headers,
-            body: JSON.stringify(entity),
-          }
-        }
-        else if (tag) {
+         if (tag) {
           // A tag was provided, so we attempt to
           // fetch the entity's HEAD revision.
-          const entity = await store.getEntityByTag(tag)
-          if (!entity) { return { statusCode: 404, headers } }
-
+          const result = await store.getEntityByTag(tenant, tag)
+          
           return {
-            statusCode: 200,
+            statusCode: result.code,
             headers,
-            body: JSON.stringify(entity),
+            body: JSON.stringify(result.body),
           }
         }
         else if (!id) {
@@ -62,29 +48,57 @@ const handler = async (event) => {
           }
         } else {
           // We fetch a single entity revision.
-          const entity = await store.getEntity(id)
-          if (!entity) { return { statusCode: 404, headers } }
-
+          const result = await store.getEntityById(id)
+          
           return {
-            statusCode: 200,
+            statusCode: result.code,
             headers,
-            body: JSON.stringify(entity),
+            body: JSON.stringify(result.body),
           }
         }
       }
+      case "POST": {
 
-      case "PUT": {
-        if (tag) {
-          // Given a tag, this PUT operation updates the display and/or labels.
-          return {
-            statusCode: 200,
-            headers,
-          }
+        const body = JSON.parse(event.body);
+
+        if (undefined == body.user) { return { statusCode: 400, headers, body: "Missing 'user' field" } }
+        if (undefined == body.tenant) { return { statusCode: 400, headers, body: "Missing 'tenant' field" } }
+        if (undefined == body.name) { return { statusCode: 400, headers, body: "Missing 'name' field" } }
+        if (undefined == body.description) { return { statusCode: 400, headers, body: "Missing 'description' field" } }
+        if (undefined == body.tag) { return { statusCode: 400, headers, body: "Missing 'tag' field" } }
+        if (undefined == body.definition) { return { statusCode: 400, headers, body: "Missing 'definition' field" } }
+
+        const result = await store.createEntity(body)
+
+        console.debug(result)
+
+        // if (undefined == result) {
+        //   return { statusCode: 400, headers, body: `Key with name ${name} already exists` }
+        // }
+
+        return { statusCode: result.code, headers, body: JSON.stringify(result.body) }
+      }
+      case "PATCH": {
+        if (id) {
+          
+          const body = JSON.parse(event.body);
+
+          if (undefined == body.name) { return { statusCode: 400, headers, body: "Missing 'name' field" } }
+          if (undefined == body.tag) { return { statusCode: 400, headers, body: "Missing 'tag' field" } }     
+          if (undefined == body.description) { return { statusCode: 400, headers, body: "Missing 'description' field" } }   
+          if (undefined == body.timeStamp) { return { statusCode: 400, headers, body: "Missing 'timeStamp' field" } }   
+
+          const result = await store.updateEntity(id, body)
+
+          console.debug(result)
+
+          return { statusCode: result.code, headers, body: JSON.stringify(result.body) }
         }
         else {
           return { statusCode: 400, headers }
         }
       }
+
 
       case "OPTIONS": { return { statusCode: 200, headers } }
 

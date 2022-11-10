@@ -19,93 +19,109 @@ module.exports = class RuleStore {
     // Public functions
     // ================
 
-            /**
-     * Gets all rulesets for a tennt.
-     * @param {String} name The name of the tenant.
-     * @returns The tenant.
-     */
-    async getRuleSets(tenant) {
-    const client = this._getClient()
-
-    const result = await client.query(
-        q.Call("get-rulesets", 
-            tenant)
-        )
-    
-    
-    return {
-        body: result.data
-    }
-}
-
-
     /**
-     * Retrieves a RuleSet given a RuleSet identifier.
-     * @param {string} id The RuleSet identifier.
-     * @returns The RuleSet.
-     */
-     async getRuleSet(id) {
+    * Retrieves a RuleSet given a Tenant and Tag, including the latest revision
+    * @param {string} tenant The tenant name.
+    * @param {string} tag The tag name.
+    * @returns The RuleSet.
+    */
+    async getRuleSetByTag(tenant, tag) {
         const client = this._getClient()
 
         const result = await client.query(
-            q.Call("get-ruleset-by-ref", 
-                id)
+            q.Call("get-ruleset-by-tag", 
+                tenant,
+                tag)
             )
-        
-        
+
         return {
             code: result.code,
             body: result.body
         }
     }
 
-            /**
-     * Retrieves a RuleSet given a RuleSet identifier.
-     * @param {string} id The RuleSet identifier.
-     * @returns The RuleSet.
-     */
-             async getRuleSetByTag(tenant, tag) {
-                const client = this._getClient()
-        
-                const result = await client.query(
-                    q.Call("get-ruleset-by-tag", 
-                        tenant,
-                        tag)
-                    )
-                
-                
-                return {
-                    code: result.code,
-                    body: result.body
-                }
-            }
+    /**
+    * Gets all rulesets for a tenant.
+    * @param {String} name The name of the tenant.
+    * @returns The tenant.
+    */
+    async getRuleSets(tenant) {
+        const client = this._getClient()
     
-
-        /**
-     * Retrieves a RuleSet given a RuleSet identifier.
-     * @param {string} id The RuleSet identifier.
-     * @returns The RuleSet.
-     */
-         async getRuleSetByTagAndRevision(tenant, tag, revision) {
-            const client = this._getClient()
-    
-            const result = await client.query(
-                q.Call("get-ruleset-by-tag-and-revision", 
-                    tenant, tag, revision)
-                )
-            
-            
-            return {
-                code: result.code,
-                body: result.body
-            }
+        const result = await client.query(
+            q.Call("get-rulesets", 
+                tenant)
+            )
+               
+        return {
+            body: result.data
         }
+    }
 
-        /**
-     * Creates a new tenant.
-     * @param {String} name The name of the tenant.
-     * @returns The tenant.
-     */
+    /**
+    * Retrieves a RuleSet given an ID, including latest revision
+    * @param {string} id The ruleset id.
+    * @returns The RuleSet.
+    */
+    async getRulesetById(id) {
+        const client = this._getClient()
+
+        const result = await client.query(
+            q.Call("get-ruleset-by-ref", 
+                id)
+            )
+                
+        return {
+            code: result.code,
+            body: result.body
+        }
+    }
+
+    /**
+    * Retrieves a RuleSet given a tenant, tag and revision number and returnes the Ruleset and specified revision.
+    * @param {string} tenant The tenant name.
+    * @param {string} tag The tag name.
+    * @param {string} revision The revision number.
+    * @returns The RuleSet.
+    */
+    async getRuleSetByTagAndRevision(tenant, tag, revision) {
+        const client = this._getClient()
+
+        const result = await client.query(
+            q.Call("get-ruleset-by-tag-and-revision", 
+                tenant, tag, revision)
+            )
+
+        return {
+            code: result.code,
+            body: result.body
+        }
+    }
+
+    /**
+    * Retrieves a RuleSet and Revision given a RuleSet revision identifier.
+    * @param {string} id The RuleSet revision identifier.
+    * @returns The RuleSet.
+    */
+    async getRuleSetByRevisionRef(id) {
+        const client = this._getClient()
+
+        const result = await client.query(
+            q.Call("get-ruleset-by-revisionref", 
+                id)
+            )
+            
+        return {
+            code: result.code,
+            body: result.body
+        }
+    } 
+
+    /**
+    * Creates a new ruleset and ruleset revision.
+    * @param {rulset} name The ruleset object.
+    * @returns The ruleset ids.
+    */
     async createRuleSet(ruleSet) {
         const client = this._getClient()
 
@@ -116,6 +132,7 @@ module.exports = class RuleStore {
                 ruleSet.name,
                 ruleSet.tag,
                 ruleSet.description,
+                ruleSet.definition,
                 ruleSet.entityRevisionId)
             )
             // .catch((err) => 
@@ -128,7 +145,31 @@ module.exports = class RuleStore {
             //     err.errors()[0].cause[0].description,
             //     ),             
             // )
-        
+              
+        return {
+            code: result.code,
+            body: result.body
+        }
+    }
+
+    /**
+    * Updates a ruleset.
+    * @param {string} id The ruleset id.
+    * @param {ruleset} ruleset The ruleset object.
+    * @returns The ruleset ids.
+    */
+    async updateRuleset(id, ruleset) {
+        const client = this._getClient()
+
+        const result = await client.query(
+            q.Call("update-ruleset", 
+                id,
+                ruleset.timeStamp,
+                ruleset.name,
+                ruleset.tag,
+                ruleset.description
+                )
+            )
         
         return {
             code: result.code,
@@ -136,29 +177,31 @@ module.exports = class RuleStore {
         }
     }
 
-         /**
-     * Creates a new tenant.
-     * @param {String} name The name of the tenant.
-     * @returns The tenant.
-     */
-          async updateRuleSet(id, ruleSet) {
-            const client = this._getClient()
-    
-            const result = await client.query(
-                q.Call("update-ruleset-revision", 
-                    id,
-                    ruleSet.entityRevisionId,
-                    ruleSet.timeStamp,
-                    ruleSet.userId,
-                    ruleSet.definition
-                    )
+
+    /**
+    * Updates the ruleset revision or creates a new one if the the existing revision is published.
+    * @param {String} id The id of the ruleset revision.
+    * @param {String} ruleset The ruleset revision object.
+    * @returns The ruleset.
+    */
+    async updateRuleSetRevision(id, ruleSet) {
+        const client = this._getClient()
+
+        const result = await client.query(
+            q.Call("update-ruleset-revision", 
+                id,
+                ruleSet.entityRevisionId,
+                ruleSet.timeStamp,
+                ruleSet.userId,
+                ruleSet.definition
                 )
-            
-            return {
-                code: result.code,
-                body: result.body
-            }
+            )
+        
+        return {
+            code: result.code,
+            body: result.body
         }
+    }
 
     // Private implementation
     // ======================
