@@ -73,6 +73,7 @@ const handler = async (event) => {
 
           if (undefined == body.user) { return { statusCode: 400, headers, body: "Missing 'user' field" } }
           if (undefined == body.definition) { return { statusCode: 400, headers, body: "Missing 'definition' field" } }     
+          if (undefined == body.status) { return { statusCode: 400, headers, body: "Missing 'status' field" } }     
           if (undefined == body.timeStamp) { return { statusCode: 400, headers, body: "Missing 'timeStamp' field" } }   
 
           const result = await store.updateEntityRevision(id, body)

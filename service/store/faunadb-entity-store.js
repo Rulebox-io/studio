@@ -185,7 +185,8 @@ module.exports = class Store {
                 id,
                 entity.timeStamp,
                 entity.user,
-                entity.definition
+                entity.definition,
+                entity.status
                 )
             )
         
