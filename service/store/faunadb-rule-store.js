@@ -193,7 +193,8 @@ module.exports = class RuleStore {
                 ruleSet.entityRevisionId,
                 ruleSet.timeStamp,
                 ruleSet.userId,
-                ruleSet.definition
+                ruleSet.definition,
+                ruleSet.status
                 )
             )
         

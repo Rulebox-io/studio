@@ -184,7 +184,7 @@ module.exports = class Store {
             q.Call("update-entity-revision", 
                 id,
                 entity.timeStamp,
-                entity.userId,
+                entity.user,
                 entity.definition
                 )
             )
