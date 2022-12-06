@@ -65,6 +65,11 @@ const handler = async (event) => {
 
         return { statusCode: result.code, headers, body: JSON.stringify(result.body) }
 
+      }
+      case "DELETE": {
+        const result = await store.deleteRuleSetRevision(id)
+        
+        return { statusCode: result.code, headers, body: JSON.stringify(result.body) }
       }  
       default: {
         return {

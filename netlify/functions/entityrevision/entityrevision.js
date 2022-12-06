@@ -86,27 +86,10 @@ const handler = async (event) => {
           return { statusCode: 400, headers }
         }
       }
-
       case "DELETE": {
         const result = await store.deleteEntityRevision(id)
-        switch (result.status) {
-          case "success": {
-            if (result.data) return { statusCode: 200, body: JSON.stringify(result.data), headers }
-            else return { statusCode: 204, headers }
-          }
-          case "not-found": { return { statusCode: 404, headers } }
-          case "precondition-failed": {
-            return {
-              statusCode: 400,
-              headers, body: JSON.stringify({
-                status: result.status,
-                sub_status: result.sub_status
-              })
-            }
-          }
-
-          default: { return { statusCode: 400, headers, body: result.message } }
-        }
+        
+        return { statusCode: result.code, headers, body: JSON.stringify(result.body) }
       }
 
       default: {
