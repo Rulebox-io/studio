@@ -38,14 +38,14 @@ const handler = async (event) => {
         }
         else if (!id) {
           // No ID was specified so we fetch entity header records.
-          let entities = await store.getEntities(tenant)
-          if (!entities) entities = []
+          let result = await store.getEntities(tenant)
 
           return {
-            statusCode: 200,
-            headers,
-            body: JSON.stringify(entities),
-          }
+              statusCode: result.code,
+              headers,
+              body: JSON.stringify(result.body),
+            }
+         
         } else {
           // We fetch a single entity revision.
           const result = await store.getEntityById(id)

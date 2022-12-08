@@ -51,10 +51,27 @@ module.exports = class Store {
         const result = await client.query(
             q.Call("get-entities", 
                 tenant)
-            )   
-        
-        return {
-            body: result.data
+            )
+
+        console.debug(result)
+
+        if (result.data.length > 0) {     
+            return {
+                code: 200,
+                body: {
+                    status: "success",
+                    data: result.data 
+                }        
+            }
+        }
+        else {
+            return {
+                code: 404,
+                body: {
+                    status: "entities not found",
+                    data: null
+                }        
+            }
         }
     }
 
