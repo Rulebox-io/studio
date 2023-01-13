@@ -1,7 +1,7 @@
 <script setup>
   import {computed} from "vue"
 
-  import ChevronRightIcon from "@heroicons/vue/solid/ChevronRightIcon"
+  import { ChevronRightIcon } from "@heroicons/vue/20/solid"
 
   const myProps = defineProps({
     user: {type: Object, required: true},

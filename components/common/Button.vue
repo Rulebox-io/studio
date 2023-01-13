@@ -4,14 +4,17 @@
   const myProps = defineProps({
     secondary: {type: Boolean, default: false},
     disabled: {type: Boolean, default: false},
+    variant: {type: String, default: "primary"},
   })
 
   const emit = defineEmits(["click"])
 
   const buttonStyle = computed(() => {
-    return myProps.secondary === true
-      ? "border-gray-300 bg-white text-gray-700 hover:bg-gray-50 dark:border-transparent dark:bg-gray-600 dark:text-white dark:hover:bg-gray-700"
-      : "border-transparent bg-rulebox-600 hover:bg-rulebox-700 text-white"
+    if(myProps.secondary === true || myProps.variant === "secondary")
+      return "h-fullbutton border-desaturated-500 bg-desaturated-100 text-gray-900 enabled:hover:border-transparent enabled:hover:bg-rulebox-200 dark:text-white dark:bg-desaturated-900 dark:enabled:hover:bg-rulebox-700 "
+    else if(myProps.variant === "lesser")
+     return "h-lesserbutton border-transparent bg-rulebox-500 enabled:hover:bg-rulebox-400 text-white"
+     else return "h-fullbutton border-transparent bg-gradient-to-r from-rulebox-500 to-leftshift-600 enabled:hover:from-rulebox-400 enabled:hover:to-leftshift-500 text-white"
   })
 
   const onclick = () => {
@@ -24,7 +27,7 @@
     type="button"
     :disabled="disabled"
     :class="buttonStyle"
-    class="inline-flex items-center rounded-md border border-transparent px-3 py-2 text-base font-medium leading-4 shadow-sm focus:outline-none focus:ring-2 focus:ring-rulebox-500 focus:ring-offset-2 sm:text-sm"
+    class="inline-flex items-center justify-center rounded-md border px-[34px] text-base font-medium leading-4 focus:outline-none focus:ring-2 focus:ring-rulebox-500 focus:ring-offset-2 dark:focus:ring-rulebox-200"
     @click="onclick">
     <slot />
   </button>

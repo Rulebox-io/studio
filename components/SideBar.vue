@@ -8,8 +8,8 @@
     HomeIcon,
     InboxIcon,
     UsersIcon,
-    XIcon,
-  } from "@heroicons/vue/outline"
+    XMarkIcon,
+  } from "@heroicons/vue/24/outline"
   import {useStore} from "@/store/user"
 
   defineProps({open: {type: Boolean, default: false}})

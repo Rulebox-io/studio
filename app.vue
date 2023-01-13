@@ -3,7 +3,7 @@
 
 import "./assets/css/tailwind.css"
 
-  import {MenuIcon} from "@heroicons/vue/outline"
+  import {Bars3Icon} from "@heroicons/vue/24/outline"
 
   useHead({
     title: "Rulebox Studio",
@@ -41,49 +41,7 @@ import "./assets/css/tailwind.css"
 </template>
 
 <style lang="postcss">
-  @font-face {
-    font-family: UntitledSans;
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-    src: url("~/assets/fonts/untitled-sans/UntitledSans-Regular.ttf")
-        format("truetype"),
-      url("~/assets/fonts/untitled-sans/UntitledSans-Regular.woff2?3.13")
-        format("woff2");
-  }
-
-  @font-face {
-    font-family: UntitledSans;
-    font-weight: 500;
-    font-style: normal;
-    font-display: swap;
-    src: url("~/assets/fonts/untitled-sans/UntitledSans-Medium.ttf")
-        format("truetype"),
-      url("~/assets/fonts/untitled-sans/UntitledSans-Medium.woff2?3.13")
-        format("woff2");
-  }
-
-  @font-face {
-    font-family: UntitledSans;
-    font-weight: 400;
-    font-style: italic;
-    font-display: swap;
-    src: url("~/assets/fonts/untitled-sans/UntitledSans-RegularItalic.ttf")
-        format("truetype"),
-      url("~/assets/fonts/untitled-sans/UntitledSans-RegularItalic.woff2?3.13")
-        format("woff2");
-  }
-
-  @font-face {
-    font-family: UntitledSans;
-    font-weight: bold;
-    font-style: normal;
-    font-display: swap;
-    src: url("~/assets/fonts/untitled-sans/UntitledSans-Bold.ttf")
-        format("truetype"),
-      url("~/assets/fonts/untitled-sans/UntitledSans-Bold.woff2?3.13")
-        format("woff2");
-  }
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
   body {
     @apply dark:bg-gray-600;

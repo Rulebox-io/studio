@@ -27,3 +27,5 @@
     url("~/assets/fonts/untitled-sans/UntitledSans-Bold.ttf") format("truetype"), 
     url("~/assets/fonts/untitled-sans/UntitledSans-Bold.woff2?3.13") format("woff2"),
   }
+
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');

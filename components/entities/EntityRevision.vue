@@ -1,5 +1,5 @@
 <script setup>
-  import CubeIcon from "@heroicons/vue/outline/CubeIcon"
+  import { CubeIcon } from "@heroicons/vue/24/outline"
 
   const myProps = defineProps({
     entity: {type: Object, required: true},

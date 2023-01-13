@@ -1,10 +1,6 @@
 <script setup>
-  import CubeIcon from "@heroicons/vue/outline/CubeIcon"
-  import ChevronRightIcon from "@heroicons/vue/solid/ChevronRightIcon"
-  import PencilIcon from "@heroicons/vue/solid/PencilIcon"
-  import SaveIcon from "@heroicons/vue/solid/SaveIcon"
-  import TrashIcon from "@heroicons/vue/solid/TrashIcon"
-  import XCircleIcon from "@heroicons/vue/solid/XCircleIcon"
+  import { CubeIcon } from "@heroicons/vue/24/outline"
+  import { ChevronRightIcon, PencilIcon, CloudArrowUpIcon, TrashIcon, XCircleIcon } from "@heroicons/vue/20/solid"
 
   import {useStore} from "@/store/entity"
 
@@ -142,7 +138,7 @@
                   v-if="isEditing"
                   class="ml-1.5"
                   @click="saveDraft">
-                  <SaveIcon class="mr-3 h-5 w-5"></SaveIcon>
+                  <CloudArrowUpIcon class="mr-3 h-5 w-5"></CloudArrowUpIcon>
                   Save draft
                 </CommonButton>
               </h2>

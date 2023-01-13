@@ -4,6 +4,7 @@
   const myProps = defineProps({
     name: {type: String, required: true},
     url: {type: String, required: false, default: ""},
+    size: {type: String, required: false, default: "md"},
   })
 
   const initials = computed(() => {
@@ -25,7 +26,9 @@
   })
 
   const avatarStyle = computed(() => {
-    return {"background-color": stringToHslColor(myProps.name, 60, 50)}
+    return {
+      "background-color": stringToHslColor(myProps.name, 100, 71),
+      "color": stringToHslColor(myProps.name, 100, 29)}
   })
 
   /**
@@ -53,20 +56,19 @@
   <span>
     <img
       v-if="url"
-      class="inline-block h-10 w-10 rounded-full md:h-9 md:w-9"
+      class="inline-block rounded-full"
+      :class="size === 'sm' ? 'w-[33px] h-[33px]' : 'w-[45px] h-[45px]'"
       :src="url"
       alt="Profile image" />
     <span
       v-else
-      class="inline-flex h-10 w-10 items-center justify-center rounded-full md:h-9 md:w-9"
+      class="inline-flex items-center justify-center rounded-full"
+      :class="size === 'sm' ? 'w-[33px] h-[33px]' : 'w-[45px] h-[45px]'"
       :style="avatarStyle">
-      <span class="font-medium leading-none text-white">{{ initials }}</span>
+      <span 
+        class="font-medium leading-none"
+        :class="size === 'sm' ? 'text-lg' : 'text-2xl'"
+      >{{ initials }}</span>
     </span>
   </span>
 </template>
-
-<style lang="postcss" scoped>
-  div.avatar-lg > * {
-    @apply h-12 w-12;
-  }
-</style>
