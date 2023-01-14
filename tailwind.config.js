@@ -25,6 +25,9 @@ module.exports = {
     ],
     borderColor: ["dark", "dark-focus", "dark-focus-within"],
     textColor: ["dark", "dark-hover", "dark-active"],
+    extend: {
+      ring: ["focus-within", "dark-focus-within"],
+    },
   },
   theme: {
     extend: {
@@ -102,7 +105,7 @@ module.exports = {
       height: {
         'fullbutton': "39px",
         'lesserbutton': "33px",
-      }
+      },
     },
   },
   plugins: [

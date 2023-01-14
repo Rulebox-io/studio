@@ -27,7 +27,7 @@
     type="button"
     :disabled="disabled"
     :class="buttonStyle"
-    class="inline-flex items-center justify-center rounded-md border px-[34px] text-base font-medium leading-4 focus:outline-none focus:ring-2 focus:ring-rulebox-500 focus:ring-offset-2 dark:focus:ring-rulebox-200"
+    class="inline-flex items-center justify-center space-x-2 rounded-md border px-[34px] text-base font-medium leading-4 focus:outline-none focus:ring-2 focus:ring-rulebox-500 focus:ring-offset-2 dark:focus:ring-rulebox-200"
     @click="onclick">
     <slot />
   </button>

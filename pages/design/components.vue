@@ -1,5 +1,6 @@
 <script setup>
 import { AdjustmentsVerticalIcon } from '@heroicons/vue/20/solid';
+import { CubeIcon } from '@heroicons/vue/24/outline';
 
     const text1 = ref("A textbox with some text in it")
     const text2 = ref("")
@@ -79,6 +80,9 @@ import { AdjustmentsVerticalIcon } from '@heroicons/vue/20/solid';
             <div class="flex flex-col space-y-2">
                 <CommonTextbox placeholder="Name" :model="text1"/>
                 <CommonTextbox class="mt-2" placeholder="Placeholder text" :model="text2" />
+                <CommonTextbox class="mt-2" placeholder="Placeholder with icon" :model="text2">
+                    <CubeIcon class="w-5 h-5"></CubeIcon>
+                </CommonTextbox>
             </div>
 
             <div class="text-gray-900 dark:text-white font-medium">
