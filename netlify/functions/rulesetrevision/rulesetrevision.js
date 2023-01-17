@@ -56,6 +56,7 @@ const handler = async (event) => {
         if (undefined == body.entityRevisionId) { return { statusCode: 400, headers, body: "Missing 'entityRevisionId' field" } }
         if (true == isNaN(body.entityRevisionId)) { return { statusCode: 400, headers, body: "Invalid 'entityRevisionId'" } }
         if (undefined == body.definition) { return { statusCode: 400, headers, body: "Missing 'definition' field" } }     
+        if (undefined == body.status) { return { statusCode: 400, headers, body: "Missing 'status' field" } }     
         if (undefined == body.timeStamp) { return { statusCode: 400, headers, body: "Missing 'timeStamp' field" } }     
 
         const result = await store.updateRuleSetRevision(id, body)
@@ -64,6 +65,11 @@ const handler = async (event) => {
 
         return { statusCode: result.code, headers, body: JSON.stringify(result.body) }
 
+      }
+      case "DELETE": {
+        const result = await store.deleteRuleSetRevision(id)
+        
+        return { statusCode: result.code, headers, body: JSON.stringify(result.body) }
       }  
       default: {
         return {

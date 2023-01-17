@@ -73,6 +73,7 @@ const handler = async (event) => {
 
           if (undefined == body.user) { return { statusCode: 400, headers, body: "Missing 'user' field" } }
           if (undefined == body.definition) { return { statusCode: 400, headers, body: "Missing 'definition' field" } }     
+          if (undefined == body.status) { return { statusCode: 400, headers, body: "Missing 'status' field" } }     
           if (undefined == body.timeStamp) { return { statusCode: 400, headers, body: "Missing 'timeStamp' field" } }   
 
           const result = await store.updateEntityRevision(id, body)
@@ -85,27 +86,10 @@ const handler = async (event) => {
           return { statusCode: 400, headers }
         }
       }
-
       case "DELETE": {
         const result = await store.deleteEntityRevision(id)
-        switch (result.status) {
-          case "success": {
-            if (result.data) return { statusCode: 200, body: JSON.stringify(result.data), headers }
-            else return { statusCode: 204, headers }
-          }
-          case "not-found": { return { statusCode: 404, headers } }
-          case "precondition-failed": {
-            return {
-              statusCode: 400,
-              headers, body: JSON.stringify({
-                status: result.status,
-                sub_status: result.sub_status
-              })
-            }
-          }
-
-          default: { return { statusCode: 400, headers, body: result.message } }
-        }
+        
+        return { statusCode: result.code, headers, body: JSON.stringify(result.body) }
       }
 
       default: {

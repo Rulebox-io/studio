@@ -193,7 +193,8 @@ module.exports = class RuleStore {
                 ruleSet.entityRevisionId,
                 ruleSet.timeStamp,
                 ruleSet.userId,
-                ruleSet.definition
+                ruleSet.definition,
+                ruleSet.status
                 )
             )
         
@@ -202,6 +203,29 @@ module.exports = class RuleStore {
             body: result.body
         }
     }
+
+    /**
+     * This function deletes a ruleset revision. If the revision does not exist,
+     * or a newer revision exists, or the revision is not a draft
+     * this function returns an error. The rulesets's head revision will be the latest revision, post deletion.
+     * If the ruleset does not have a head revision, the entire ruleset will be deleted. 
+     * @param {string} id The ID of the revision to delete. 
+     * @returns The result of the operation.
+     */
+         async deleteRuleSetRevision(id) {
+            const client = this._getClient()
+    
+            const result = await client.query(
+                q.Call("delete-ruleset-revision", 
+                    id
+                    )
+                )
+            
+            return {
+                code: result.code,
+                body: result.body
+            }
+        }
 
     // Private implementation
     // ======================
