@@ -11,6 +11,7 @@ const headers = {
 // eslint-disable-next-line require-await
 const handler = async (event) => {
   try {
+  
 
     // Get common query string parameters
     const tenant = event.queryStringParameters.tenant;
