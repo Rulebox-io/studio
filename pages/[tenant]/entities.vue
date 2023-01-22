@@ -1,4 +1,6 @@
 <script setup>
+  import { AdjustmentsVerticalIcon } from '@heroicons/vue/20/solid';
+import { CubeIcon } from '@heroicons/vue/24/outline';
   const route = useRoute()
   const config = useRuntimeConfig()
 
@@ -14,12 +16,23 @@
 
 <template>
   <div>
-    <div class="my-4 mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
+    <AppScreenHeader>
+        <CubeIcon class="w-6 h-6"></CubeIcon>
+        <span>Types</span>
+    </AppScreenHeader>
+    <div class="p-4">
       <h1
-        class="flex items-center text-2xl font-semibold text-gray-900 dark:text-gray-100">
-        Entities
-        <CommonButton class="ml-auto" @click="newEntity"
-          >Create entity</CommonButton
+        class="flex items-center justify-between font-medium text-gray-900 dark:text-gray-100">
+        <div class="flex items-center md:space-x-10">
+          <span class="hidden md:block text-2xl text-gray-600 dark:text-gray-400">Acme Corp</span>
+          <span class="hidden md:block text-2xl">Types</span>
+          <div class="flex items-center space-x-4">
+            <CommonIconButton :disabled="false"><AdjustmentsVerticalIcon class="w-5 h-5"></AdjustmentsVerticalIcon></CommonIconButton>
+            <span>2 types</span>          
+          </div>
+        </div>
+        <CommonButton @click="newEntity"
+          >New type</CommonButton
         >
       </h1>
     </div>

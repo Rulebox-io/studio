@@ -27,6 +27,7 @@ module.exports = {
     textColor: ["dark", "dark-hover", "dark-active"],
     extend: {
       ring: ["focus-within", "dark-focus-within"],
+      spacing: ["md"]
     },
   },
   theme: {
@@ -97,15 +98,18 @@ module.exports = {
         sans: ["'Inter'", ...defaultTheme.fontFamily.sans],
       },
       fontSize: {
-        "lg": "1.143rem",
-        "xl": "1.286rem",
-        "2xl": "1.429rem",
+        "lg": "1.143rem", /* 16px */
+        "xl": "1.286rem", /* 18px */
+        "2xl": "1.429rem", /* 20px */
 
       },
       height: {
         'fullbutton': "39px",
         'lesserbutton': "33px",
       },
+      spacing: {
+        '2': "0.5rem"
+      }
     },
   },
   plugins: [
