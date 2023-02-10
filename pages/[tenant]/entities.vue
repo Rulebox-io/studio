@@ -1,6 +1,6 @@
 <script setup>
   import { AdjustmentsVerticalIcon } from '@heroicons/vue/20/solid';
-import { CubeIcon } from '@heroicons/vue/24/outline';
+  import { CubeIcon } from '@heroicons/vue/24/outline';
   const route = useRoute()
   const config = useRuntimeConfig()
 
@@ -20,7 +20,7 @@ import { CubeIcon } from '@heroicons/vue/24/outline';
         <CubeIcon class="w-6 h-6"></CubeIcon>
         <span>Types</span>
     </AppScreenHeader>
-    <div class="p-4">
+    <div class="px-6 py-4">
       <h1
         class="flex items-center justify-between font-medium text-gray-900 dark:text-gray-100">
         <div class="flex items-center md:space-x-10">
@@ -36,7 +36,7 @@ import { CubeIcon } from '@heroicons/vue/24/outline';
         >
       </h1>
     </div>
-    <div v-if="!pending" class="mx-auto my-4 max-w-7xl px-4 sm:px-6 md:px-8">
+    <div v-if="!pending" class="mt-12 px-6">
       <EntitiesEntityList :entities="entities"></EntitiesEntityList>
     </div>
   </div>

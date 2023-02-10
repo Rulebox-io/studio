@@ -1,4 +1,6 @@
 <script setup>
+  import { CubeIcon } from '@heroicons/vue/24/outline'
+
   const myProps = defineProps({
     entity: {type: Object, required: true},
   })
@@ -31,35 +33,47 @@
   const head = computed(() => {
     return myProps.entity.head
   })
+
+  const revisions = [ parseRevision(myProps.entity.head), parseRevision(myProps.entity.latest) ]
+
+  function parseRevision(revision) {
+    console.log(revision)
+    if (!revision) {
+      return
+    }
+    return {
+      revision: revision.revision,
+      date: new Date(revision.last_modified_on),
+      status: revision.status,
+      name: revision.edited_by,
+    }
+  }
 </script>
 
 <template>
   <NuxtLink
     :to="link"
-    class="group block hover:bg-gray-50 dark:hover:bg-gray-800">
-    <div class="px-4 py-4 sm:px-6">
-      <EntitiesEntityRevision
-        :entity="entity"
-        :revision="latest"></EntitiesEntityRevision>
-      <EntitiesEntityRevision
-        v-if="hasRecentDraft"
-        :entity="entity"
-        :revision="head"></EntitiesEntityRevision>
-
-      <div class="mt-2 sm:flex sm:justify-between">
-        <div class="flex items-center">
-          <p
-            class="flex items-center text-sm text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300">
-            <span class="font-mono">{{ tag }}</span>
-          </p>
-          <CommonBadge
-            v-for="label in entity.labels"
-            :key="label"
-            class="ml-2 border border-gray-300 bg-white text-gray-700 dark:border-transparent dark:bg-gray-600 dark:text-white">
-            {{ label }}
-          </CommonBadge>
-        </div>
+    class="flex flex-col w-[321px] space-y-[23px] bg-gray-50 shadow-md border rounded-md p-4 border-desaturated-200 dark:bg-desaturated-800  dark:border-desaturated-800">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <CubeIcon class="w-5 h-5 text-gray-900 dark:text-white"></CubeIcon>
+        <span class="text-gray-900 font-medium dark:text-white">
+          {{ entity.name }}
+        </span>
       </div>
+      <div class="block w-[16px] h-[16px] rounded-full border bg-rulebox-500 border-rulebox-500 dark:bg-white dark:border-white"></div>
     </div>
+    <div class="text-base font-medium text-gray-700 dark:text-gray-200">
+      An invoice object represents a single invoice, with multiple line...
+      {{ entity.description }}
+    </div>
+    <div v-if="entity.labels.length > 0" class="flex items-center space-x-2">
+      <AppLabel
+      v-for="label in entity.labels"
+      :key="label"
+      labelColor="#6AFFE4">{{ label }}</AppLabel>
+    </div>
+
+    <AppRevisionHistory :revisions="revisions"></AppRevisionHistory>
   </NuxtLink>
 </template>
