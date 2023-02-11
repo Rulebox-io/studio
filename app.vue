@@ -19,7 +19,7 @@ import "./assets/css/tailwind.css"
 
 <template>
   <div class="flex h-screen overflow-hidden bg-desaturated-100 dark:bg-desaturated-900">
-    <div class="fixed inset-x-0 top-[-100px] h-[295px] bg-gradient-to-r blur-[100px]  from-[rgba(255,170,0,0.2)] via-[rgba(132,70,255,0.2)] to-[rgba(1,255,1,0.2)]  dark:from-[rgba(255,170,0,0.2)] dark:via-[rgba(132,70,255,0.2)] dark:to-[rgba(1,255,1,0.2)] dark:top-[-300px]"></div>
+    <div class="fixed inset-x-0 top-[-100px] h-[295px] bg-gradient-to-r blur-[100px]  from-[rgba(255,170,0,0.2)] via-[rgba(132,70,255,0.2)] to-[rgba(1,255,1,0.2)]  dark:from-[rgba(255,170,0,0.2)] dark:via-[rgba(132,70,255,0.2)] dark:to-[rgba(1,255,1,0.2)] dark:top-[-270px]"></div>
     <div class="fixed inset-x-0 bottom-[-300px] h-[295px] bg-gradient-to-r blur-[100px]  from-[rgba(255,170,0,0.2)] via-[rgba(132,70,255,0.2)] to-[rgba(1,255,1,0.2)]  dark:from-[rgba(255,170,0,0.2)] dark:via-[rgba(132,70,255,0.2)] dark:to-[rgba(1,255,1,0.2)]"></div>
     <SidebarMobile></SidebarMobile>
     <SidebarDesktop></SidebarDesktop>
