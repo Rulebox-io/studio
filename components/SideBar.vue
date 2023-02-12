@@ -23,7 +23,7 @@
     return [
       {name: "Dashboard", href: "/", icon: HomeIcon, current: true},
       {name: "Entities", href: "~/entities", icon: UsersIcon, current: false},
-      {name: "Rules", href: "~/entities", icon: FolderIcon, current: false},
+      {name: "Rules", href: "~/rules", icon: FolderIcon, current: false},
       {name: "Tests", href: "~/tests", icon: CalendarIcon, current: false},
       {
         name: "Integration",
@@ -31,7 +31,7 @@
         icon: InboxIcon,
         current: false,
       },
-      {name: "Reports", href: "~/reports", icon: ChartBarIcon, current: false},
+      {name: "Reports", href: "~/reports", icon: ChartBarIcon, current: false}
     ].map((nav) => ({
       ...nav,
       href: nav.href.replace("~", `/${route.params.tenant}`),
