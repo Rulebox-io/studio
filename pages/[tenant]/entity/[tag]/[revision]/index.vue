@@ -16,22 +16,27 @@
     "revision",
     async () => {
       const {data} = await useFetch(
-        `${config.public.studioApiUrl}/entity?tenant=${route.params.tenant}&tag=${route.params.tag}&revision=${route.params.revision}`
+        `${config.public.studioApiUrl}/entityrevision?tenant=${route.params.tenant}&tag=${route.params.tag}&revision=${route.params.revision}`
       )
 
       if (!data.value) {
         return {}
       }
+
+      if(data.value.status!=='success' || !data.value.data) {
+        return { }
+      }
+
       return {
-        id: data.value.id,
-        display: data.value.name,
-        tag: data.value.tag,
-        labels: [...data.value.labels],
-        revision_id: data.value.revision.id,
-        revision: data.value.revision.revision,
-        definition: data.value.revision.definition,
-        status: data.value.revision.status,
-        ts: data.value.revision.ts,
+        id: data.value.data.id,
+        display: data.value.data.name,
+        tag: data.value.data.tag,
+        labels: [...data.value.data.labels],
+        revision_id: data.value.data.revision.id,
+        revision: data.value.data.revision.revision,
+        definition: data.value.data.revision.definition,
+        status: data.value.data.revision.status,
+        ts: data.value.data.revision.ts,
       }
     }
   )
@@ -40,6 +45,54 @@
     return "Edwin Groenendaal"
   })
 
+  const revisions = [
+    {
+      revision: 1,
+      status: "draft",
+      date: new Date("2022-11-09"),
+      name: "John Doe",
+      url: null,
+    },
+    {
+      revision: 2,
+      status: "published",
+      date: new Date("2022-11-09"),
+      name: "John Doe",
+      url: null,
+    },
+  ]
+
+  const dependencies = [
+    {
+      name: "Invoice",
+      revision: 6,
+      status: 'draft',
+      rulesets: [
+        {
+          name: "Has invoice expired",
+          revision: 4,
+          status: 'draft',
+        },
+      ]
+    },
+    {
+      name: "Invoice",
+      revision: 5,
+      status: 'published',
+      rulesets: [
+        {
+          name: "Has invoice expired",
+          revision: 2,
+          status: 'published',
+        },
+        {
+          name: "Has invoice expired",
+          revision: 1,
+          status: 'published',
+        },
+      ]
+    },
+  ]
   const startEditing = () => {
     isEditing.value = true
     nextTick(() => definitionEditor.value.focus())
@@ -71,17 +124,52 @@
         <CubeIcon class="w-6 h-6"></CubeIcon>
         <span>{{working_set.display}}</span>
     </AppScreenHeader>
-    
+
     <div v-if="!pending" class="px-4 md:px-6 py-4 hidden md:block">
       <h1
         class="flex items-center justify-between font-medium text-gray-900 dark:text-gray-100">
         <div class="flex items-center md:space-x-10">
           <span class="text-2xl text-gray-600 dark:text-gray-400">{{ tenant }}</span>
-          <span class="text-2xl">{{working_set.display}}</span>
+          <span class="text-2xl flex items-center space-x-4">
+            <CubeIcon class="w-6 h-6"></CubeIcon>
+            <span>{{ working_set.display }}</span>
+          </span>
         </div>
       </h1>
     </div>
-
+    <div v-if="!pending" class="mt-12 px-4 md:px-6 md:w-[390px] flex flex-col space-y-6">
+      <AppRevisionInfo 
+        :revision="working_set.revision" 
+        :status="working_set.status"
+        :date="new Date('2022-11-09')"
+        name="John Doe"
+        :url="null">
+      </AppRevisionInfo>
+      <AppSummary
+        :display="working_set.display"
+        description="Some description that needs to be loaded from the server"
+        :tag="working_set.tag"
+        :labels="working_set.labels">
+      </AppSummary>
+      <CommonDisclosure>
+        <template #title>Revisions</template>
+        <AppRevisionHistory :revisions="revisions"></AppRevisionHistory>
+      </CommonDisclosure>
+      <CommonDisclosure>
+        <template #title>Rulesets that use this type</template>
+        <div class="space-y-4">
+          <AppEntityDependency 
+            v-for="dependency in dependencies" 
+            :key="dependency.id" 
+            :name="dependency.name" 
+            :revision="dependency.revision" 
+            :status="dependency.status" 
+            :rulesets="dependency.rulesets">
+          </AppEntityDependency>
+        </div>
+      </CommonDisclosure>
+    </div>
+    <!--
     <div v-if="!pending" class="my-4 mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
       <div class="lg:flex lg:items-center lg:justify-between">
         <div class="min-w-0 flex-1">
@@ -235,5 +323,6 @@
         </div>
       </div>
     </div>
+  -->
   </div>
 </template>

@@ -6,8 +6,31 @@
 
   const tenant = route.params.tenant
 
-  const {pending, data: entities} = useLazyFetch(
-    `${config.public.studioApiUrl}/entity?tenant=${tenant}`
+  const {pending, data: entities} = useLazyAsyncData(
+    "entities",
+    async () => {
+      const {data} = await useFetch(
+        `${config.public.studioApiUrl}/entity?tenant=${tenant}`
+      )
+
+      if (!data.value) {
+        return {}
+      }
+
+      if(data.value.status!=='success' || !Array.isArray(data.value.data)) {
+        return { }
+      }
+
+      return data.value.data.map(e => (
+        {
+          id: e.id,
+          name: e.name,
+          tag: e.tag,
+          labels: [...e.labels],
+          latest: { ...e.latest },
+          head: { ...e.head },
+        }))
+    }
   )
 
   const count = computed(() => {
@@ -17,6 +40,7 @@
 
   const selectedCount = computed(() => {
     if(pending.value) return 0
+    console.log(entities.value)
     return entities.value.filter((e) => e.selected).length
   })
 
