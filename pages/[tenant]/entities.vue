@@ -4,8 +4,10 @@
   const route = useRoute()
   const config = useRuntimeConfig()
 
+  const tenant = route.params.tenant
+
   const {pending, data: entities} = useLazyFetch(
-    `${config.public.studioApiUrl}/entity?tenant=${route.params.tenant}`
+    `${config.public.studioApiUrl}/entity?tenant=${tenant}`
   )
 
   const count = computed(() => {
@@ -57,7 +59,7 @@
       <h1
         class="flex items-center justify-between font-medium text-gray-900 dark:text-gray-100">
         <div class="flex items-center md:space-x-10">
-          <span class="hidden md:block text-2xl text-gray-600 dark:text-gray-400">Acme Corp</span>
+          <span class="hidden md:block text-2xl text-gray-600 dark:text-gray-400">{{ tenant }}</span>
           <span class="hidden md:block text-2xl">Types</span>
           <div class="flex items-center space-x-4">
             <CommonIconButton :disabled="false"><AdjustmentsVerticalIcon class="w-5 h-5"></AdjustmentsVerticalIcon></CommonIconButton>

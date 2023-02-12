@@ -99,7 +99,7 @@ const handler = async (event) => {
 
   } catch (error) {
     console.error(error)
-    return { statusCode: 500, body: error.toString() }
+    return { statusCode: 500, headers, body: error.toString() }
   }
 }
 

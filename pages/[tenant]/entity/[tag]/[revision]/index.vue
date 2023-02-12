@@ -8,8 +8,10 @@
   const config = useRuntimeConfig()
   const store = useStore()
 
+  const tenant = route.params.tenant
   const isEditing = ref(false)
   const definitionEditor = ref()
+
   const {pending, data: working_set} = useLazyAsyncData(
     "revision",
     async () => {
@@ -65,6 +67,21 @@
 
 <template>
   <div>
+    <AppScreenHeader v-if="!pending">
+        <CubeIcon class="w-6 h-6"></CubeIcon>
+        <span>{{working_set.display}}</span>
+    </AppScreenHeader>
+    
+    <div v-if="!pending" class="px-4 md:px-6 py-4 hidden md:block">
+      <h1
+        class="flex items-center justify-between font-medium text-gray-900 dark:text-gray-100">
+        <div class="flex items-center md:space-x-10">
+          <span class="text-2xl text-gray-600 dark:text-gray-400">{{ tenant }}</span>
+          <span class="text-2xl">{{working_set.display}}</span>
+        </div>
+      </h1>
+    </div>
+
     <div v-if="!pending" class="my-4 mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
       <div class="lg:flex lg:items-center lg:justify-between">
         <div class="min-w-0 flex-1">
