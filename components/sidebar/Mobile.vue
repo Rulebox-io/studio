@@ -1,7 +1,8 @@
 <script setup>
     import { useAppStore } from '@/store/app'
     import { useStore } from '@/store/user'
-    import { XMarkIcon, HomeIcon, CubeIcon, AdjustmentsVerticalIcon, ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline'
+    import { XMarkIcon, AdjustmentsVerticalIcon, ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline'
+    import { buildNavigation }  from './utils'
 
     const appStore = useAppStore()
     const userStore = useStore()
@@ -10,12 +11,7 @@
 
     appStore.$subscribe((_, state) => { isOpen.value = state.mobileMenuOpen })
 
-    const navigation = [
-        {name: "Home", href: "/", icon: HomeIcon, current: true},
-        {name: "Acme Corp", href: null, icon: HomeIcon, current: false},
-        {name: "Types", href: "~/entities", icon: CubeIcon, current: false},
-        {name: "Rulesets", href: "~/rulesets", icon: CubeIcon, current: false},
-    ]
+    const navigation = buildNavigation({ tenants:userStore.tenants })
 
     const name = userStore.displayName
     const picture = null
@@ -26,7 +22,7 @@
 </script>
 <template>
     <div v-show="isOpen" class="fixed inset-0 z-40 flex flex-col md:hidden bg-desaturated-100 dark:bg-desaturated-900">
-        <div class="-z-10 fixed inset-x-0 top-[-230px] h-[576px] bg-gradient-to-r blur-[100px]  from-[rgba(255,170,0,1)] via-[rgba(132,70,255,1)] to-[rgba(1,255,1,1)]  dark:from-[rgba(255,170,0,0.5)] dark:via-[rgba(132,70,255,0.5)] dark:to-[rgba(1,255,1,0.5)] dark:h-[270px]"></div>
+        <div class="-z-10 fixed inset-x-0 top-[-230px] h-[350px] bg-gradient-to-r blur-[100px]  from-[rgba(255,170,0,1)] via-[rgba(132,70,255,1)] to-[rgba(1,255,1,1)]  dark:from-[rgba(255,170,0,0.5)] dark:via-[rgba(132,70,255,0.5)] dark:to-[rgba(1,255,1,0.5)] dark:h-[270px]"></div>
         <div class="p-4 mb-4 flex items-center justify-between">
             <div class="flex items-center space-x-2">
                 <IconsRuleboxIcon class="w-8 h-8 text-rulebox-500 dark:text-white"></IconsRuleboxIcon>
@@ -39,13 +35,18 @@
 
         <nav class="px-6 flex flex-col space-y-2">
             <template v-for="item in navigation" :key="item.name">
-                <a :href="item.href"
-                    class="flex items-center px-4 py-2 text-base font-medium border dark:text-white rounded-md"
-                    :class="item.current ? 'bg-rulebox-600 border-transparent text-white dark:border-[#B0A2CD] dark:border-opacity-50 dark:bg-[#322B40] dark:bg-opacity-50 ' : ' text-gray-900 border-transparent'">
+                <span v-if="!item.href"
+                    class="flex items-center px-4 py-2 text-base font-medium border rounded-md text-gray-700 border-transparent dark:text-gray-400">
+                    <component :is="item.icon" class="w-6 h-6"></component>
+                    <span class="ml-3">{{item.name}}</span>
+                </span>
+                <NuxtLink v-else @click="closeMobile" :to="item.href"
+                    class="flex items-center px-4 py-2 text-base font-medium border rounded-md"
+                    :class="item.current ? 'bg-rulebox-600 border-transparent text-white dark:border-[#B0A2CD] dark:border-opacity-50 dark:bg-[#322B40] dark:bg-opacity-50 ' : 'text-gray-900 border-transparent hover:bg-rulebox-200 dark:text-white dark:hover:bg-desaturated-800'">
 
                     <component :is="item.icon" class="w-6 h-6"></component>
                     <span class="ml-3">{{item.name}}</span>
-                </a>
+                </NuxtLink>
             </template>
         </nav>
 

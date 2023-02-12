@@ -10,7 +10,7 @@
 </script>
 <template>
     <div class="p-4 mb-4 flex items-center justify-between md:hidden">
-      <div class="-z-10 fixed inset-x-0 top-[-230px] h-[576px] bg-gradient-to-r blur-[100px]  from-[rgba(255,170,0,1)] via-[rgba(132,70,255,1)] to-[rgba(1,255,1,1)]  dark:from-[rgba(255,170,0,0.5)] dark:via-[rgba(132,70,255,0.5)] dark:to-[rgba(1,255,1,0.5)] dark:h-[270px]"></div>
+      <div class="-z-10 fixed inset-x-0 top-[-230px] h-[270px] bg-gradient-to-r blur-[100px]  from-[rgba(255,170,0,1)] via-[rgba(132,70,255,1)] to-[rgba(1,255,1,1)]  dark:from-[rgba(255,170,0,0.5)] dark:via-[rgba(132,70,255,0.5)] dark:to-[rgba(1,255,1,0.5)] dark:h-[270px]"></div>
         
       <div class="flex items-center space-x-2">
         <IconsRuleboxIcon class="w-8 h-8 text-rulebox-500 dark:text-white"></IconsRuleboxIcon>

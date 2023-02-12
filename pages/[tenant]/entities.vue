@@ -34,6 +34,17 @@
       match.selected = !match.selected
     }
   }
+  
+  const cancelSelection = () => {
+    entities.value.forEach((e) => {
+      e.selected = false
+    })
+  }
+
+  const deleteSelection = () => {
+    // eslint-disable-next-line no-alert
+    alert("Delete")
+  }
 </script>
 
 <template>
@@ -61,13 +72,13 @@
     <div v-if="!pending" class="mt-12 px-4 md:px-6">
       <EntitiesEntityList :entities="entities" @toggle="toggleSelect"></EntitiesEntityList>
     </div>
-    <div v-if="selectedCount" class="absolute mx-auto inset-x-0 bottom-8 max-w-6xl flex items-center justify-between px-6 py-4 rounded-md shadow-md bg-gray-50 border border-desaturated-200 dark:bg-desaturated-900 dark:border-desaturated-700">
+    <div v-if="selectedCount" class="absolute mx-auto inset-x-4 dark:inset-x-0 md:inset-x-0 bottom-0 md:bottom-8 max-w-6xl flex items-center justify-between px-6 py-4 rounded-t-lg dark:rounded-none md:rounded-md md:shadow-md bg-gray-50  border-0 dark:border-t md:border border-desaturated-200 dark:bg-desaturated-900 dark:border-desaturated-700">
       <span class="text-gray-900 dark:text-white text-base font-medium">{{ selectedDisplay }}</span>
       <div class="flex items-center space-x-4">
-        <CommonButton variant="secondary">Cancel</CommonButton>
-        <CommonButton>
+        <CommonButton class="hidden md:block" @click="cancelSelection" variant="secondary">Cancel</CommonButton>
+        <CommonButton @click="deleteSelection">
           <TrashIcon class="w-5 h-5"></TrashIcon>
-          <span>Delete</span>
+          <span class="hidden md:inline">Delete</span>
         </CommonButton>
       </div>
     </div>
