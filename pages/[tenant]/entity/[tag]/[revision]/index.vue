@@ -1,6 +1,6 @@
 <script setup>
   import { CubeIcon } from "@heroicons/vue/24/outline"
-  import { ChevronRightIcon, PencilIcon, CloudArrowUpIcon, TrashIcon, XCircleIcon } from "@heroicons/vue/20/solid"
+  import { TableCellsIcon, CodeBracketSquareIcon } from "@heroicons/vue/20/solid"
 
   import {useStore} from "@/store/entity"
 
@@ -93,6 +93,14 @@
       ]
     },
   ]
+
+  const selectedEditor = ref('left')
+
+  const selectEditor = (editor) => {
+    
+    selectedEditor.value = editor
+  }
+
   const startEditing = () => {
     isEditing.value = true
     nextTick(() => definitionEditor.value.focus())
@@ -168,6 +176,15 @@
           </AppEntityDependency>
         </div>
       </CommonDisclosure>
+    </div>
+    <div class="px-4 md:pr-6 flex flex-col space-y-4">
+      <div class="flex items-center justify-between pl-4 md:pl-0 text-lg font-bold text-gray-900 dark:text-white">
+        <span>Type definition</span>
+        <CommonToggle :selected="selectedEditor" @select="selectEditor">
+          <template #left><TableCellsIcon class="w-5 h-5"></TableCellsIcon></template>
+          <template #right><CodeBracketSquareIcon class="w-5 h-5"></CodeBracketSquareIcon></template>
+        </CommonToggle>
+      </div>
     </div>
     <!--
     <div v-if="!pending" class="my-4 mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
