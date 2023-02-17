@@ -1,8 +1,9 @@
 <script setup>
-  import { CubeIcon } from "@heroicons/vue/24/outline"
+  import { CubeIcon, XMarkIcon } from "@heroicons/vue/24/outline"
   import { TableCellsIcon, CodeBracketSquareIcon } from "@heroicons/vue/20/solid"
 
   import {useStore} from "@/store/entity"
+  import { Dialog, DialogPanel, DialogTitle } from "@headlessui/vue";
 
   const route = useRoute()
   const config = useRuntimeConfig()
@@ -95,10 +96,24 @@
   ]
 
   const selectedEditor = ref('left')
+  const isEditingSummary = ref(false)
+  const isEditingSummaryDesktop = ref(false)
 
+  
   const selectEditor = (editor) => {
     
     selectedEditor.value = editor
+  }
+
+  const editSummary = (mode) => {
+    switch(mode) {
+      case 'desktop':
+        isEditingSummaryDesktop.value = true
+        break
+      case 'mobile':
+        isEditingSummary.value = true
+        break
+    }
   }
 
   const startEditing = () => {
@@ -127,7 +142,7 @@
 </script>
 
 <template>
-  <div>
+  <div class="min-h-screen flex flex-col">
     <AppScreenHeader v-if="!pending">
         <CubeIcon class="w-6 h-6"></CubeIcon>
         <span>{{working_set.display}}</span>
@@ -145,47 +160,104 @@
         </div>
       </h1>
     </div>
-    <div v-if="!pending" class="mt-12 px-4 md:px-6 md:w-[390px] flex flex-col space-y-6">
-      <AppRevisionInfo 
-        :revision="working_set.revision" 
-        :status="working_set.status"
-        :date="new Date('2022-11-09')"
-        name="John Doe"
-        :url="null">
-      </AppRevisionInfo>
-      <AppSummary
-        :display="working_set.display"
-        description="Some description that needs to be loaded from the server"
-        :tag="working_set.tag"
-        :labels="working_set.labels">
-      </AppSummary>
-      <CommonDisclosure>
-        <template #title>Revisions</template>
-        <AppRevisionHistory :revisions="revisions"></AppRevisionHistory>
-      </CommonDisclosure>
-      <CommonDisclosure>
-        <template #title>Rulesets that use this type</template>
-        <div class="space-y-4">
-          <AppEntityDependency 
-            v-for="dependency in dependencies" 
-            :key="dependency.id" 
-            :name="dependency.name" 
-            :revision="dependency.revision" 
-            :status="dependency.status" 
-            :rulesets="dependency.rulesets">
-          </AppEntityDependency>
-        </div>
-      </CommonDisclosure>
-    </div>
-    <div class="px-4 md:pr-6 flex flex-col space-y-4">
-      <div class="flex items-center justify-between pl-4 md:pl-0 text-lg font-bold text-gray-900 dark:text-white">
-        <span>Type definition</span>
-        <CommonToggle :selected="selectedEditor" @select="selectEditor">
-          <template #left><TableCellsIcon class="w-5 h-5"></TableCellsIcon></template>
-          <template #right><CodeBracketSquareIcon class="w-5 h-5"></CodeBracketSquareIcon></template>
-        </CommonToggle>
+
+    <div v-if="!pending" class="mt-12 flex-col md:flex-row flex-grow"
+      :class="isEditingSummary ? 'hidden md:flex' : 'flex'">
+      <div class="px-4 md:px-6 md:w-[390px] flex flex-col space-y-6">
+        <AppRevisionInfo 
+          :revision="working_set.revision" 
+          :status="working_set.status"
+          :date="new Date('2022-11-09')"
+          name="John Doe"
+          :url="null">
+        </AppRevisionInfo>
+        <AppSummary
+          :display="working_set.display"
+          description="Some description that needs to be loaded from the server"
+          :tag="working_set.tag"
+          :labels="working_set.labels"
+          @click="editSummary">
+        </AppSummary>
+        <CommonDisclosure>
+          <template #title>Revisions</template>
+          <AppRevisionHistory :revisions="revisions"></AppRevisionHistory>
+        </CommonDisclosure>
+        <CommonDisclosure>
+          <template #title>Rulesets that use this type</template>
+          <div class="space-y-4">
+            <AppEntityDependency 
+              v-for="dependency in dependencies" 
+              :key="dependency.id" 
+              :name="dependency.name" 
+              :revision="dependency.revision" 
+              :status="dependency.status" 
+              :rulesets="dependency.rulesets">
+            </AppEntityDependency>
+          </div>
+        </CommonDisclosure>
       </div>
+      <div class="mt-6 md:mt-0 px-4 md:pr-6 flex-grow flex flex-col space-y-6">
+        <div class="flex items-center justify-between pl-4 md:pl-0 text-lg font-bold text-gray-900 dark:text-white">
+          <span>Type definition</span>
+          <CommonToggle :selected="selectedEditor" @select="selectEditor">
+            <template #left><TableCellsIcon class="w-5 h-5"></TableCellsIcon></template>
+            <template #right><CodeBracketSquareIcon class="w-5 h-5"></CodeBracketSquareIcon></template>
+          </CommonToggle>
+        </div>
+        <pre
+            ref="definitionEditor"
+            :contenteditable="isEditing"
+            class="min-h-[400px] flex-grow mt-4 rounded-md p-4 text-gray-900 dark:text-white bg-gray-50 dark:bg-desaturated-800 "
+            >{{ working_set.definition }}
+        </pre>
+        <div class="flex items-center space-x-4 justify-end pb-4">
+          <CommonButton @click="abandonChanges" variant="secondary">Cancel</CommonButton>
+          <CommonButton @click="saveDraft" class="flex-grow md:flex-grow-0">
+            <span>Save Draft</span>
+          </CommonButton>
+        </div>
+      </div>     
     </div>
+    <div v-if="isEditingSummary" class="mt-12 px-4 flex flex-col flex-grow md:hidden">
+      <EntityEditor 
+        class="flex-grow"
+        @close="isEditingSummary = false"
+        :display="working_set.display" 
+        description="Some description that needs to be loaded from the server" 
+        :tag="working_set.tag" 
+        :labels="working_set.labels">
+      </EntityEditor>
+    </div> 
+    <Dialog 
+      :open="isEditingSummaryDesktop" 
+      @close="isEditingSummaryDesktop = false"
+      class="relative z-50 ">
+      <div class="fixed inset-0 flex items-center justify-center bg-[rgba(12,12,14,0.3)] dark:bg-transparent">
+        <DialogPanel class="rounded-md border shadow-lg w-[640px] p-6 text-gray-900 bg-desaturated-100 border-desaturated-200 dark:text-white dark:bg-desaturated-900 dark:border-desaturated-700">
+          <DialogTitle>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-4">
+                <CubeIcon class="w-6 h-6"></CubeIcon>
+                <span class="font-medium text-xl">{{ working_set.display }}</span>
+              </div>
+              <button
+                  @click="isEditingSummaryDesktop = false"
+                  class="flex items-center justify-center rounded-md w-[33px] h-lesserbutton focus:ring-2 focus:ring-offset-2 focus:outline-none focus:ring-rulebox-500 hover:bg-gray-50  dark:hover:bg-desaturated-800 dark:focus:ring-rulebox-200">
+                  <XMarkIcon class="w-9 h-9"></XMarkIcon>
+              </button>
+            </div>
+          </DialogTitle>
+          <EntityEditor 
+            class="mt-10"
+            @close="isEditingSummaryDesktop = false"
+            :display="working_set.display" 
+            description="Some description that needs to be loaded from the server" 
+            :tag="working_set.tag" 
+            :labels="working_set.labels">
+          </EntityEditor>
+        </DialogPanel>
+      </div>
+    </Dialog>
     <!--
     <div v-if="!pending" class="my-4 mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
       <div class="lg:flex lg:items-center lg:justify-between">
