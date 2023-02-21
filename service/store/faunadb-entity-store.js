@@ -58,10 +58,7 @@ module.exports = class Store {
         if (result.data.length > 0) {     
             return {
                 code: 200,
-                body: {
-                    status: "success",
-                    data: result.data 
-                }        
+                body: result.data      
             }
         }
         else {
@@ -127,6 +124,8 @@ module.exports = class Store {
             q.Call("get-entity-by-revisionref", 
                 id)
             )
+
+            console.debug(result)
             
         return {
             code: result.code,

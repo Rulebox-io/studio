@@ -53,7 +53,7 @@ const handler = async (event) => {
         else if (!!id) {
           // We fetch a single entity revision.
           const result = await store.getEntityByRevisionRef(id)
-          
+        
           return {
             statusCode: result.code,
             headers,
