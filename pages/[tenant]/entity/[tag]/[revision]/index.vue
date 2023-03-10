@@ -232,7 +232,7 @@
       :open="isEditingSummaryDesktop" 
       @close="isEditingSummaryDesktop = false"
       class="relative z-50 ">
-      <div class="fixed inset-0 flex items-center justify-center bg-[rgba(12,12,14,0.3)] dark:bg-transparent">
+      <div class="fixed inset-0 flex items-center justify-center bg-[rgba(12,12,14,0.3)] dark:bg-transparent backdrop-blur-md">
         <DialogPanel class="rounded-md border shadow-lg w-[640px] p-6 text-gray-900 bg-desaturated-100 border-desaturated-200 dark:text-white dark:bg-desaturated-900 dark:border-desaturated-700">
           <DialogTitle>
             <div class="flex items-center justify-between">
