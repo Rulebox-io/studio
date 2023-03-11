@@ -9,8 +9,6 @@ import "./assets/css/tailwind.css"
     title: "Rulebox Studio",
     // or, instead:
     // titleTemplate: (title) => `My App - ${title}`,
-    viewport: "width=device-width, initial-scale=1, maximum-scale=1",
-    charset: "utf-8",
     meta: [{name: "description", content: "Rule Management for everyone"}],
     link: [{rel: "icon", type: "image/x-icon", href: "/favicon.ico"}],
   })
@@ -44,8 +42,4 @@ import "./assets/css/tailwind.css"
 
 <style lang="postcss">
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
-  body {
-    @apply dark:bg-gray-600;
-  }
 </style>

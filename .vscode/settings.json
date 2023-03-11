@@ -1,7 +1,5 @@
 {
-    "prettier.enable": false,
-    "editor.codeActionsOnSave": {
-      "source.fixAll.eslint": true
-    },
+    "prettier.enable": true,
+    "editor.formatOnSave": true,
     "tailwindCSS.rootFontSize": 14,
   }

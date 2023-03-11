@@ -1,7 +1,7 @@
 <script setup>
     const myProps = defineProps(
         {
-            model: {type: String, required: true},
+            modelValue: {type: String, required: true},
             disabled: {type: Boolean, default: false},
             placeholder: {type: String, default: ""},
 
@@ -14,7 +14,9 @@
         <slot></slot>
         <input
         :placeholder="myProps.placeholder" 
-        v-model="model" :disabled="disabled" 
+        :value="model"
+        @input="$emit('update:modelValue', $event.target.value)"
+        :disabled="disabled" 
         type="text" class="w-full bg-gray-50 focus:outline-none dark:placeholder:text-[#b8b8b8] dark:bg-desaturated-800" />
     </div>
 
