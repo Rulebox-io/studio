@@ -1,5 +1,5 @@
-const jwt = require('jsonwebtoken')
-const cookie = require('cookie')
+const jwt = require("jsonwebtoken")
+const cookie = require("cookie")
 
 const roles = ["contributor", "publisher", "administrator", "owner"]
 const RULEBOX_SESSION_COOKIE = "rb-session"
@@ -9,7 +9,6 @@ const RULEBOX_SESSION_COOKIE = "rb-session"
  * on user tokens.
  */
 module.exports = class User {
-
   // constructor
   // ===========
   /**
@@ -19,14 +18,13 @@ module.exports = class User {
    * @param {Event} event The HTTP event object.
    */
   constructor(event) {
-
     this.hasSession = false
     this.user = null
 
     const cookies = event.headers.cookie && cookie.parse(event.headers.cookie)
     if (!cookies) return
 
-    const rulebox = cookies[RULEBOX_SESSION_COOKIE];
+    const rulebox = cookies[RULEBOX_SESSION_COOKIE]
     if (!rulebox) return
 
     // Verify that the token is valid.
@@ -36,15 +34,11 @@ module.exports = class User {
     this.user = user
   }
 
-
-
   // Public properties
   // =================
   static contributor = "contributor"
   static publisher = "publisher"
   static administrator = "administrator"
-
-
 
   // Public functions
   // ================
@@ -55,7 +49,6 @@ module.exports = class User {
    * @returns True if the user has the role, or access above the role.
    */
   authorise(tenant, role) {
-
     if (!this.hasSession) return false
     if (!this.user.tenants) return false
 
