@@ -28,7 +28,8 @@
   const avatarStyle = computed(() => {
     return {
       "background-color": stringToHslColor(myProps.name, 100, 71),
-      "color": stringToHslColor(myProps.name, 100, 29)}
+      color: stringToHslColor(myProps.name, 100, 29),
+    }
   })
 
   /**
@@ -57,18 +58,19 @@
     <img
       v-if="url"
       class="inline-block rounded-full"
-      :class="size === 'sm' ? 'w-[33px] h-[33px]' : 'w-[45px] h-[45px]'"
+      :class="size === 'sm' ? 'h-[33px] w-[33px]' : 'h-[45px] w-[45px]'"
       :src="url"
       alt="Profile image" />
     <span
       v-else
       class="inline-flex items-center justify-center rounded-full"
-      :class="size === 'sm' ? 'w-[33px] h-[33px]' : 'w-[45px] h-[45px]'"
+      :class="size === 'sm' ? 'h-[33px] w-[33px]' : 'h-[45px] w-[45px]'"
       :style="avatarStyle">
-      <span 
+      <span
         class="font-medium leading-none"
         :class="size === 'sm' ? 'text-lg' : 'text-2xl'"
-      >{{ initials }}</span>
+        >{{ initials }}</span
+      >
     </span>
   </span>
 </template>

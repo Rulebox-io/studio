@@ -9,6 +9,7 @@
     "prettier.bracketSameLine": true,
     "prettier.semi": false,
     "prettier.vueIndentScriptAndStyle": true,
+    "prettier.singleAttributePerLine": true,
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": true

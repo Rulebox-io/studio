@@ -1,11 +1,11 @@
 <script setup>
-  import { CubeIcon } from '@heroicons/vue/24/outline'
+  import {CubeIcon} from "@heroicons/vue/24/outline"
 
   const myProps = defineProps({
     entity: {type: Object, required: true},
   })
 
-  const emit = defineEmits(['toggle'])
+  const emit = defineEmits(["toggle"])
 
   const route = useRoute()
 
@@ -36,10 +36,13 @@
     return myProps.entity.head
   })
 
-  const revisions = [ parseRevision(myProps.entity.head), parseRevision(myProps.entity.latest) ]
+  const revisions = [
+    parseRevision(myProps.entity.head),
+    parseRevision(myProps.entity.latest),
+  ]
 
   function toggle() {
-    emit('toggle', myProps.entity.id)
+    emit("toggle", myProps.entity.id)
   }
 
   function parseRevision(revision) {
@@ -59,18 +62,22 @@
 <template>
   <NuxtLink
     :to="link"
-    class="flex flex-col md:w-[321px] space-y-[23px] bg-gray-50 hover:shadow-md transition-shadow border rounded-md p-4 border-desaturated-200 dark:bg-desaturated-800  dark:border-desaturated-800">
+    class="flex flex-col space-y-[23px] rounded-md border border-desaturated-200 bg-gray-50 p-4 transition-shadow hover:shadow-md dark:border-desaturated-800 dark:bg-desaturated-800 md:w-[321px]">
     <div class="flex items-center justify-between">
       <div class="flex items-center space-x-4">
-        <CubeIcon class="w-5 h-5 text-gray-900 dark:text-white"></CubeIcon>
-        <span class="text-gray-900 font-medium dark:text-white">
+        <CubeIcon class="h-5 w-5 text-gray-900 dark:text-white"></CubeIcon>
+        <span class="font-medium text-gray-900 dark:text-white">
           {{ entity.name }}
         </span>
       </div>
-      <button @click.prevent="toggle"
-        class="block w-6 h-6 rounded-full border"
-        :class="entity.selected ? 'bg-rulebox-500 border-rulebox-500 dark:bg-white dark:border-white' : 'bg-gray-50 border-desaturated-500 hover:bg-desaturated-100 dark:bg-desaturated-900 hover:dark:bg-desaturated-800 dark:border-gray-200'"
-      ></button>
+      <button
+        class="block h-6 w-6 rounded-full border"
+        :class="
+          entity.selected
+            ? 'border-rulebox-500 bg-rulebox-500 dark:border-white dark:bg-white'
+            : 'border-desaturated-500 bg-gray-50 hover:bg-desaturated-100 dark:border-gray-200 dark:bg-desaturated-900 hover:dark:bg-desaturated-800'
+        "
+        @click.prevent="toggle"></button>
     </div>
     <div class="text-base font-medium text-gray-700 dark:text-gray-200">
       An invoice object represents a single invoice, with multiple line...
@@ -78,9 +85,11 @@
     </div>
     <div v-if="entity.labels.length > 0" class="flex items-center space-x-2">
       <AppLabel
-      v-for="label in entity.labels"
-      :key="label"
-      labelColor="#6AFFE4">{{ label }}</AppLabel>
+        v-for="label in entity.labels"
+        :key="label"
+        label-color="#6AFFE4"
+        >{{ label }}</AppLabel
+      >
     </div>
 
     <AppRevisionHistory :revisions="revisions"></AppRevisionHistory>

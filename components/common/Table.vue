@@ -1,4 +1,5 @@
 <script setup>
+  // eslint-disable-next-line no-unused-vars
   const myProps = defineProps({
     headers: {type: Array, required: true},
     rows: {type: Array, required: true},

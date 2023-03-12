@@ -1,9 +1,9 @@
 <script setup>
-  import { CubeIcon, XMarkIcon } from "@heroicons/vue/24/outline"
-  import { TableCellsIcon, CodeBracketSquareIcon } from "@heroicons/vue/20/solid"
+  import {CubeIcon, XMarkIcon} from "@heroicons/vue/24/outline"
+  import {TableCellsIcon, CodeBracketSquareIcon} from "@heroicons/vue/20/solid"
 
   import {useStore} from "@/store/entity"
-  import { Dialog, DialogPanel, DialogTitle } from "@headlessui/vue";
+  import {Dialog, DialogPanel, DialogTitle} from "@headlessui/vue"
 
   const route = useRoute()
   const config = useRuntimeConfig()
@@ -24,8 +24,8 @@
         return {}
       }
 
-      if(data.value.status!=='success' || !data.value.data) {
-        return { }
+      if (data.value.status !== "success" || !data.value.data) {
+        return {}
       }
 
       return {
@@ -67,50 +67,48 @@
     {
       name: "Invoice",
       revision: 6,
-      status: 'draft',
+      status: "draft",
       rulesets: [
         {
           name: "Has invoice expired",
           revision: 4,
-          status: 'draft',
+          status: "draft",
         },
-      ]
+      ],
     },
     {
       name: "Invoice",
       revision: 5,
-      status: 'published',
+      status: "published",
       rulesets: [
         {
           name: "Has invoice expired",
           revision: 2,
-          status: 'published',
+          status: "published",
         },
         {
           name: "Has invoice expired",
           revision: 1,
-          status: 'published',
+          status: "published",
         },
-      ]
+      ],
     },
   ]
 
-  const selectedEditor = ref('left')
+  const selectedEditor = ref("left")
   const isEditingSummary = ref(false)
   const isEditingSummaryDesktop = ref(false)
 
-  
   const selectEditor = (editor) => {
-    
     selectedEditor.value = editor
   }
 
   const editSummary = (mode) => {
-    switch(mode) {
-      case 'desktop':
+    switch (mode) {
+      case "desktop":
         isEditingSummaryDesktop.value = true
         break
-      case 'mobile':
+      case "mobile":
         isEditingSummary.value = true
         break
     }
@@ -142,30 +140,34 @@
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col">
+  <div class="flex min-h-screen flex-col">
     <AppScreenHeader v-if="!pending">
-        <CubeIcon class="w-6 h-6"></CubeIcon>
-        <span>{{working_set.display}}</span>
+      <CubeIcon class="h-6 w-6"></CubeIcon>
+      <span>{{ working_set.display }}</span>
     </AppScreenHeader>
 
-    <div v-if="!pending" class="px-4 md:px-6 py-4 hidden md:block">
+    <div v-if="!pending" class="hidden px-4 py-4 md:block md:px-6">
       <h1
         class="flex items-center justify-between font-medium text-gray-900 dark:text-gray-100">
         <div class="flex items-center md:space-x-10">
-          <span class="text-2xl text-gray-600 dark:text-gray-400">{{ tenant }}</span>
-          <span class="text-2xl flex items-center space-x-4">
-            <CubeIcon class="w-6 h-6"></CubeIcon>
+          <span class="text-2xl text-gray-600 dark:text-gray-400">{{
+            tenant
+          }}</span>
+          <span class="flex items-center space-x-4 text-2xl">
+            <CubeIcon class="h-6 w-6"></CubeIcon>
             <span>{{ working_set.display }}</span>
           </span>
         </div>
       </h1>
     </div>
 
-    <div v-if="!pending" class="mt-12 flex-col md:flex-row flex-grow"
+    <div
+      v-if="!pending"
+      class="mt-12 flex-grow flex-col md:flex-row"
       :class="isEditingSummary ? 'hidden md:flex' : 'flex'">
-      <div class="px-4 md:px-6 md:w-[390px] flex flex-col space-y-6">
-        <AppRevisionInfo 
-          :revision="working_set.revision" 
+      <div class="flex flex-col space-y-6 px-4 md:w-[390px] md:px-6">
+        <AppRevisionInfo
+          :revision="working_set.revision"
           :status="working_set.status"
           :date="new Date('2022-11-09')"
           name="John Doe"
@@ -185,75 +187,88 @@
         <CommonDisclosure>
           <template #title>Rulesets that use this type</template>
           <div class="space-y-4">
-            <AppEntityDependency 
-              v-for="dependency in dependencies" 
-              :key="dependency.id" 
-              :name="dependency.name" 
-              :revision="dependency.revision" 
-              :status="dependency.status" 
+            <AppEntityDependency
+              v-for="dependency in dependencies"
+              :key="dependency.id"
+              :name="dependency.name"
+              :revision="dependency.revision"
+              :status="dependency.status"
               :rulesets="dependency.rulesets">
             </AppEntityDependency>
           </div>
         </CommonDisclosure>
       </div>
-      <div class="mt-6 md:mt-0 px-4 md:pr-6 flex-grow flex flex-col space-y-6">
-        <div class="flex items-center justify-between pl-4 md:pl-0 text-lg font-bold text-gray-900 dark:text-white">
+      <div class="mt-6 flex flex-grow flex-col space-y-6 px-4 md:mt-0 md:pr-6">
+        <div
+          class="flex items-center justify-between pl-4 text-lg font-bold text-gray-900 dark:text-white md:pl-0">
           <span>Type definition</span>
           <CommonToggle :selected="selectedEditor" @select="selectEditor">
-            <template #left><TableCellsIcon class="w-5 h-5"></TableCellsIcon></template>
-            <template #right><CodeBracketSquareIcon class="w-5 h-5"></CodeBracketSquareIcon></template>
+            <template #left
+              ><TableCellsIcon class="h-5 w-5"></TableCellsIcon
+            ></template>
+            <template #right
+              ><CodeBracketSquareIcon class="h-5 w-5"></CodeBracketSquareIcon
+            ></template>
           </CommonToggle>
         </div>
         <pre
-            ref="definitionEditor"
-            :contenteditable="isEditing"
-            class="min-h-[400px] flex-grow mt-4 rounded-md p-4 text-gray-900 dark:text-white bg-gray-50 dark:bg-desaturated-800 "
-            >{{ working_set.definition }}
+          ref="definitionEditor"
+          :contenteditable="isEditing"
+          class="mt-4 min-h-[400px] flex-grow rounded-md bg-gray-50 p-4 text-gray-900 dark:bg-desaturated-800 dark:text-white"
+          >{{ working_set.definition }}
         </pre>
-        <div class="flex items-center space-x-4 justify-end pb-4">
-          <CommonButton @click="abandonChanges" variant="secondary">Cancel</CommonButton>
-          <CommonButton @click="saveDraft" class="flex-grow md:flex-grow-0">
+        <div class="flex items-center justify-end space-x-4 pb-4">
+          <CommonButton variant="secondary" @click="abandonChanges"
+            >Cancel</CommonButton
+          >
+          <CommonButton class="flex-grow md:flex-grow-0" @click="saveDraft">
             <span>Save Draft</span>
           </CommonButton>
         </div>
-      </div>     
+      </div>
     </div>
-    <div v-if="isEditingSummary" class="mt-12 px-4 flex flex-col flex-grow md:hidden">
-      <EntityEditor 
+    <div
+      v-if="isEditingSummary"
+      class="mt-12 flex flex-grow flex-col px-4 md:hidden">
+      <EntityEditor
         class="flex-grow"
-        @close="isEditingSummary = false"
-        :display="working_set.display" 
-        description="Some description that needs to be loaded from the server" 
-        :tag="working_set.tag" 
-        :labels="working_set.labels">
+        :display="working_set.display"
+        description="Some description that needs to be loaded from the server"
+        :tag="working_set.tag"
+        :labels="working_set.labels"
+        @close="isEditingSummary = false">
       </EntityEditor>
-    </div> 
-    <Dialog 
-      :open="isEditingSummaryDesktop" 
-      @close="isEditingSummaryDesktop = false"
-      class="relative z-50 ">
-      <div class="fixed inset-0 flex items-center justify-center bg-[rgba(12,12,14,0.3)] dark:bg-transparent backdrop-blur-md">
-        <DialogPanel class="rounded-md border shadow-lg w-[640px] p-6 text-gray-900 bg-desaturated-100 border-desaturated-200 dark:text-white dark:bg-desaturated-900 dark:border-desaturated-700">
+    </div>
+    <Dialog
+      :open="isEditingSummaryDesktop"
+      class="relative z-50"
+      @close="isEditingSummaryDesktop = false">
+      <div
+        class="fixed inset-0 flex items-center justify-center bg-[rgba(12,12,14,0.3)] backdrop-blur-md dark:bg-transparent">
+        <DialogPanel
+          class="w-[640px] rounded-md border border-desaturated-200 bg-desaturated-100 p-6 text-gray-900 shadow-lg dark:border-desaturated-700 dark:bg-desaturated-900 dark:text-white">
           <DialogTitle>
             <div class="flex items-center justify-between">
               <div class="flex items-center space-x-4">
-                <CubeIcon class="w-6 h-6"></CubeIcon>
-                <span class="font-medium text-xl">{{ working_set.display }}</span>
+                <CubeIcon class="h-6 w-6"></CubeIcon>
+                <span class="text-xl font-medium">{{
+                  working_set.display
+                }}</span>
               </div>
               <button
-                  @click="isEditingSummaryDesktop = false"
-                  class="flex items-center justify-center rounded-md w-[33px] h-lesserbutton focus:ring-2 focus:ring-offset-2 focus:outline-none focus:ring-rulebox-500 hover:bg-gray-50  dark:hover:bg-desaturated-800 dark:focus:ring-rulebox-200">
-                  <XMarkIcon class="w-9 h-9"></XMarkIcon>
+                class="flex h-lesserbutton w-[33px] items-center justify-center rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-rulebox-500 focus:ring-offset-2 dark:hover:bg-desaturated-800 dark:focus:ring-rulebox-200"
+                @click="isEditingSummaryDesktop = false">
+                <XMarkIcon class="h-9 w-9"></XMarkIcon>
               </button>
             </div>
           </DialogTitle>
-          <EntityEditor 
+          <EntityEditor
             class="mt-10"
-            @close="isEditingSummaryDesktop = false"
-            :display="working_set.display" 
-            description="Some description that needs to be loaded from the server" 
-            :tag="working_set.tag" 
-            :labels="working_set.labels">
+            :display="working_set.display"
+            description="Some description that needs to be loaded from the server"
+            :tag="working_set.tag"
+            :labels="working_set.labels"
+            @close="isEditingSummaryDesktop = false">
           </EntityEditor>
         </DialogPanel>
       </div>
@@ -412,6 +427,5 @@
         </div>
       </div>
     </div>
-  -->
-  </div>
+  --></div>
 </template>

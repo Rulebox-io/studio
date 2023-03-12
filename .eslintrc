@@ -1,7 +1,19 @@
 {
-  "extends": ["prettier", "plugin:vue/vue3-recommended"],
+  "extends": ["eslint:recommended", "plugin:vue/vue3-recommended", "prettier"],
   "plugins": ["prettier"],
   "rules": {
     "prettier/prettier": ["error"]
+  },
+  "globals": {
+    "Vue": "readonly",
+    "VueRouter": "readonly",
+    "Vuex": "readonly",
+    "VueCompositionAPI": "readonly",
+    "defineProps": "readonly",
+    "defineEmits": "readonly",
+    "defineExpose": "readonly",
+    "withDefaults": "readonly",
+    "computed": "readonly",
+    "useRoute": "readonly"
   }
 }

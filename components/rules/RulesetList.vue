@@ -1,4 +1,5 @@
 <script setup>
+  // eslint-disable-next-line no-unused-vars
   const myProps = defineProps({
     rulesets: {type: Array, required: true},
   })

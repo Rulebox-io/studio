@@ -13,15 +13,14 @@
 </script>
 
 <template>
-  <NuxtLink :to="profileLink" class="flex flex-col flex-shrink-0">
+  <NuxtLink :to="profileLink" class="flex flex-shrink-0 flex-col">
     <div class="flex items-center justify-between">
       <div>
         <p
           class="text-base font-medium text-gray-900 dark:text-gray-300 md:text-sm">
           {{ name }}
         </p>
-        <p
-          class="text-base font-medium text-gray-600  md:text-xs">
+        <p class="text-base font-medium text-gray-600 md:text-xs">
           Account settings
         </p>
       </div>

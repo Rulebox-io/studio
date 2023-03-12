@@ -1,3 +1,3 @@
 <template>
-    <h2 class="text-gray-900 text-lg font-bold dark:text-white"><slot></slot></h2>
+  <h2 class="text-lg font-bold text-gray-900 dark:text-white"><slot></slot></h2>
 </template>

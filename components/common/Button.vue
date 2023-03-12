@@ -10,11 +10,12 @@
   const emit = defineEmits(["click"])
 
   const buttonStyle = computed(() => {
-    if(myProps.secondary === true || myProps.variant === "secondary")
+    if (myProps.secondary === true || myProps.variant === "secondary")
       return "h-fullbutton border-desaturated-500 text-gray-900 enabled:hover:border-transparent enabled:hover:bg-rulebox-200 dark:text-white dark:enabled:hover:bg-rulebox-700 "
-    else if(myProps.variant === "lesser")
-     return "h-lesserbutton border-transparent bg-rulebox-500 enabled:hover:bg-rulebox-400 text-white"
-     else return "h-fullbutton border-transparent bg-gradient-to-r from-rulebox-500 to-leftshift-600 enabled:hover:from-rulebox-400 enabled:hover:to-leftshift-500 text-white"
+    else if (myProps.variant === "lesser")
+      return "h-lesserbutton border-transparent bg-rulebox-500 enabled:hover:bg-rulebox-400 text-white"
+    else
+      return "h-fullbutton border-transparent bg-gradient-to-r from-rulebox-500 to-leftshift-600 enabled:hover:from-rulebox-400 enabled:hover:to-leftshift-500 text-white"
   })
 
   const onclick = () => {

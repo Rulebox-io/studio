@@ -1,23 +1,19 @@
 <script setup>
-    import { XMarkIcon } from '@heroicons/vue/20/solid';
-    const emit = defineEmits(["click"])
-    const myProps = defineProps(
-        {
-            labelColor: {type: String, required: true},
-        }
-    )
-    const bg = computed(() => {
-        return { background: myProps.labelColor }
-    })
+  import {XMarkIcon} from "@heroicons/vue/20/solid"
+  const emit = defineEmits(["click"])
+  const myProps = defineProps({
+    labelColor: {type: String, required: true},
+  })
+  const bg = computed(() => {
+    return {background: myProps.labelColor}
+  })
 </script>
 <template>
-    <button
-        @click="emit('click')"
-        class="flex items-center text-sm text-gray-900 space-x-2 px-[8px] py-[6px] border rounded-full font-medium dark:text-white  border-rulebox-500 dark:border-desaturated-600">
-        <span class="rounded-full w-[10px] h-[10px]"
-        :style="bg"
-></span>
-        <span><slot></slot></span>
-        <XMarkIcon class="w-5 h-5"></XMarkIcon>
-    </button>
+  <button
+    class="flex items-center space-x-2 rounded-full border border-rulebox-500 px-[8px] py-[6px] text-sm font-medium text-gray-900 dark:border-desaturated-600 dark:text-white"
+    @click="emit('click')">
+    <span class="h-[10px] w-[10px] rounded-full" :style="bg" />
+    <span><slot /></span>
+    <XMarkIcon class="h-5 w-5" />
+  </button>
 </template>

@@ -5,5 +5,5 @@
 </script>
 
 <template>
-  <div>{{ruleset.id}}</div>
+  <div>{{ ruleset.id }}</div>
 </template>
