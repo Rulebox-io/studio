@@ -11,15 +11,11 @@
       `${config.public.studioApiUrl}/entity?tenant=${tenant}`
     )
 
-    if (!data.value) {
+    if (!data.value || !Array.isArray(data.value)) {
       return {}
     }
 
-    if (data.value.status !== "success" || !Array.isArray(data.value.data)) {
-      return {}
-    }
-
-    return data.value.data.map((e) => ({
+    return data.value.map((e) => ({
       id: e.id,
       name: e.name,
       tag: e.tag,

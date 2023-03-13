@@ -12,7 +12,7 @@
 </script>
 
 <template>
-  <ul class="flex flex-wrap">
+  <ul class="flex flex-wrap gap-6">
     <li v-for="entity in entities" :key="entity.id">
       <EntitiesEntityListItem
         :entity="entity"

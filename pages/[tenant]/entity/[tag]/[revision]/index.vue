@@ -24,44 +24,45 @@
         return {}
       }
 
-      if (data.value.status !== "success" || !data.value.data) {
-        return {}
-      }
-
       return {
-        id: data.value.data.id,
-        display: data.value.data.name,
-        tag: data.value.data.tag,
-        labels: [...data.value.data.labels],
-        revision_id: data.value.data.revision.id,
-        revision: data.value.data.revision.revision,
-        definition: data.value.data.revision.definition,
-        status: data.value.data.revision.status,
-        ts: data.value.data.revision.ts,
+        id: data.value.id,
+        display: data.value.name,
+        tag: data.value.tag,
+        labels: [...data.value.labels],
+        description: data.value.description,
+        revision_id: data.value.revision.id,
+        revision: data.value.revision.revision,
+        definition: data.value.revision.definition,
+        name: data.value.revision.edited_by,
+        status: data.value.revision.status,
+        date: new Date(data.value.revision.ts),
+        head: {...data.value.head},
+        latest: {...data.value.latest},
       }
     }
   )
 
-  const name = computed(() => {
-    return "Edwin Groenendaal"
+  const revisions = computed(() => {
+    if (pending.value) return []
+    return [
+      parseRevision(working_set.value.head),
+      parseRevision(working_set.value.latest),
+    ]
   })
 
-  const revisions = [
-    {
-      revision: 1,
-      status: "draft",
-      date: new Date("2022-11-09"),
-      name: "John Doe",
-      url: null,
-    },
-    {
-      revision: 2,
-      status: "published",
-      date: new Date("2022-11-09"),
-      name: "John Doe",
-      url: null,
-    },
-  ]
+  /** TODO Make this a util as it's used in EntityListItem, too. */
+  const parseRevision = (revision) => {
+    if (!revision) {
+      return
+    }
+    return {
+      id: revision.id,
+      revision: revision.revision,
+      date: new Date(revision.last_modified_on),
+      status: revision.status,
+      name: revision.edited_by,
+    }
+  }
 
   const dependencies = [
     {
@@ -114,21 +115,26 @@
     }
   }
 
+  /*
   const startEditing = () => {
     isEditing.value = true
     nextTick(() => definitionEditor.value.focus())
   }
+  */
 
   const abandonChanges = () => {
     isEditing.value = false
   }
 
+  /*
   const deleteRevision = () => {
     store.deleteEntityRevision({
       tenant: route.params.tenant,
       id: working_set.value.revision_id,
     })
   }
+  */
+
   const saveDraft = () => {
     store.updateEntityRevision({
       tenant: route.params.tenant,
@@ -169,13 +175,13 @@
         <AppRevisionInfo
           :revision="working_set.revision"
           :status="working_set.status"
-          :date="new Date('2022-11-09')"
-          name="John Doe"
+          :date="working_set.date"
+          :name="working_set.name"
           :url="null">
         </AppRevisionInfo>
         <AppSummary
           :display="working_set.display"
-          description="Some description that needs to be loaded from the server"
+          :description="working_set.description"
           :tag="working_set.tag"
           :labels="working_set.labels"
           @click="editSummary">
