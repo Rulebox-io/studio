@@ -16,7 +16,7 @@
 <template>
   <div class="flex flex-nowrap">
     <button
-      class="flex h-lesserbutton w-[33px] items-center justify-center rounded-l-md border border-rulebox-500 text-gray-900 focus:z-10 focus:outline-none focus:ring-2 focus:ring-rulebox-500 focus:ring-offset-2 disabled:text-gray-600 dark:border-desaturated-600 dark:text-white dark:focus:ring-rulebox-200"
+      class="flex h-lesserbutton w-[33px] items-center justify-center rounded-l-md border border-rulebox-500 text-gray-900 focus:z-10 focus:outline-none focus:ring-2 focus:ring-rulebox-500 focus:ring-offset-2 disabled:text-gray-600 dark:border-desaturated-600 dark:text-white dark:focus:ring-rulebox-200 dark:focus:ring-offset-desaturated-900"
       :class="
         selected === 'left'
           ? 'bg-rulebox-200 dark:bg-desaturated-700'
@@ -26,7 +26,7 @@
       <slot name="left"></slot>
     </button>
     <button
-      class="relative left-[-1px] flex h-lesserbutton w-[33px] items-center justify-center rounded-r-md border border-rulebox-500 text-gray-900 focus:z-10 focus:outline-none focus:ring-2 focus:ring-rulebox-500 focus:ring-offset-2 disabled:text-gray-600 dark:border-desaturated-600 dark:text-white dark:focus:ring-rulebox-200"
+      class="relative left-[-1px] flex h-lesserbutton w-[33px] items-center justify-center rounded-r-md border border-rulebox-500 text-gray-900 focus:z-10 focus:outline-none focus:ring-2 focus:ring-rulebox-500 focus:ring-offset-2 disabled:text-gray-600 dark:border-desaturated-600 dark:text-white dark:focus:ring-rulebox-200 dark:focus:ring-offset-desaturated-900"
       :class="
         selected === 'right'
           ? 'bg-rulebox-200 dark:bg-desaturated-700'

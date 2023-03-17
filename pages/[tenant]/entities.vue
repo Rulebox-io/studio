@@ -1,6 +1,8 @@
 <script setup>
   import {AdjustmentsVerticalIcon, TrashIcon} from "@heroicons/vue/20/solid"
   import {CubeIcon, XMarkIcon} from "@heroicons/vue/24/outline"
+  import {Dialog, DialogPanel, DialogTitle} from "@headlessui/vue"
+
   const route = useRoute()
   const config = useRuntimeConfig()
 
@@ -153,10 +155,10 @@
     </div>
     <Dialog
       :open="isEditingNewEntityDesktop"
-      class="relative z-50 bg-transparent"
+      class="relative z-50"
       @close="isEditingNewEntityDesktop = false">
       <div
-        class="fixed inset-0 flex items-center justify-center bg-[rgba(12,12,14,0.3)] backdrop-blur-md transition-all dark:bg-transparent">
+        class="fixed inset-0 flex items-center justify-center bg-[rgba(12,12,14,0.3)] backdrop-blur-md dark:bg-transparent">
         <DialogPanel
           class="w-[640px] rounded-md border border-desaturated-200 bg-desaturated-100 p-6 text-gray-900 shadow-lg dark:border-desaturated-700 dark:bg-desaturated-900 dark:text-white">
           <DialogTitle>
@@ -166,7 +168,7 @@
                 <span class="text-xl font-medium">New type</span>
               </div>
               <button
-                class="flex h-lesserbutton w-[33px] items-center justify-center rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-rulebox-500 focus:ring-offset-2 dark:hover:bg-desaturated-800 dark:focus:ring-rulebox-200"
+                class="flex h-lesserbutton w-[33px] items-center justify-center rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-rulebox-500 focus:ring-offset-2 dark:hover:bg-desaturated-800 dark:focus:ring-rulebox-200 dark:focus:ring-offset-desaturated-900"
                 @click="isEditingNewEntityDesktop = false">
                 <XMarkIcon class="h-9 w-9"></XMarkIcon>
               </button>

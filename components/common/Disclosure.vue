@@ -7,7 +7,7 @@
     class="flex flex-col rounded-md border border-desaturated-200 bg-gray-50 py-2 pl-4 pr-[6px] text-gray-900 dark:border-desaturated-800 dark:bg-desaturated-800 dark:text-white">
     <Disclosure>
       <DisclosureButton
-        class="flex h-[20px] items-center justify-between text-lg font-bold focus:ring-rulebox-500 dark:focus:ring-rulebox-200">
+        class="flex h-[20px] items-center justify-between text-lg font-bold focus:ring-rulebox-500 dark:focus:ring-rulebox-200 dark:focus:ring-offset-desaturated-900">
         <span><slot name="title"></slot></span>
         <ChevronDownIcon class="h- w-5"></ChevronDownIcon>
       </DisclosureButton>

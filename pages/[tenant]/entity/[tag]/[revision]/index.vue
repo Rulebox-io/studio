@@ -262,7 +262,7 @@
                 }}</span>
               </div>
               <button
-                class="flex h-lesserbutton w-[33px] items-center justify-center rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-rulebox-500 focus:ring-offset-2 dark:hover:bg-desaturated-800 dark:focus:ring-rulebox-200"
+                class="flex h-lesserbutton w-[33px] items-center justify-center rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-rulebox-500 focus:ring-offset-2 dark:hover:bg-desaturated-800 dark:focus:ring-rulebox-200 dark:focus:ring-offset-desaturated-900"
                 @click="isEditingSummaryDesktop = false">
                 <XMarkIcon class="h-9 w-9"></XMarkIcon>
               </button>

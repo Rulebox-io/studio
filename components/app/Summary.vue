@@ -21,12 +21,12 @@
         <span>{{ display }}</span>
       </div>
       <button
-        class="flex h-lesserbutton w-[33px] items-center justify-center rounded-md border border-rulebox-500 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-rulebox-500 focus:ring-offset-2 dark:border-desaturated-500 dark:bg-desaturated-800 dark:focus:ring-rulebox-200 md:hidden"
+        class="flex h-lesserbutton w-[33px] items-center justify-center rounded-md border border-rulebox-500 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-rulebox-500 focus:ring-offset-2 dark:border-desaturated-500 dark:bg-desaturated-800 dark:focus:ring-rulebox-200 dark:focus:ring-offset-desaturated-900 md:hidden"
         @click="emit('click', 'mobile')">
         <PencilIcon class="h-5 w-5"></PencilIcon>
       </button>
       <button
-        class="hidden h-lesserbutton w-[33px] items-center justify-center rounded-md border border-rulebox-500 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-rulebox-500 focus:ring-offset-2 dark:border-desaturated-500 dark:bg-desaturated-800 dark:focus:ring-rulebox-200 md:flex"
+        class="hidden h-lesserbutton w-[33px] items-center justify-center rounded-md border border-rulebox-500 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-rulebox-500 focus:ring-offset-2 dark:border-desaturated-500 dark:bg-desaturated-800 dark:focus:ring-rulebox-200 dark:focus:ring-offset-desaturated-900 md:flex"
         @click="emit('click', 'desktop')">
         <PencilIcon class="h-5 w-5"></PencilIcon>
       </button>

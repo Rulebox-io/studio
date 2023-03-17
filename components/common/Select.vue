@@ -15,7 +15,7 @@
   <Listbox v-model="myProps.model">
     <div class="relative">
       <ListboxButton
-        class="flex h-lesserbutton items-center justify-between space-x-4 rounded-md border border-rulebox-500 bg-gray-50 pl-[10px] pr-[6px] focus:outline-none focus:ring-2 focus:ring-rulebox-500 focus:ring-offset-2 dark:border-desaturated-500 dark:bg-desaturated-800 dark:text-white dark:focus:ring-rulebox-200">
+        class="flex h-lesserbutton items-center justify-between space-x-4 rounded-md border border-rulebox-500 bg-gray-50 pl-[10px] pr-[6px] focus:outline-none focus:ring-2 focus:ring-rulebox-500 focus:ring-offset-2 dark:border-desaturated-500 dark:bg-desaturated-800 dark:text-white dark:focus:ring-rulebox-200 dark:focus:ring-offset-desaturated-900">
         <span class="font-medium text-gray-900 dark:text-white">{{
           myProps.model.name
         }}</span>

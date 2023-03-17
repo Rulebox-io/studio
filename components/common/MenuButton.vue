@@ -10,7 +10,7 @@
 <template>
   <Menu as="div" class="relative h-9">
     <MenuButton
-      class="flex h-lesserbutton w-[33px] items-center justify-center rounded-md bg-rulebox-200 text-gray-900 focus:outline-none focus:ring-2 focus:ring-rulebox-500 focus:ring-offset-2 dark:bg-desaturated-700 dark:text-white dark:focus:ring-rulebox-200">
+      class="flex h-lesserbutton w-[33px] items-center justify-center rounded-md bg-rulebox-200 text-gray-900 focus:outline-none focus:ring-2 focus:ring-rulebox-500 focus:ring-offset-2 dark:bg-desaturated-700 dark:text-white dark:focus:ring-rulebox-200 dark:focus:ring-offset-desaturated-900">
       <ChevronDownIcon class="h-5 w-5"></ChevronDownIcon>
     </MenuButton>
     <MenuItems
