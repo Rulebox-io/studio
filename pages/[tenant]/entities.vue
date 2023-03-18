@@ -150,6 +150,7 @@
         description=""
         :tag="null"
         :labels="[]"
+        mode="new"
         @close="isEditingNewEntity = false">
       </EntityEditor>
     </div>
@@ -180,6 +181,7 @@
             description=""
             :tag="null"
             :labels="[]"
+            mode="new"
             @close="isEditingNewEntityDesktop = false">
           </EntityEditor>
         </DialogPanel>
