@@ -15,7 +15,7 @@ It is hosted in **Netlify** and is available at [https://app.netlify.com/sites/s
 - Nuxt 3 (3.2.3)
 - Vue 3
 - Pinia
-- MagicAuth
+- Kinde Auth
 - Fauna DB
 
 ## Setting up Visual Studio Code
@@ -89,7 +89,6 @@ The front-end uses Nuxt, and so all config is via `Nuxt.config.ts`. For example,
 ```json
 runtimeConfig: {
     public: {
-        magicPublishableKey: "pk_live_XXXXXXXXXXX",
         studioApiUrl: "http://localhost:9999/.netlify/functions",
     },
 },
@@ -99,14 +98,13 @@ In code, these config keys are retrieved using `useRuntimeConfig`:
 
 ```typescript
 const config = useRuntimeConfig()
-const magic = new Magic(config.public.magicPublishableKey)
+//const magic = new Magic(config.public.magicPublishableKey)
 ```
 
 Nuxt also supports `.env` and so you can use the `.env` file to set the config keys, using environment variables:
 
 ```
 NUXT_PUBLIC_STUDIO_API_URL="http://localhost:9999/.netlify/functions"
-NUXT_PUBLIC_MAGIC_PUBLISHABLE_KEY=pk_live_XXXXXXXXXXXXXXXX
 ```
 
 Note that Nuxt automatically maps the uppercase snake case of env variables to camcel case of config keys.
@@ -145,6 +143,6 @@ Note that one addtional environment variable controls the version of Node that t
 
 This is because locally we use Node 18, but Netlify only supports Node 16. So we need to set the version to 16 in Netlify.
 
-## MagicAuth and authentication
+## Kinde and authentication
 
 ## Fauna Database

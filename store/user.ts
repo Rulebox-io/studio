@@ -1,6 +1,5 @@
-import axios from "axios"
+//import axios from "axios"
 import {defineStore} from "pinia"
-import {Magic} from "magic-sdk"
 
 export const useStore = defineStore("user", {
   state: () => {
@@ -36,6 +35,7 @@ export const useStore = defineStore("user", {
     },
 
     CLEAR_USER_DATA() {
+      /*
       this.$patch({
         id: null,
         email: null,
@@ -44,11 +44,12 @@ export const useStore = defineStore("user", {
         tenants: null,
         authenticated: false,
       })
-
-      navigateTo(`/login`)
+      */
+      //navigateTo(`/login`)
     },
 
     async login(email) {
+      /*
       // Log in through magic link, and create a session.
       const config = useRuntimeConfig()
       const magic = new Magic(config.public.magicPublishableKey)
@@ -79,8 +80,10 @@ export const useStore = defineStore("user", {
       }
 
       navigateTo(`/${tenants[0]}/integration/keys`)
+      */
     },
     async logout() {
+      /*
       const config = useRuntimeConfig()
 
       await axios.post(`${config.public.studioApiUrl}/logout`, "", {
@@ -90,6 +93,7 @@ export const useStore = defineStore("user", {
         },
       })
       this.CLEAR_USER_DATA()
+      */
     },
   },
 })

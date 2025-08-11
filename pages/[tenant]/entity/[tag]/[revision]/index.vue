@@ -5,6 +5,10 @@
   import {useStore} from "@/store/entity"
   import {Dialog, DialogPanel, DialogTitle} from "@headlessui/vue"
 
+  definePageMeta({
+    middleware: ["auth-logged-in"],
+  })
+
   const route = useRoute()
   const config = useRuntimeConfig()
   const store = useStore()

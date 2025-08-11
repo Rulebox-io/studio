@@ -1,4 +1,8 @@
 <script setup>
+  definePageMeta({
+    middleware: ["auth-logged-in"],
+  })
+
   const tabs = reactive([
     {
       id: "profile",

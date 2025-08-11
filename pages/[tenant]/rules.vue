@@ -1,4 +1,8 @@
 <script setup>
+  definePageMeta({
+    middleware: ["auth-logged-in"],
+  })
+
   const route = useRoute()
   const config = useRuntimeConfig()
 

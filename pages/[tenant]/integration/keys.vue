@@ -2,6 +2,10 @@
   const route = useRoute()
   const config = useRuntimeConfig()
 
+  definePageMeta({
+    middleware: ["auth-logged-in"],
+  })
+
   const headers = ref([
     {id: "name", display: "Name"},
     {id: "primary", display: "Primary"},

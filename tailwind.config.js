@@ -1,6 +1,6 @@
 const colors = require("tailwindcss/colors")
 const defaultTheme = require("tailwindcss/defaultTheme")
-const plugin = require('tailwindcss/plugin');
+const plugin = require("tailwindcss/plugin")
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -27,7 +27,7 @@ module.exports = {
     textColor: ["dark", "dark-hover", "dark-active"],
     extend: {
       ring: ["focus-within", "dark-focus-within"],
-      spacing: ["md"]
+      spacing: ["md"],
     },
   },
   theme: {
@@ -35,11 +35,12 @@ module.exports = {
       backgroundImage: (_) => ({
         "rulebox-logo": "url('~/assets/logo.svg')",
         "rulebox-logo-dark": "url('~/assets/logo-dark.svg')",
-        "gradient-radial": "radial-gradient(100% 75% at 50% 25%, var(--tw-gradient-stops))",
+        "gradient-radial":
+          "radial-gradient(100% 75% at 50% 25%, var(--tw-gradient-stops))",
       }),
       borderRadius: {
-        'md': '0.429rem',
-      },  
+        md: "0.429rem",
+      },
       colors: {
         rulebox: {
           50: "#eee5ff",
@@ -54,15 +55,15 @@ module.exports = {
           900: "#100033",
         },
         desaturated: {
-          100: "#E7E6EA",
-          200: "#C0B9D0",
-          300: "#9988BF",
-          400: "#7355B4",
-          500: "#5A4091",
-          600: "#44306E",
-          700: "#34294C",
-          800: "#231F2E",
-          900: "#141216",
+          100: "hsl(259, 10, 91)",
+          200: "hsl(259, 15, 77)",
+          300: "hsl(259, 20, 64)",
+          400: "hsl(259, 25, 52)",
+          500: "hsl(259, 25, 41)",
+          600: "hsl(259, 25, 31)",
+          700: "hsl(259, 20, 23)",
+          800: "hsl(259, 15, 15)",
+          900: "hsl(259, 10, 8)",
         },
         leftshift: {
           50: "#ECE5FF",
@@ -74,7 +75,7 @@ module.exports = {
           600: "#4315CB",
           700: "#2F0A9E",
           800: "#1C0368",
-          900: "#0D0033",          
+          900: "#0D0033",
         },
 
         gray: {
@@ -87,35 +88,34 @@ module.exports = {
           600: "#707070",
           700: "#545454",
           800: "#363636",
-          900: "#1A1A1A",          
+          900: "#1A1A1A",
         },
         green: {
-          default: "#08950E",          
+          default: "#08950E",
           500: "#08950E",
-        }
+        },
       },
       fontFamily: {
         sans: ["'Inter'", ...defaultTheme.fontFamily.sans],
       },
       fontSize: {
-        "lg": "1.143rem", /* 16px */
-        "xl": "1.286rem", /* 18px */
-        "2xl": "1.429rem", /* 20px */
-
+        lg: "1.143rem" /* 16px */,
+        xl: "1.286rem" /* 18px */,
+        "2xl": "1.429rem" /* 20px */,
       },
       height: {
-        'fullbutton': "39px",
-        'lesserbutton': "33px",
+        fullbutton: "39px",
+        lesserbutton: "33px",
       },
       spacing: {
-        '2': "0.5rem"
-      }
+        2: "0.5rem",
+      },
     },
   },
   plugins: [
-    plugin(function({ addBase }) {
-     addBase({
-        'html': { fontSize: "14px" },
+    plugin(function ({addBase}) {
+      addBase({
+        html: {fontSize: "14px"},
       })
     }),
   ],

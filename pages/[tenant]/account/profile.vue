@@ -1,6 +1,10 @@
 <script setup>
   import {useStore} from "@/store/user"
 
+  definePageMeta({
+    middleware: ["auth-logged-in"],
+  })
+
   const store = useStore()
 
   const signOut = () => {
@@ -12,6 +16,10 @@
     <h1
       class="mb-2 flex items-center text-2xl font-semibold text-gray-900 dark:text-gray-100">
       Profile
+      <NuxtLink class="dark:text-white" to="/api/logout" external
+        >Sign out</NuxtLink
+      >
+
       <CommonButton class="ml-auto" @click="signOut">Sign out</CommonButton>
     </h1>
   </div>

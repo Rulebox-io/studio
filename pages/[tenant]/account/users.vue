@@ -2,6 +2,10 @@
   const route = useRoute()
   const config = useRuntimeConfig()
 
+  definePageMeta({
+    middleware: ["auth-logged-in"],
+  })
+
   const {pending, data: users} = useLazyFetch(
     `${config.public.studioApiUrl}/users?tenant=${route.params.tenant}`
   )

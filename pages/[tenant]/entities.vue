@@ -3,6 +3,10 @@
   import {CubeIcon, XMarkIcon} from "@heroicons/vue/24/outline"
   import {Dialog, DialogPanel, DialogTitle} from "@headlessui/vue"
 
+  definePageMeta({
+    middleware: ["auth-logged-in"],
+  })
+
   const route = useRoute()
   const config = useRuntimeConfig()
 
